@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booting nuBlog...</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Prevent horizontal scrolling */
+        html,
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Base layout and background */
+        html {
+            height: 100%;
+            background-color: rgba(230, 230, 230, 1);
+            background-image: url('images/10-4.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mac OS X Aqua Loading Screen Overlay */
+        #mac-os-window {
+            width: 500px;
+            background: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.5s ease;
+            position: relative;
+        }
+
+        #mac-os-title-bar {
+            height: 24px;
+            background: linear-gradient(to bottom, #ebebeb 0%, #d6d6d6 100%);
+            border-bottom: 1px solid #888;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            position: relative;
+        }
+
+        .mac-os-buttons {
+            display: flex;
+            gap: 7px;
+            position: absolute;
+            left: 8px;
+            z-index: 2;
+        }
+
+        .mac-os-btn {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 1px 1px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.4);
+        }
+
+        .mac-os-btn::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            right: 2px;
+            height: 4px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            border-radius: 10px 10px 0 0;
+        }
+
+        .mac-os-btn.close {
+            background: radial-gradient(circle at 5px 5px, #ff9b96 0%, #ff5f56 50%, #e0443e 100%);
+            border-color: #d83d37;
+        }
+
+        .mac-os-btn.minimize {
+            background: radial-gradient(circle at 5px 5px, #ffdf80 0%, #ffbd2e 50%, #dea123 100%);
+            border-color: #c48e1b;
+        }
+
+        .mac-os-btn.zoom {
+            background: radial-gradient(circle at 5px 5px, #86e09c 0%, #27c93f 50%, #1aab29 100%);
+            border-color: #169322;
+        }
+
+        #mac-os-title-text {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 13px;
+            color: #333;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+            width: 100%;
+            pointer-events: none;
+            font-weight: 500;
+        }
+
+        #mac-os-content {
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #mac-os-text {
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+            color: #333;
+            font-size: 12px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        #mac-os-header {
+            font-size: 26px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 0px;
+        }
+
+        #mac-os-subheader {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .mac-info-table td {
+            padding-bottom: 5px;
+        }
+
+        .mac-info-table .label {
+            font-weight: bold;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .mac-os-grey-button {
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            color: #111;
+            background: linear-gradient(180deg, #ffffff 0%, #f6f6f6 40%, #ededed 45%, #e1e1e1 100%);
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 3px 14px;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mac-os-grey-button:active {
+            background: linear-gradient(180deg, #d4d4d4 0%, #e8e8e8 100%);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Loading Bar Styles */
+        .mac-os-loading-container {
+            margin-top: 20px;
+            width: 100%;
+            height: 14px;
+            background: #e6e6e6;
+            border: 1px solid #999;
+            border-radius: 7px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mac-os-loading-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(180deg, #99cfff 0%, #469af8 48%, #1f7df2 52%, #4da2fa 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            animation: fillMacBar 3s linear forwards;
+            position: relative;
+        }
+
+        /* Subtle moving gleam on the loading bar */
+        .mac-os-loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+            animation: moveGleam 1.5s infinite linear;
+        }
+
+        @keyframes fillMacBar {
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        @keyframes moveGleam {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="mac-os-window">
+        <div id="mac-os-title-bar">
+            <div class="mac-os-buttons">
+                <div class="mac-os-btn close"></div>
+                <div class="mac-os-btn minimize"></div>
+                <div class="mac-os-btn zoom"></div>
+            </div>
+            <div id="mac-os-title-text">nuBlog</div>
+        </div>
+        <div id="mac-os-content">
+            <div id="mac-os-text">
+                <div id="mac-os-header">nuBlog</div>
+                <div id="mac-os-subheader">Version 2.1</div>
+
+                <table class="mac-info-table" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="label">Processor</td>
+                        <td>GitHub Pages CI/CD Runner</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Memory</td>
+                        <td>Infinite Cloud Storage Allocation</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Graphics</td>
+                        <td>Headless Virtual Machine</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Software</td>
+                        <td>Jekyll Static Generation 2.1</td>
+                    </tr>
+                </table>
+
+                <div class="mac-os-loading-container">
+                    <div class="mac-os-loading-bar"></div>
+                </div>
+            </div>
+
+            <div class="bottom-buttons">
+                <button class="mac-os-grey-button" id="mac-os-boot-button">Boot nuBlog...</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('mac-os-boot-button').addEventListener('click', function () {
+            // Save to session storage so we dont hit this screen again when pressing 'home'
+            sessionStorage.setItem('nuBlogBootFinished', 'true');
+            // Allow JS to hijack the audio intent later on home.html
+            sessionStorage.setItem('musicPlaying', 'true');
+
+            const bootScreen = document.getElementById('mac-os-window');
+            bootScreen.style.opacity = '0';
+
+            // Allow CSS transition to finish before navigating away
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 500);
+        });
+    </script>
+
+</body>
+
+</html>

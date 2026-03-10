@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>image gallery - nuBlog</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .gallery-table img.styled-image {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            border-radius: 0px;
+            box-shadow: none;
+            border: none;
+        }
+
+        .gallery-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .gallery-table td {
+            width: 50%;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .gallery-table p {
+            margin-top: 5px;
+            color: #99CCCC;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+            font-size: 0.9em;
+        }
+
+        .image-wrapper {
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .gallery-entry {
+            background-color: #111;
+            border: 1px solid #444;
+            margin: 18px 0;
+            padding: 18px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .gallery-entry-label {
+            color: #33CCAA;
+            text-decoration: none;
+            font-size: 1.05em;
+            display: block;
+        }
+
+        .gallery-entry-label:hover {
+            background-color: #222;
+        }
+
+        .gallery-entry-label.is-disabled {
+            color: #88AFAA;
+            text-decoration: none;
+            cursor: default;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .gallery-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin: 12px 0 20px;
+        }
+
+        .gallery-group-title {
+            margin: 0 0 6px;
+        }
+
+        .gallery-group-note {
+            margin: 0 0 12px;
+            color: #99CCCC;
+            font-size: 0.9em;
+        }
+
+        .gallery-grid {
+            --gallery-min-width: 220px;
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(var(--gallery-min-width), 1fr));
+        }
+
+        .gallery-grid .gallery-entry {
+            margin: 0;
+        }
+
+        .gallery-entry-children {
+            --gallery-child-min-width: 140px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(var(--gallery-child-min-width), 1fr));
+            margin-top: 12px;
+        }
+
+        .gallery-entry-children:empty {
+            display: none;
+        }
+
+        .gallery-entry-children .gallery-entry {
+            padding: 12px;
+        }
+
+        .gallery-entry-children .gallery-entry-label {
+            font-size: 0.95em;
+        }
+
+        .gallery-entry-year .gallery-entry-label {
+            font-size: 1.2em;
+        }
+
+        .gallery-entry-preview {
+            position: relative;
+            width: 100%;
+            background-color: #111;
+            border: 1px solid #444;
+            font-family: monospace;
+            font-size: 2em;
+            text-align: center;
+            color: #33CCAA;
+            text-decoration: none;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            aspect-ratio: 3 / 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            padding: 0;
+        }
+
+        .gallery-entry-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            transition: background 0.3s ease;
+        }
+
+        .gallery-entry-preview:hover::before {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .gallery-entry-preview:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-entry-preview .gallery-entry-label {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            font-size: 1em;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <h1>image gallery home <a href="image-gallery-all.html"
+                style="font-size: 0.45em; color: #444; text-decoration: none; vertical-align: middle;">[view all]</a>
+        </h1>
+        <i>last updated: 3/1/2026 </i>
+        <div class="gallery-groups" data-gallery-groups></div>
+
+        <template id="gallery-group-template">
+            <section class="gallery-group">
+                <h2 class="gallery-group-title"></h2>
+                <p class="gallery-group-note"></p>
+                <div class="gallery-grid"></div>
+            </section>
+        </template>
+
+        <template id="gallery-entry-template">
+            <div class="gallery-entry">
+                <a href="#" class="gallery-entry-label"></a>
+                <div class="gallery-entry-children"></div>
+            </div>
+        </template>
+
+        <table class="gallery-table">
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/canon/canon4039.JPG" alt="Image 1" class="styled-image">
+                    </div>
+                    <p>kc 2025</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/om10.jpeg" alt="Image 2" class="styled-image">
+                    </div>
+                    <p>omaha 2025</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/com10.jpeg" alt="Image 3" class="styled-image">
+                    </div>
+                    <p>columbia 2025</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/sd10.jpeg" alt="Image 4" class="styled-image">
+                    </div>
+                    <p>san diego 2025</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/chi.jpg" alt="Image 5" class="styled-image">
+                    </div>
+                    <p>chicago 2024</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/sd.jpg" alt="Image 6" class="styled-image">
+                    </div>
+                    <p>san diego 2024</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/utah.jpg" alt="Image 7" class="styled-image">
+                    </div>
+                    <p>utah 2024</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/utah2.jpg" alt="Image 8" class="styled-image">
+                    </div>
+                    <p>utah 2024</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/cap.jpg" alt="Image 9" class="styled-image">
+                    </div>
+                    <p>jefferson city capital 2024</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/hi.jpg" alt="Image 10" class="styled-image">
+                    </div>
+                    <p>hawaii 2023</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/la.jpg" alt="Image 11" class="styled-image">
+                    </div>
+                    <p>los angeles 2023</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/mt1.jpg" alt="Image 12" class="styled-image">
+                    </div>
+                    <p>montana 2022</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/unity2022.jpg" alt="Image 13" class="styled-image">
+                    </div>
+                    <p>unity village 2022</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/mt2.jpg" alt="Image 14" class="styled-image">
+                    </div>
+                    <p>montana 2021</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/tn.jpg" alt="Image 15" class="styled-image">
+                    </div>
+                    <p>tennessee 2021</p>
+                </td>
+                <td>
+                    <div class="image-wrapper">
+                        <img src="images/galleryhome/co.jpg" alt="Image 16" class="styled-image">
+                    </div>
+                    <p>colorado 2016</p>
+                </td>
+            </tr>
+        </table>
+
+        <div id="site-footer"></div>
+    </div>
+
+    <script src="_tools/include.js" data-base="."></script>
+    <script src="_tools/gallery-data.js"></script>
+    <script src="_tools/gallery.js"></script>
+</body>
+
+</html>

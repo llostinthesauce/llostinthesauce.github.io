@@ -1,0 +1,231 @@
+/* Prevent horizontal scrolling */
+html,
+body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.ignore-css {
+    all: unset;
+}
+
+/* Base layout and background */
+html {
+    height: 100%;
+    background-color: #000080;
+    background-image: url('../images/water.gif');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Typography and base styling */
+body {
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.nav {
+    font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.6rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px 4px;
+    text-align: left;
+    scrollbar-width: none;
+}
+
+.nav a {
+    display: inline-block;
+    padding: 2px 0;
+}
+
+.nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* Page container */
+.content {
+    background-color: #000000;
+    border: 2px solid #5CCCCC;
+    width: 95%;
+    max-width: 1120px;
+    margin: 12px auto;
+    padding: 8px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #9966CC;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: left;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 20px;
+}
+
+/* Links */
+a {
+    color: #33CCAA;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #66FFCC;
+}
+
+/* Responsive images */
+.styled-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+.styled-image2 {
+    width: 50%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 10px auto;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 5px;
+    vertical-align: top;
+}
+
+/* Footer */
+footer {
+    margin-top: 20px;
+    font-size: 0.8em;
+    color: #99CCCC;
+    text-align: center;
+}
+
+/* Under construction notice */
+.construction {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Horizontal rule */
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, #333344, #6699CC, #333344);
+    margin: 15px 0;
+}
+
+/* Blinking animation */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.blinking {
+    animation: blink 2s step-start infinite;
+}
+
+/* Daily posts displayed in columns */
+.daily-posts ul {
+    column-count: 3;
+    column-gap: 20px;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.daily-posts ul li {
+    margin-bottom: 6px;
+}
+
+.profile-links {
+    list-style: none;
+    padding-left: 0;
+    margin: 10px 0 0;
+}
+
+.profile-links li {
+    margin-bottom: 6px;
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 600px) {
+    body {
+        text-align: left;
+        font-size: 18px;
+    }
+
+    .nav {
+        font-size: 1.05rem;
+        gap: 0.45rem;
+        padding: 6px 2px;
+    }
+
+    .content {
+        width: 95%;
+        padding: 6px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: 18px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    footer {
+        font-size: 0.7em;
+    }
+
+    .daily-posts ul {
+        column-count: 2;
+    }
+
+}

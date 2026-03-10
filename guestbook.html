@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>guestbook - nuBlog</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .gb-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #111;
+            border: 1px solid #33CCAA;
+            overflow: hidden;
+            /* Hide anything that spills out, like the ad */
+            height: 600px;
+            /* Give the container a defined height so it can scroll */
+        }
+
+        .gb-iframe-wrapper {
+            margin-top: -95px;
+            /* Shift the iframe up to slice the full ad off */
+            height: calc(100% + 95px);
+            /* Let the wrapper take up the full container + ad offset */
+            overflow: auto;
+            /* Enable scrolling within the wrapper */
+            -webkit-overflow-scrolling: touch;
+            /* Smooth scrolling on mobile iOS */
+        }
+
+        .gb-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: transparent;
+        }
+
+        .archive-entry {
+            border-bottom: 1px dashed #5CCCCC;
+            padding: 10px 0;
+            margin-bottom: 5px;
+            font-family: monospace;
+        }
+
+        .archive-meta {
+            color: #99CCCC;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .archive-name {
+            color: #33CCAA;
+            font-weight: bold;
+        }
+
+        .archive-msg {
+            color: #FFF;
+        }
+
+        .archive-header {
+            margin-top: 40px;
+            border-top: 2px solid #9966CC;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+
+        <h1>guestbook</h1>
+
+        <div class="gb-container">
+            <div class="gb-iframe-wrapper">
+                <iframe class="gb-iframe" src="https://users.smartgb.com/g/g.php?a=s&i=g19-02873-ca" scrolling="no"
+                    title="SmartGB Guestbook">
+                    Your browser does not support iframes. Please view the guestbook at
+                    https://users.smartgb.com/g/g.php?a=s&i=g19-02873-ca
+                </iframe>
+            </div>
+        </div>
+
+        <h2 class="archive-header">the archives (pre-2025)</h2>
+        <p style="color: #99CCCC; font-size: 0.9em;">these messages were recovered from the old PHP database.</p>
+
+        <div class="gb-container">
+            <div class="archive-entry">
+                <div class="archive-meta">[2025-04-28 20:15:39] <span class="archive-name">wizard747</span> says:</div>
+                <div class="archive-msg">Stay cool!</div>
+            </div>
+            <div class="archive-entry">
+                <div class="archive-meta">[2025-04-26 03:44:41] <span class="archive-name">Austin</span> says:</div>
+                <div class="archive-msg">shoutout Mateo fr</div>
+            </div>
+            <div class="archive-entry">
+                <div class="archive-meta">[2025-04-25 14:30:14] <span class="archive-name">:P</span> says:</div>
+                <div class="archive-msg">Derp </div>
+            </div>
+            <div class="archive-entry">
+                <div class="archive-meta">[2025-03-25 01:46:23] <span class="archive-name">mackenzie</span> says:</div>
+                <div class="archive-msg">bob dylan was here</div>
+            </div>
+            <div class="archive-entry">
+                <div class="archive-meta">[2025-03-23 09:59:48] <span class="archive-name">BTG</span> says:</div>
+                <div class="archive-msg">coby hungy for daddy cookie</div>
+            </div>
+            <div class="archive-entry">
+                <div class="archive-meta">[2025-03-23 08:58:34] <span class="archive-name">corbin</span> says:</div>
+                <div class="archive-msg">testing derpala</div>
+            </div>
+            <div class="archive-entry" style="border-bottom: none;">
+                <div class="archive-meta">[2025-03-23 08:57:57] <span class="archive-name">ellie !!</span> says:</div>
+                <div class="archive-msg">hii i love coby hes so smart :3</div>
+            </div>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="_tools/include.js" data-base="."></script>
+</body>
+
+</html>
