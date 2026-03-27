@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>current plants - nuBlog</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <style>
+        .gallery-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .gallery-table td {
+            width: 50%;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+        .gallery-table img.styled-image {
+            max-width: 100%;
+            height: auto;
+            border: none;
+        }
+        .gallery-table p {
+            margin-top: 5px;
+            color: #99CCCC;
+            font-size: 0.9em;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0 30px;
+            justify-content: center;
+            padding: 0 10px;
+        }
+        .big-link-box {
+            position: relative;
+            flex: 1 1 300px;
+            max-width: 500px;
+            background-color: #111;
+            border: 1px solid #444;
+            font-family: monospace;
+            font-size: 2em;
+            text-align: center;
+            color: #33CCAA;
+            text-decoration: none;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            aspect-ratio: 3 / 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+        .big-link-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            transition: background 0.3s ease;
+        }
+        .big-link-box:hover::before {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .big-link-box:hover {
+            transform: scale(1.02);
+        }
+        .big-link-box span {
+            position: relative;
+            z-index: 1;
+        }
+        @media (max-width: 768px) {
+            .big-link-box {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()" style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to galleries
+            </a>
+        </div>
+        <h1>current plants</h1>
+        <p>may-oct 2025 below</p>
+
+        <table class="gallery-table">
+            <tr>
+                <td><img src="../images/plants/IMG_6156.jpeg" alt="IMG_6156" class="styled-image"><p>polka dot begonia</p></td>
+                <td><img src="../images/plants/IMG_6157.jpeg" alt="IMG_6157" class="styled-image">alocasia<p></p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/IMG_6159.jpeg" alt="IMG_6159" class="styled-image"><p>assorted</p></td>
+                <td><img src="../images/plants/IMG_6160.jpeg" alt="IMG_6160" class="styled-image"><p>assorted</p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/IMG_6345.jpeg" alt="IMG_6345" class="styled-image"><p>mango</p></td>
+                <td><img src="../images/plants/IMG_7018.jpeg" alt="IMG_7018" class="styled-image"><p>spider babies</p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/plantos1.JPG" alt="plant1" class="styled-image"><p>spider plant(s)</p></td>
+                <td><img src="../images/plants/plantos2.JPG" alt="plant2" class="styled-image"><p>chinese money plant</p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/plantos3.JPG" alt="plant3" class="styled-image"><p>inchplant</p></td>
+                <td><img src="../images/plants/plantos4.JPG" alt="plant4" class="styled-image"><p>string of hearts</p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/plantos5.JPG" alt="plant5" class="styled-image"><p>pothos</p></td>
+                <td><img src="../images/plants/plantos6.JPG" alt="plant6" class="styled-image"><p>microgreens</p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/philodendron.jpg" alt="x" class="styled-image"><p>philodendron</p></td>
+                <td><img src="../images/plants/phil2.jpg" alt="plant6" class="styled-image"><p>philodendron (baby)</p></td>
+            </tr>
+            <tr>
+                <td><img src="../images/plants/monstera.jpg" alt="x" class="styled-image"><p>monstera</p></td>
+                <td><img src="../images/plants/peacelily.jpg" alt="plant6" class="styled-image"><p>peace lily</p></td>
+            </tr>
+        </table>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../_tools/include.js" data-base=".."></script>
+</body>
+</html>

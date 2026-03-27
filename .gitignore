@@ -1,0 +1,69 @@
+# OS/macOS stuff
+.DS_Store
+Thumbs.db
+*~
+*.old
+*.bak
+*.orig
+*.swp
+*.tmp
+
+# Logs and cache
+*.log
+*.cache
+npm-debug.log
+cache/
+tmp/
+__pycache__/
+*.pyc
+
+# Compression & Archives
+*.gz
+*.tar
+*.tar.gz
+*.zip
+
+# Secrets & credentials
+.env
+*.key
+*.pem
+*.crt
+config.php
+secrets/
+private/
+
+# Git & Deployment
+.git/
+
+# IDEs & Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node
+node_modules/
+
+# -------- SPECIFIC TO NUBLOG --------
+
+# Local image backups
+images_backup/
+
+# Droplets/Incoming
+_incoming_photos/
+_incoming_posts/
+
+# Scripts & Agent Notes
+scurub.sh
+scripts/publish_galleries.sh
+scripts/strip-image-metadata.sh
+AGENTS.md
+Gemini.MD
+Claude.MD
+
+# Ignored content overrides
+blog/longform/daily-archive-2025.html
+galleries/currentplants.html
+galleries/longformrootpics.html
+
+/blog/agent/

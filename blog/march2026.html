@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>March 2026 - nuBlog</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <style>
+        .blog-post-content {
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .blog-post-content img {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #444;
+        }
+
+        .blog-post-date {
+            color: #99CCCC;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        const bootFinished = sessionStorage.getItem('nuBlogBootFinished') === 'true';
+        if (!bootFinished) { window.location.href = '../index.html'; }
+    </script>
+</head>
+
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()"
+                style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to blog
+            </a>
+        </div>
+
+        <h1>things i have been building...</h1>
+        <div class="blog-post-date">Originally published: March 3rd, 2026</div>
+
+        <div class="blog-post-content">
+            <section class="section section--body section--first section--last">
+                <div class="section-divider">
+                    <hr class="section-divider">
+                </div>
+                <div class="section-content">
+                    <div class="section-inner sectionLayout--insetColumn">
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/longformroot/IMG_8453.JPG">
+                        </figure>
+                        <h2 class="graf graf--h2 graf-after--figure">preface:</h2>
+
+
+                        <h3 class="graf graf--h3 graf-after--h2">ACRE</h3>
+
+                        <p class="graf graf--p graf-after--h3">acre was my final capstone project before i could
+                            graduate. it was poised by me in august of
+                            2025, and i
+                            had just gotten interested in running ai models on edge hardware. it was indeed a group
+                            project, but i
+                            myself pitched the idea and we developed it accordingly. the framework was posited as a
+                            LMStudio or
+                            Ollama competitor, but truly open source, and designed to be lightweight, universal across
+                            machines and
+                            OS, and accessible. We gained access to a brand new NVIDIA Jetson edge device (glorified pi
+                            with GPU
+                            cores) to show that it operates fully offline, as a proof of concept. this project really
+                            captured my
+                            interest, and I wanted to know what the limits were of self hosting and how hard it actually
+                            is to build
+                            a full GUI app with multiple framework libraries and so on. We encountered a lot of hurdles.
+                            Cross
+                            platforming was fucking hard, and rag was very had to make useful on the Jetson. it could
+                            run decent
+                            inference, but nothing compared to my MacBook. However, i wish I had more time to finish the
+                            project,
+                            but it got to a demonstrable state by the end, and we got a perfect grade, namely because we
+                            delivered
+                            what we set out to back in august, which was, develop a full multi-platform LLM inference
+                            engine for
+                            macOS, unix, and windows, which in the end, it did. fully fleshed out with “dev settings”,
+                            or no-brainer
+                            settings, themes, chat history, safe words, and encryption.</p>
+
+
+                        <h3 class="graf graf--h3 graf-after--p">LumenComposite</h3>
+
+                        <p class="graf graf--p graf-after--h3">however, I graduated, and i was NOT satisfied with ACRE.
+                            ACRE was written in python, and made
+                            for
+                            multiple machines. I have a mac, and MUCH prefer the macOS versions of these tools, namely
+                            because of
+                            this wonderful library developed by the ML engineers at Apple, called MLX. mlx is the bread
+                            and butter
+                            for local llm inference on apple silicon, and the difference is STARK. it runs laps over
+                            other machines
+                            with comparable specs, and offers mostly marginal improvement over running gguf or other
+                            model types.
+                            still tho, i was excited to build acre again, but just in native swift using mlx-lm. This
+                            was much
+                            harder than I had anticipated, as there really just isnt/wasnt a ton of mlx support that was
+                            open
+                            source. i wanted a local iOS app too that could share chat history and settings via apple id
+                            or local
+                            network, ie, able to run inference from my phone via my MacBook, if i was on the same
+                            network, and in
+                            theory if i used tail scale or something, could use it anywhere. Youtube videos of people
+                            homelabbing or
+                            clustering mac mins got me inspired. So I got lumen composite to a point where it have a
+                            nice macOS
+                            native GUI and did everything I wanted it to. had simple rag, inference, all of the
+                            parameters you could
+                            want in the world, and mlx-lm framework. However, I noticed that I kept getting issues when
+                            downloading
+                            new models from HF because I was sorta trying to re-invent the wheel, when i could just use
+                            LM studio
+                            for mlx inference, serve it, and build a more complex RAG wrapper app outside of that, which
+                            is what I
+                            really want. Dev paused on this around xmas because I got burned out.</p>
+
+
+                        <h3 class="graf graf--h3 graf-after--p">ollama-mlx-lm-fw</h3>
+
+                        <p class="graf graf--p graf-after--h3">this was a library I tried to make or am still trying to
+                            make that replicates what ollama
+                            does, but with
+                            actual MLX support. was to be bundled into LumenComposite. Sorta was, may come back to this.
+                            (at the
+                            time I did NOT want to use LMStudio or some other pre-built framework)</p>
+
+
+                        <h2 class="graf graf--h2 graf-after--p">current 2026:</h2>
+
+
+                        <h3 class="graf graf--h3 graf-after--h2">mycelium v0.9</h3>
+
+                        <p class="graf graf--p graf-after--h3">ACRE -&gt; lumen -&gt; lumenComposite -&gt; ollama-mlx
+                            -&gt; (two month pause) -&gt; LibMem
+                            -&gt; AI_Lab
+                            -&gt; Lumen reDux ?-&gt; Myceliumv0.5</p>
+
+                        <p class="graf graf--p graf-after--p">enough time passed and I got the itch again to continue
+                            dev on my vision of
+                            ACRE/Lumen/Mycelium. Around
+                            this time, OpenClaw dropped and got me thinking, yes, I dont need to completely re-engineer
+                            how MLX is
+                            processed and served on mac. So I set out once again to create some sort of skill, wrapper,
+                            app, or
+
+                            plugin, that is served locally, accessible thru outlets, and possible to run multi node with
+                            prompt
+                            processing and all of the bells and whistles. I started dev on this again before I even
+                            realized I was
+                            trying to make my own open claw. the difference is that it isnt so reliant on cloud models
+                            or fancy mcp
+                            servers or automated workflows. i want skills, but just the ones I build, not a whole
+                            marketplace, way
+                            too much security risk IMO. also something about building this perfect vision for myself is
+                            much more
+                            fun than just running open claw. I also get to learn so much while building. So I am
+                            somewhere well
+                            along from what I would call a v1 dev release, being that I have inference running thru
+                            ollama on my mac
+                            for mlx. it just WORKS! i have a full chroma rag db built out with qwen embedding and node
+                            setup scripts
+                            that one shot it. so i turned my old desktop into a linux server and set it up as a node to
+                            utilize its
+                            shitey gpu. same with my old mac pro, a engineering beast, but a bit weak for inference, but
+                            tons of
+                            ram. both of these are “nodes” in my system, that do cronjobs to pull daily use into the rag
+                            db and have
+                            some edge gguf models that I dont want on my mac. mac is MLX ONLY! so I am working on the
+                            more
+                            interesting capabilities, like chromium playwright browser automation, true agent mode, and
+                            other
+                            special tasks like code reviewer, biohacker, personal writer, send / receive mail and
+                            imessage, personal
+                            library, security analyst, trader, poster, and many more. if you cant tell, lots of these
+                            tasks are
+                            pretty much using all of the projects below in some way. little did i realize what I wanted
+                            was a way to
+                            talk to my second brain. I have wanted a proper second brain search for YEARS, and i refused
+                            to use
+                            obsidian, so apple notes and paper notebooks remain my second brain and sure I have a
+                            system. But i
+                            might as well leverage edge ai, rag embeddings, and ML to conceive this idea, and if i am
+                            happy with the
+                            project in the end, I will put it on GH. the one liner would essentially be a privacy first,
+                            ultra
+                            intelligent RAG DB plugin for ai agents (cloud, or local, big emphasis on local here!). I
+                            have mainly
+                            worked on the plugin skills and just getting inference and UI in the browser smooth, but I
+                            need to look
+                            at refining the skills, DB search, MCP servers, and more “big boy” plugins. but the main
+                            emphasis is
+                            personal second brain and private. I will continue dev.</p>
+
+                        <h3 class="graf graf--h3 graf-after--p">llostinthesauce.github.io // this site</h3>
+
+                        <p class="graf graf--p graf-after--h3">this site has gone thru a few phases, originally being
+                            self hosted, to sorta-self-hosted, to
+                            taken down,
+                            to only blog posts, to only photos, and now it is restored back to a full proper blog,
+                            containing links,
+                            images, writings, and whatever else I want. i had a medium and got tired of it so ported all
+                            the posts
+                            back here. I have been tweaking little elements like image db layout, design, and the music
+                            player. this
+                            brings me great joy and i am excited to see how this evolves over the next few years. GitHub
+                            pages is
+                            fckin awesome.</p>
+
+
+                        <h3 class="graf graf--h3 graf-after--p">Rockbox Experiment</h3>
+
+                        <p class="graf graf--p graf-after--h3">fall of 2024, i flash modded my iPod video with an iflash
+                            sd. this has been a lovely change
+                            in my life,
+                            as I have gotten to build my physical music library and actually USE the iPod. it lasts
+                            DAYS. it is
+                            lightning fast. 220~ gb of alac 44.1 16 bit music on there, pure lossless. Love it. However,
+                            lossess
+                            files + large album art = iPod skips large tracks when it tries to load it into its BABY
+                            64mb cache.
+                            Sigh. how to fix? rockbox. i have loathed the idea of using rockbox on my pod, but I finally
+                            got sick of
+                            it and tried. yeah that lasted a day. sure, rockbox may be better if you have non-lossless
+                            files, or
+                            even if you do, but at the size of my library, it was just constant headache after headache
+                            to just get
+                            the damn thing to work. back to stock iPod os i go, but hey, at least i tried.</p>
+
+
+                        <h3 class="graf graf--h3 graf-after--p">musicmaster (apple-music-toolkit &amp; sauced)</h3>
+
+                        <p>during this entire rockbox and iPod debacle, i had to rebuild my apple music library multiple
+                            times so it
+                            could sync, and I also setup a navidrome server with my new shiny library. thankfully, this
+                            works well.
+                            but the repo here is just a series of tools I ended up needing or using during the library
+                            fixing and
+                            migration across platforms. sauced is the navidrome client app i built to mimic apple music.
+                            will return
+                            and polish these later, but they did the job for the task at hand, so no complaints.</p>
+
+                        <h3>Navidrome Server</h3>
+                        <p>I first set this up on my pi, but realized I would rather have it on the mac pro. so I did
+                            that,
+                            performance was better on the mac. good tool.</p>
+
+                        <h3>Calibre Server</h3>
+                        <p>same idea as above.</p>
+
+                        <h3>Kalshi x Grok x X Trading Bot</h3>
+                        <p>public on my gh as a proof of concept, but do NOT trade with this. it will lose your money
+                            currently. I
+                            saw some hyped up posts about allowing open claw to trade the weather and figured it was a
+                            little too
+                            good to be true. in my limited anecdotal experience, it is. i think some people larp for
+                            views. idk. i
+                            would love to return to this and really put more than a day or two into it, but it was fun
+                            for the time
+                            being</p>
+
+                        <h3>X API Persona Farmer</h3>
+                        <p>wanted to see how automating an X account to post autonomously with its own personality and
+                            style goes.
+                            Wasnt too bad to setup, cheap api credits using grok and x api.</p>
+
+                        <h3>Networking Tools Suite</h3>
+                        <p>i used the ring api, smart IOT apis, pi-hole, and other OS tools to build a toolkit that lets
+                            me monitor
+                            my network, machines, and cameras, displayed in a browser gui, designed like this site. I
+                            also developed
+                            a simple app to port old iPhones as web cameras over localhost. Cool!</p>
+
+                        <h3>Indoor Farming Business Ideas</h3>
+                        <p>- I developed a 10 step plan to farm shrimp indoors. Probably will not do this but a stupid
+                            4chan idea
+                            from years ago.</p>
+                        <p>- rare houseplants. This one is more feasible, there is huge demand, but artificial scarcity
+                            is the
+                            killer for this market. what isnt tho?</p>
+                        <p>- mushrooms !! mycelium !! this is the most exciting. I could actually do this. Will I? Idk.
+                        </p>
+
+                        <h3>Amazon Unlimited E-Pub Generator</h3>
+                        <p>looking for areas to create some side income, i serenaded my buddy Claude to help me generate
+                            100-200
+                            page e-pub books for amazon. upfront cost was $15~ for api credits to generate 30~ books.
+                            they arent
+                            great, but was an experiment. they are live on amazon, and i gave a lot of effort into the
+                            prompts that
+                            became the seed for the plot. not my proudest moment because good god I would never read an
+                            ai generated
+                            book. But proof of concept. and messing with claude API.</p>
+
+                        <h3>GeneView</h3>
+                        <p>a tool that uses open source health/genome/genetic databases to scan your own dna data and
+                            cross check it
+                            to find better health outcomes, or to help diagnose possible conditions. sorta in
+                            development still,
+                            need to add more db and checking. uses 23/me or ancestry dna downloaded data to parse.
+                            currently works
+                            and displays output in comprehensive doc in browser.</p>
+
+                        <h3>PlantsV0.5</h3>
+                        <p>a simple program to look at my plant/gardening spreadsheet and tell me actionable next steps
+                            or things
+                            perhaps I missed. Could add more, use vision model for diagnosis. may come back</p>
+
+                        <h3>X Bookmark Sorter</h3>
+                        <p>needed a good way to see ALL of my X bookmarks in one place. built a simple tool that scrapes
+                            x bookmark
+                            data from your login session and turn it into a sorted and viewable UI in your browser.
+                            includes images
+                            and links. allows export to reading list in safari. May polish.</p>
+
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0492.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0495.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0503.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0507.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0509.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0514.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0518.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0527.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0532.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0534.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0542.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0549.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0554.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0556.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0562.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0576.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0585.jpeg">
+                        </figure>
+                        <figure class="graf graf--figure graf-after--p">
+                            <img class="graf-image" src="../images/monthly-images/mar26/IMG_0588.jpeg">
+                        </figure>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../_tools/include.js" data-base=".."></script>
+</body>
+
+</html>
