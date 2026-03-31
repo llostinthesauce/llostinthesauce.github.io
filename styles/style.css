@@ -115,6 +115,37 @@ a:hover {
     margin: 10px auto;
 }
 
+/* Gallery Grid - Responsive layout for mixed orientation photos */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 16px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.gallery-grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.gallery-grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none;
+}
+
+/* For mobile: single column layout */
+@media (max-width: 600px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
 /* Tables */
 table {
     width: 100%;
