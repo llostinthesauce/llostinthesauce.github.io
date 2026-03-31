@@ -39,9 +39,9 @@
     onekoScript.src = `${base}/_tools/oneko.js`;
     document.body.appendChild(onekoScript);
 
-    // Load music player
-    const musicScript = document.createElement('script');
-    musicScript.src = `${base}/_tools/music.js`;
-    document.body.appendChild(musicScript);
+    // Load music player (DISABLED for performance testing)
+    // const musicScript = document.createElement('script');
+    // musicScript.src = `${base}/_tools/music.js`;
+    // document.body.appendChild(musicScript);
 
 })();
