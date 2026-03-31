@@ -138,6 +138,10 @@ a:hover {
     border: none;
 }
 
+.vertical-start {
+    grid-column-start: 1;
+}
+
 /* For mobile: single column layout */
 @media (max-width: 600px) {
     .gallery-grid {
@@ -221,6 +225,29 @@ hr {
 
 .profile-links li {
     margin-bottom: 6px;
+}
+
+/* Gallery Load More Button */
+.load-more-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 24px;
+    background-color: #9966CC;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.load-more-btn:hover {
+    background-color: #7744AA;
+}
+
+.hidden {
+    display: none !important;
 }
 
 /* Mobile-friendly adjustments */
