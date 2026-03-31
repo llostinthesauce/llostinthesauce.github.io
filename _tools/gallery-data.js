@@ -12,17 +12,17 @@ window.nublogGalleryGroups = [
         entries: [
             {
                 label: 'mar 2026',
-                href: 'monthly/2026-03-mar.html',
+                href: 'galleries/monthly/2026-03-mar.html',
                 caption: ''
             },
             {
                 label: 'feb 2026',
-                href: 'monthly/2026-02-feb.html',
+                href: 'galleries/monthly/2026-02-feb.html',
                 caption: ''
             },
             {
                 label: 'jan 2026',
-                href: 'monthly/2026-01-jan.html',
+                href: 'galleries/monthly/2026-01-jan.html',
                 caption: ''
             }
         ]
@@ -32,62 +32,62 @@ window.nublogGalleryGroups = [
         entries: [
             {
                 label: 'dec 2025',
-                href: 'monthly/2025-12-dec.html',
+                href: 'galleries/monthly/2025-12-dec.html',
                 caption: ''
             },
             {
                 label: 'nov 2025',
-                href: 'monthly/2025-11-nov.html',
+                href: 'galleries/monthly/2025-11-nov.html',
                 caption: ''
             },
             {
                 label: 'oct 2025',
-                href: 'monthly/2025-10-oct.html',
+                href: 'galleries/monthly/2025-10-oct.html',
                 caption: ''
             },
             {
                 label: 'sep 2025',
-                href: 'monthly/2025-09-sep.html',
+                href: 'galleries/monthly/2025-09-sep.html',
                 caption: ''
             },
             {
                 label: 'aug 2025',
-                href: 'monthly/2025-08-aug.html',
+                href: 'galleries/monthly/2025-08-aug.html',
                 caption: ''
             },
             {
                 label: 'jul 2025',
-                href: 'monthly/2025-07-jul.html',
+                href: 'galleries/monthly/2025-07-jul.html',
                 caption: ''
             },
             {
                 label: 'jun 2025',
-                href: 'monthly/2025-06-jun.html',
+                href: 'galleries/monthly/2025-06-jun.html',
                 caption: ''
             },
             {
                 label: 'may 2025',
-                href: 'monthly/2025-05-may.html',
+                href: 'galleries/monthly/2025-05-may.html',
                 caption: ''
             },
             {
                 label: 'apr 2025',
-                href: 'monthly/2025-04-apr.html',
+                href: 'galleries/monthly/2025-04-apr.html',
                 caption: ''
             },
             {
                 label: 'mar 2025',
-                href: 'monthly/2025-03-mar.html',
+                href: 'galleries/monthly/2025-03-mar.html',
                 caption: ''
             },
             {
                 label: 'feb 2025',
-                href: 'monthly/2025-02-feb.html',
+                href: 'galleries/monthly/2025-02-feb.html',
                 caption: ''
             },
             {
                 label: 'jan 2025',
-                href: 'monthly/2025-01-jan.html',
+                href: 'galleries/monthly/2025-01-jan.html',
                 caption: ''
             }
         ]
@@ -97,7 +97,7 @@ window.nublogGalleryGroups = [
         entries: [
             {
                 label: 'animals',
-                href: 'misc/animals.html',
+                href: 'galleries/misc/animals.html',
                 caption: '',
                 previewImage: 'images/animals/IDG_20251214_125645_527.jpeg'
             }
