@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog - nuBlog</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .blog-item { margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #333; }
+        .blog-item a { font-size: 1.2em; text-decoration: none; color: #33CCAA; }
+        .blog-item a:hover { text-decoration: underline; }
+        .blog-item-date { font-size: 0.9em; color: #99CCCC; margin-left: 10px; }
+    </style>
+    <script>
+        const bootFinished = sessionStorage.getItem('nuBlogBootFinished') === 'true';
+        if (!bootFinished) { window.location.href = 'index.html'; }
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <h1>blogs</h1>
+        <div id="blog-list">
+        <div class="blog-item"><a href="blog/2026-03-29-untitled.html">untitled</a> <span class="blog-item-date">March 29, 2026</span></div>
+        <div class="blog-item"><a href="blog/march2026.html">things i have been building</a> <span class="blog-item-date">March 03, 2026</span></div>
+        <div class="blog-item"><a href="blog/2025-12-01-aoip.html">AoIP</a> <span class="blog-item-date">December 01, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-11-09-please-for-the-love-of-god-slow-down-and-run-them-offline.html">Please, For the Love of God, Slow Down and Run Them Offline…</a> <span class="blog-item-date">November 09, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-10-17-some-rambling-thoughts-on-ai.html">some rambling thoughts on ai</a> <span class="blog-item-date">October 17, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-09-30-gap.html">gap</a> <span class="blog-item-date">September 30, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-09-12-what-the-labubu.html">what the Labubu</a> <span class="blog-item-date">September 12, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-09-07-300.html">300%</a> <span class="blog-item-date">September 07, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-09-05-perpetuity.html">perpetuity</a> <span class="blog-item-date">September 05, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html">review: books i have read (2023, 2024, 2025, 2026)</a> <span class="blog-item-date">September 04, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-08-28-a-scruple-scruples.html">a scruple scruples</a> <span class="blog-item-date">August 28, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-06-04-regeneration.html">regeneration</a> <span class="blog-item-date">June 04, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-05-15-review-nausea-plus-other.html">review: nausea (plus other..)</a> <span class="blog-item-date">May 15, 2025</span></div>
+        <div class="blog-item"><a href="blog/2025-03-27-nature-being-paradoxical.html">nature being paradoxical</a> <span class="blog-item-date">March 27, 2025</span></div>
+        <div class="blog-item"><a href="blog/2024-12-31-m-c-t.html">m.c.t.</a> <span class="blog-item-date">December 31, 2024</span></div>
+        <div class="blog-item"><a href="blog/2023-08-04-fiction-airplane.html">fiction: airplane</a> <span class="blog-item-date">August 04, 2023</span></div>
+        <div class="blog-item"><a href="blog/2021-09-02-five-essays-from-phil1000.html">five essays from PHIL1000</a> <span class="blog-item-date">September 02, 2021</span></div>
+        <div class="blog-item"><a href="blog/2021-04-28-final-project-for-fintech-2021.html">final project for FinTech 2021</a> <span class="blog-item-date">April 28, 2021</span></div>
+        <div class="blog-item"><a href="blog/2015-06-16-e-mail-to-myself-2015.html">e-mail to myself 2015</a> <span class="blog-item-date">June 16, 2015</span></div></div>
+        <div id="site-footer"></div>
+    </div>
+    <script src="_tools/include.js" data-base="."></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jan 2026 photos - nuBlog</title>
+    <link rel="stylesheet" href="../../../styles/style.css">
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
+    <style>
+        .hidden-batch {
+            display: none;
+        }
+        .load-more-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #9966CC;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .load-more-btn:hover {
+            background-color: #7744AA;
+        }
+    </style>
+</head>
+
+<body class="blog-post-page">
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()" style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to galleries
+            </a>
+        </div>
+        <h1 class="underlined-heading">jan 2026 photos</h1>
+        <p>sorted chronologically — horizontal photos first, then vertical photos</p>
+
+        <div class="gallery-grid">
+            <!-- Batch 1: First 16 images (visible by default) -->
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_3769.jpeg" alt="IMG_3769" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_3771.jpeg" alt="IMG_3771" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8393.jpeg" alt="IMG_8393" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8584.jpeg" alt="IMG_8584" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8678.jpeg" alt="IMG_8678" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8689.jpeg" alt="IMG_8689" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8846.jpeg" alt="IMG_8846" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8851.jpeg" alt="IMG_8851" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_3770.jpeg" alt="IMG_3770" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_3773.jpeg" alt="IMG_3773" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8333.jpeg" alt="IMG_8333" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8582.jpeg" alt="IMG_8582" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8628.jpeg" alt="IMG_8628" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8682.jpeg" alt="IMG_8682" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_8914.jpeg" alt="IMG_8914" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2026/01-jan/IMG_9032.jpeg" alt="IMG_9032" class="styled-image" loading="lazy"></div>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../../_tools/include.js" data-base="../.."></script>
+    <script>
+        function loadMoreImages(batchNumber) {
+            // Show the batch
+            const batchRows = document.querySelectorAll('.batch-' + batchNumber);
+            batchRows.forEach(row => {
+                row.classList.remove('hidden-batch');
+            });
+
+            // Hide the button that was clicked
+            const buttons = document.querySelectorAll('[onclick="loadMoreImages(' + batchNumber + ')"]');
+            buttons.forEach(btn => btn.style.display = 'none');
+
+            // Show the next button if it exists
+            const nextButton = document.querySelector('.batch-' + batchNumber + '-btn');
+            if (nextButton) {
+                nextButton.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

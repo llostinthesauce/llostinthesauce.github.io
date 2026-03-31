@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dec 2025 photos - nuBlog</title>
+    <link rel="stylesheet" href="../../../styles/style.css">
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
+    <style>
+        .hidden-batch {
+            display: none;
+        }
+        .load-more-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #9966CC;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .load-more-btn:hover {
+            background-color: #7744AA;
+        }
+    </style>
+</head>
+
+<body class="blog-post-page">
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()" style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to galleries
+            </a>
+        </div>
+        <h1 class="underlined-heading">dec 2025 photos</h1>
+        <p>sorted chronologically — horizontal photos first, then vertical photos</p>
+
+        <div class="gallery-grid">
+            <!-- Batch 1: First 4 images (visible by default) -->
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/12-dec/IDG_20251215_205113_347.jpeg" alt="IDG_20251215_205113_347" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/12-dec/IMG_3746.jpeg" alt="IMG_3746" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/12-dec/IMG_7459.jpeg" alt="IMG_7459" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/12-dec/IMG_7768.jpeg" alt="IMG_7768" class="styled-image" loading="lazy"></div>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../../_tools/include.js" data-base="../.."></script>
+    <script>
+        function loadMoreImages(batchNumber) {
+            // Show the batch
+            const batchRows = document.querySelectorAll('.batch-' + batchNumber);
+            batchRows.forEach(row => {
+                row.classList.remove('hidden-batch');
+            });
+
+            // Hide the button that was clicked
+            const buttons = document.querySelectorAll('[onclick="loadMoreImages(' + batchNumber + ')"]');
+            buttons.forEach(btn => btn.style.display = 'none');
+
+            // Show the next button if it exists
+            const nextButton = document.querySelector('.batch-' + batchNumber + '-btn');
+            if (nextButton) {
+                nextButton.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

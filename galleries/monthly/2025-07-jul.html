@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jul 2025 photos - nuBlog</title>
+    <link rel="stylesheet" href="../../../styles/style.css">
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
+    <style>
+        .hidden-batch {
+            display: none;
+        }
+        .load-more-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #9966CC;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .load-more-btn:hover {
+            background-color: #7744AA;
+        }
+    </style>
+</head>
+
+<body class="blog-post-page">
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()" style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to galleries
+            </a>
+        </div>
+        <h1 class="underlined-heading">jul 2025 photos</h1>
+        <p>sorted chronologically — horizontal photos first, then vertical photos</p>
+
+        <div class="gallery-grid">
+            <!-- Batch 1: First 18 images (visible by default) -->
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_3683.jpeg" alt="IMG_3683" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_3699.jpeg" alt="IMG_3699" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4873.jpeg" alt="IMG_4873" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4894.jpeg" alt="IMG_4894" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4902.jpeg" alt="IMG_4902" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4914.jpeg" alt="IMG_4914" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4938.jpeg" alt="IMG_4938" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4969.jpeg" alt="IMG_4969" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4976.jpeg" alt="IMG_4976" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4991.jpeg" alt="IMG_4991" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4993.jpeg" alt="IMG_4993" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_5086.jpeg" alt="IMG_5086" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_5096.jpeg" alt="IMG_5096" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_C27B984B-36E1-4E15-93FE-CA31AADB0BBE.jpeg" alt="IMG_C27B984B-36E1-4E15-93FE-CA31AADB0BBE" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_3716.jpeg" alt="IMG_3716" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4879.jpeg" alt="IMG_4879" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_4886.jpeg" alt="IMG_4886" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/monthly/2025/07-jul/IMG_5041.jpeg" alt="IMG_5041" class="styled-image" loading="lazy"></div>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../../_tools/include.js" data-base="../.."></script>
+    <script>
+        function loadMoreImages(batchNumber) {
+            // Show the batch
+            const batchRows = document.querySelectorAll('.batch-' + batchNumber);
+            batchRows.forEach(row => {
+                row.classList.remove('hidden-batch');
+            });
+
+            // Hide the button that was clicked
+            const buttons = document.querySelectorAll('[onclick="loadMoreImages(' + batchNumber + ')"]');
+            buttons.forEach(btn => btn.style.display = 'none');
+
+            // Show the next button if it exists
+            const nextButton = document.querySelector('.batch-' + batchNumber + '-btn');
+            if (nextButton) {
+                nextButton.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>may photos - nuBlog</title>
+    <link rel="stylesheet" href="../../../styles/style.css">
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
+    <style>
+        .hidden-batch {
+            display: none;
+        }
+        .load-more-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #9966CC;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .load-more-btn:hover {
+            background-color: #7744AA;
+        }
+    </style>
+</head>
+<body class="blog-post-page">
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()" style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to galleries
+            </a>
+        </div>
+        <h1 class="underlined-heading">may 2025 photos</h1>
+        <p>sorted chronologically</p>
+
+        <div class="gallery-grid">
+            <!-- Batch 1: First 20 images (visible by default) -->
+                <div class="gallery-grid-item"><img src="../../images/daily/0507.jpeg" alt="0507" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515g.jpeg" alt="0515g" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0511c.jpg" alt="0511c" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0511d.jpg" alt="0511d" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0513.jpg" alt="0513" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515a.jpeg" alt="0515a" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515b.jpeg" alt="0515b" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515d.jpeg" alt="0515d" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0511b.jpg" alt="0511b" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515h.jpeg" alt="0515h" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515f.jpeg" alt="0515f" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515e.jpeg" alt="0515e" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0524i.png" alt="0524i" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0530b.JPG" alt="0530b" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0515c.jpeg" alt="0515c" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0524b.jpeg" alt="0524b" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0516b.jpg" alt="0516b" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0516c.jpg" alt="0516c" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0516d.jpeg" alt="0516d" class="styled-image" loading="lazy"></div>
+                <div class="gallery-grid-item"><img src="../../images/daily/0516e.jpg" alt="0516e" class="styled-image" loading="lazy"></div>
+        </div>
+
+        <button class="load-more-btn" onclick="loadMoreImages(2)">Load More (21 more images)</button>
+
+        <div class="gallery-grid">
+            <!-- Batch 2: Remaining 21 images -->
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0516f.jpg" alt="0516f" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0516a.jpg" alt="0516a" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524c.jpeg" alt="0524c" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524d.jpeg" alt="0524d" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524f.jpeg" alt="0524f" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524a.JPG" alt="0524a" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524h.JPG" alt="0524h" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530c.JPG" alt="0530c" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524e.jpeg" alt="0524e" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530e.JPG" alt="0530e" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530d.JPG" alt="0530d" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530g.JPG" alt="0530g" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530f.JPG" alt="0530f" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530i.JPG" alt="0530i" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530h.JPG" alt="0530h" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530k.JPG" alt="0530k" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530j.JPG" alt="0530j" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530n.JPG" alt="0530n" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0530l.JPG" alt="0530l" class="styled-image" loading="lazy"></div>
+                <div class="hidden-batch batch-2 gallery-grid-item"><img src="../../images/daily/0524g.JPG" alt="0524g" class="styled-image" loading="lazy"></div>
+
+                <div class="hidden-batch batch-2 gallery-grid-item" style="grid-column: 1 / -1"><img src="../../images/daily/0530main.JPG" alt="0530main" class="styled-image" loading="lazy"></div>
+
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../../_tools/include.js" data-base="../.."></script>
+    <script>
+        function loadMoreImages(batchNumber) {
+            // Show the batch
+            const batchRows = document.querySelectorAll('.batch-' + batchNumber);
+            batchRows.forEach(row => {
+                row.classList.remove('hidden-batch');
+            });
+
+            // Hide the button that was clicked
+            const buttons = document.querySelectorAll('[onclick="loadMoreImages(' + batchNumber + ')"]');
+            buttons.forEach(btn => btn.style.display = 'none');
+
+            // Show the next button if it exists
+            const nextButton = document.querySelector('.batch-' + batchNumber + '-btn');
+            if (nextButton) {
+                nextButton.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

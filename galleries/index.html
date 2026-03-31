@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>image gallery - nuBlog</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <style>
+        /* Featured row — current month + film cameras */
+        .gallery-featured-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 18px 0 10px;
+        }
+
+        .gallery-featured-card {
+            display: block;
+            background-color: #111;
+            border: 2px solid #9966CC;
+            padding: 20px 16px;
+            text-align: center;
+            text-decoration: none;
+            font-family: monospace;
+            color: #9966CC;
+            font-size: 1.05em;
+            font-weight: bold;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .gallery-featured-card:hover {
+            background-color: #1a0030;
+            border-color: #CC99FF;
+            color: #CC99FF;
+        }
+
+        .gallery-featured-card .gallery-featured-sub {
+            display: block;
+            margin-top: 6px;
+            color: #99CCCC;
+            font-size: 0.8em;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .gallery-featured-card .gallery-featured-badge {
+            display: inline-block;
+            background: #9966CC;
+            color: #000;
+            font-size: 0.65em;
+            padding: 1px 6px;
+            border-radius: 2px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Gallery groups from JS */
+        .gallery-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin: 18px 0 20px;
+        }
+
+        .gallery-group-title {
+            margin: 0 0 6px;
+        }
+
+        .gallery-group-note {
+            margin: 0 0 12px;
+            color: #99CCCC;
+            font-size: 0.9em;
+        }
+
+        .gallery-grid {
+            --gallery-min-width: 140px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(var(--gallery-min-width), 1fr));
+        }
+
+        .gallery-entry {
+            background-color: #111;
+            border: 1px solid #444;
+            padding: 14px 10px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .gallery-entry-label {
+            color: #33CCAA;
+            text-decoration: none;
+            font-size: 0.95em;
+            display: block;
+        }
+
+        .gallery-entry-label:hover {
+            background-color: #222;
+        }
+
+        .gallery-entry-label.is-disabled {
+            color: #88AFAA;
+            cursor: default;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .gallery-entry-preview {
+            position: relative;
+            width: 100%;
+            background-color: #111;
+            border: 1px solid #444;
+            font-family: monospace;
+            text-align: center;
+            color: #33CCAA;
+            text-decoration: none;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            aspect-ratio: 3 / 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            padding: 0;
+        }
+
+        .gallery-entry-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            transition: background 0.3s ease;
+        }
+
+        .gallery-entry-preview:hover::before {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .gallery-entry-preview:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-entry-preview .gallery-entry-label {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            font-size: 0.95em;
+        }
+
+        .gallery-entry-children {
+            --gallery-child-min-width: 140px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(var(--gallery-child-min-width), 1fr));
+            margin-top: 12px;
+        }
+
+        .gallery-entry-children:empty {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+
+        <h1>image gallery</h1>
+        <i>last updated: 3/30/2026</i>
+
+        <!-- Featured: current month + film cameras -->
+        <div class="gallery-featured-row">
+            <a href="monthly/2026-03-mar.html" class="gallery-featured-card">
+                <span class="gallery-featured-badge">current</span>
+                mar 2026 photos
+                <span class="gallery-featured-sub">daily life — march</span>
+            </a>
+            <a href="cameras/vivitar-pz3090.html" class="gallery-featured-card">
+                vivitar pz3090
+                <span class="gallery-featured-sub">35mm film camera</span>
+            </a>
+            <a href="cameras/canon-sd400.html" class="gallery-featured-card">
+                canon sd400
+                <span class="gallery-featured-sub">early 2000s digital</span>
+            </a>
+        </div>
+
+        <!-- Plants quick link -->
+        <div style="margin: 10px 0 18px; padding: 12px 14px; background: #0a1a0a; border: 1px solid #336633; font-family: monospace;">
+            <a href="../plants.html" style="color: #66CC66; font-weight: bold; text-decoration: none;">
+                🌿 plants — march 2026 update →
+            </a>
+            <span style="display: block; color: #99CCCC; font-size: 0.8em; margin-top: 4px;">
+                140 plants &nbsp;·&nbsp; 112 active &nbsp;·&nbsp; v9 tracker
+            </span>
+        </div>
+
+        <!-- All months + film + extras via JS -->
+        <div class="gallery-groups" data-gallery-groups></div>
+
+        <template id="gallery-group-template">
+            <section class="gallery-group">
+                <h2 class="gallery-group-title"></h2>
+                <p class="gallery-group-note"></p>
+                <div class="gallery-grid"></div>
+            </section>
+        </template>
+
+        <template id="gallery-entry-template">
+            <div class="gallery-entry">
+                <a href="#" class="gallery-entry-label"></a>
+                <div class="gallery-entry-children"></div>
+            </div>
+        </template>
+
+        <div id="site-footer"></div>
+    </div>
+
+    <script src="../_tools/include.js" data-base=".."></script>
+    <script src="../_tools/gallery-data.js"></script>
+    <script src="../_tools/gallery.js"></script>
+</body>
+
+</html>

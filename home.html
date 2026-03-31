@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nuBlog</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .gallery-entry {
+            background-color: #111;
+            border: 1px solid #444;
+            margin: 12px 0;
+            padding: 12px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .gallery-entry a {
+            color: #33CCAA;
+            text-decoration: none;
+            font-size: 1.05em;
+            display: block;
+        }
+
+        .gallery-entry a:hover {
+            background-color: #222;
+        }
+    </style>
+    <script>
+        // Force Boot Screen Redirect
+        const isSplashPage = window.location.pathname.endsWith('index.html');
+        // Handle root domain specifically if it defaults to index.html under the hood
+        const isRoot = window.location.pathname.endsWith('/');
+        const bootFinished = sessionStorage.getItem('nuBlogBootFinished') === 'true';
+
+        if (!bootFinished && !isSplashPage && !isRoot) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+
+        <h1>you have reached the home of <i>nuBlog</i> </h1>
+
+        <marquee behavior="scroll" direction="left" scrollamount="10">
+            <i>my domain is my domain, i am the oldest i have ever been and the youngest i will ever be, and the world i
+                was born into no longer exists! this site's birthday is march 23~ 2025</i>
+        </marquee>
+
+        <img src="images/silly.jpg" alt="A silly image" class="styled-image" loading="lazy">
+
+        <div id="site-footer"></div>
+    </div>
+
+    <script src="_tools/include.js" data-base="."></script>
+</body>
+
+</html>
