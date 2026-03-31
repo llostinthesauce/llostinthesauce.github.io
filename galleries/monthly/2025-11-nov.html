@@ -7,27 +7,7 @@
     <title>nov 2025 photos - nuBlog</title>
     <link rel="stylesheet" href="../../../styles/style.css">
     <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
-    <style>
-        .hidden-batch {
-            display: none;
-        }
-        .load-more-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 12px 24px;
-            background-color: #9966CC;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            font-family: monospace;
-            font-weight: bold;
-        }
-        .load-more-btn:hover {
-            background-color: #7744AA;
-        }
-    </style>
+    
 </head>
 
 <body class="blog-post-page">
@@ -42,43 +22,25 @@
         <p>sorted chronologically — horizontal photos first, then vertical photos</p>
 
         <div class="gallery-grid">
-            <!-- Batch 1: First 12 images (visible by default) -->
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6953.jpeg" alt="IMG_6953" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6958.jpeg" alt="IMG_6958" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7002.jpeg" alt="IMG_7002" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7013.jpeg" alt="IMG_7013" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7251.jpeg" alt="IMG_7251" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7274.jpeg" alt="IMG_7274" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_4200.jpeg" alt="IMG_4200" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6775.jpeg" alt="IMG_6775" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6781.jpeg" alt="IMG_6781" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6853.jpeg" alt="IMG_6853" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6910.jpeg" alt="IMG_6910" class="styled-image" loading="lazy"></div>
-                <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6924.jpeg" alt="IMG_6924" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item new-row"><img src="../../images/monthly/2025/11-nov/IMG_6953.jpeg" alt="IMG_6953" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6958.jpeg" alt="IMG_6958" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7002.jpeg" alt="IMG_7002" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item new-row"><img src="../../images/monthly/2025/11-nov/IMG_7013.jpeg" alt="IMG_7013" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7251.jpeg" alt="IMG_7251" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_7274.jpeg" alt="IMG_7274" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item new-row"><img src="../../images/monthly/2025/11-nov/IMG_4200.jpeg" alt="IMG_4200" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6775.jpeg" alt="IMG_6775" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6781.jpeg" alt="IMG_6781" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item new-row"><img src="../../images/monthly/2025/11-nov/IMG_6853.jpeg" alt="IMG_6853" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6910.jpeg" alt="IMG_6910" class="styled-image" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="../../images/monthly/2025/11-nov/IMG_6924.jpeg" alt="IMG_6924" class="styled-image" loading="lazy"></div>
         </div>
 
         <div id="site-footer"></div>
     </div>
     <script src="../../../_tools/include.js" data-base="../.."></script>
-    <script>
-        function loadMoreImages(batchNumber) {
-            // Show the batch
-            const batchRows = document.querySelectorAll('.batch-' + batchNumber);
-            batchRows.forEach(row => {
-                row.classList.remove('hidden-batch');
-            });
-
-            // Hide the button that was clicked
-            const buttons = document.querySelectorAll('[onclick="loadMoreImages(' + batchNumber + ')"]');
-            buttons.forEach(btn => btn.style.display = 'none');
-
-            // Show the next button if it exists
-            const nextButton = document.querySelector('.batch-' + batchNumber + '-btn');
-            if (nextButton) {
-                nextButton.style.display = 'block';
-            }
-        }
-    </script>
+    
+    <script src="../../_tools/gallery.js"></script>
 </body>
 
 </html>
