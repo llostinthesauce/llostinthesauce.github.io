@@ -118,7 +118,7 @@ a:hover {
 /* Gallery Grid - Responsive layout for mixed orientation photos */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
     margin: 20px 0;
     width: 100%;
