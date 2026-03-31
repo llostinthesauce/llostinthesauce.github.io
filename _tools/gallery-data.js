@@ -93,18 +93,8 @@ window.nublogGalleryGroups = [
         ]
     },
     {
-        title: 'film + digital',
+        title: 'misc gallery',
         entries: [
-            {
-                label: 'vivitar pz3090 — film',
-                href: 'galleries/vivitar-gallery.html',
-                caption: '35mm point-and-shoot'
-            },
-            {
-                label: 'canon powershot sd400 — digital',
-                href: 'galleries/canon-ps400-gallery.html',
-                caption: 'early 2000s digi cam'
-            },
             {
                 label: 'animals',
                 href: 'galleries/animals.html',
