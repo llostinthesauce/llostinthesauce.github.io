@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>july 2025 photos - nuBlog</title>
+    <title>jul 2025 photos - nuBlog</title>
     <link rel="stylesheet" href="../../../styles/style.css">
     <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
+    <style>
+        .hidden-batch {
+            display: none;
+        }
+        .load-more-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #9966CC;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .load-more-btn:hover {
+            background-color: #7744AA;
+        }
+    </style>
 </head>
+
 <body class="blog-post-page">
     <div class="content">
         <div id="site-header"></div>
@@ -15,25 +38,18 @@
                 &larr; back to galleries
             </a>
         </div>
-        <h1 class="underlined-heading">july 2025 photos</h1>
-        <p>sorted chronologically</p>
+        <h1 class="underlined-heading">jul 2025 photos</h1>
+        <p>sorted chronologically — horizontal photos first, then vertical photos</p>
 
         <table class="gallery-table">
+            <!-- Batch 1: First 18 images (visible by default) -->
             <tr>
                 <td><img src="../../images/monthly-images/july25/IMG_3683.jpeg" alt="IMG_3683" class="styled-image" loading="lazy"></td>
                 <td><img src="../../images/monthly-images/july25/IMG_3699.jpeg" alt="IMG_3699" class="styled-image" loading="lazy"></td>
             </tr>
             <tr>
-                <td><img src="../../images/monthly-images/july25/IMG_3716.jpeg" alt="IMG_3716" class="styled-image" loading="lazy"></td>
-                <td><img src="../../images/monthly-images/july25/IMG_4879.jpeg" alt="IMG_4879" class="styled-image" loading="lazy"></td>
-            </tr>
-            <tr>
                 <td><img src="../../images/monthly-images/july25/IMG_4873.jpeg" alt="IMG_4873" class="styled-image" loading="lazy"></td>
                 <td><img src="../../images/monthly-images/july25/IMG_4894.jpeg" alt="IMG_4894" class="styled-image" loading="lazy"></td>
-            </tr>
-            <tr>
-                <td><img src="../../images/monthly-images/july25/IMG_4886.jpeg" alt="IMG_4886" class="styled-image" loading="lazy"></td>
-                <td><img src="../../images/monthly-images/july25/IMG_5041.jpeg" alt="IMG_5041" class="styled-image" loading="lazy"></td>
             </tr>
             <tr>
                 <td><img src="../../images/monthly-images/july25/IMG_4902.jpeg" alt="IMG_4902" class="styled-image" loading="lazy"></td>
@@ -55,10 +71,38 @@
                 <td><img src="../../images/monthly-images/july25/IMG_5096.jpeg" alt="IMG_5096" class="styled-image" loading="lazy"></td>
                 <td><img src="../../images/monthly-images/july25/IMG_C27B984B-36E1-4E15-93FE-CA31AADB0BBE.jpeg" alt="IMG_C27B984B-36E1-4E15-93FE-CA31AADB0BBE" class="styled-image" loading="lazy"></td>
             </tr>
+            <tr>
+                <td><img src="../../images/monthly-images/july25/IMG_3716.jpeg" alt="IMG_3716" class="styled-image" loading="lazy"></td>
+                <td><img src="../../images/monthly-images/july25/IMG_4879.jpeg" alt="IMG_4879" class="styled-image" loading="lazy"></td>
+            </tr>
+            <tr>
+                <td><img src="../../images/monthly-images/july25/IMG_4886.jpeg" alt="IMG_4886" class="styled-image" loading="lazy"></td>
+                <td><img src="../../images/monthly-images/july25/IMG_5041.jpeg" alt="IMG_5041" class="styled-image" loading="lazy"></td>
+            </tr>
         </table>
 
         <div id="site-footer"></div>
     </div>
     <script src="../../../_tools/include.js" data-base="../.."></script>
+    <script>
+        function loadMoreImages(batchNumber) {
+            // Show the batch
+            const batchRows = document.querySelectorAll('.batch-' + batchNumber);
+            batchRows.forEach(row => {
+                row.classList.remove('hidden-batch');
+            });
+
+            // Hide the button that was clicked
+            const buttons = document.querySelectorAll('[onclick="loadMoreImages(' + batchNumber + ')"]');
+            buttons.forEach(btn => btn.style.display = 'none');
+
+            // Show the next button if it exists
+            const nextButton = document.querySelector('.batch-' + batchNumber + '-btn');
+            if (nextButton) {
+                nextButton.style.display = 'block';
+            }
+        }
+    </script>
 </body>
+
 </html>
