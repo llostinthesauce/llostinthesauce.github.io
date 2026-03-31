@@ -86,6 +86,13 @@
                 }
             }
 
+            if (wrapper && entry.caption) {
+                const cap = document.createElement('p');
+                cap.className = 'gallery-entry-caption';
+                cap.textContent = entry.caption;
+                wrapper.appendChild(cap);
+            }
+
             if (childrenGrid) {
                 const children = (entry.children || []).filter((child) => child && !child.hidden);
                 if (Number.isFinite(entry.childrenMinWidth)) {

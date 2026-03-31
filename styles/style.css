@@ -99,8 +99,11 @@ a:hover {
 
 /* Responsive images */
 .styled-image {
+    width: 100%;
     max-width: 100%;
     height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
     display: block;
     margin: 10px auto;
 }
@@ -137,6 +140,16 @@ footer {
 .construction {
     text-align: center;
     margin-top: 20px;
+}
+
+/* Gallery entry caption */
+.gallery-entry-caption {
+    margin: 6px 0 0;
+    color: #99CCCC;
+    font-family: monospace;
+    font-size: 0.8em;
+    font-style: italic;
+    text-align: center;
 }
 
 /* Horizontal rule */

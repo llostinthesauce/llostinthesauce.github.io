@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>plants - nuBlog</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .plant-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 14px 0 20px;
+            font-family: monospace;
+        }
+        .plant-stat {
+            background: #0a1a0a;
+            border: 1px solid #336633;
+            padding: 8px 14px;
+            color: #66CC66;
+            font-size: 0.95em;
+        }
+        .plant-stat span {
+            display: block;
+            color: #99CCCC;
+            font-size: 0.75em;
+        }
+
+        .plant-monthly-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0 20px;
+        }
+        .plant-monthly-link {
+            background: #111;
+            border: 1px solid #336633;
+            padding: 8px 14px;
+            color: #66CC66;
+            font-family: monospace;
+            font-size: 0.9em;
+            text-decoration: none;
+        }
+        .plant-monthly-link:hover {
+            background: #0a2a0a;
+            color: #99FF99;
+        }
+        .plant-monthly-link.current {
+            border-color: #66CC66;
+            font-weight: bold;
+        }
+
+        .plant-table-wrap {
+            overflow-x: auto;
+            margin: 18px 0;
+        }
+        .plant-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: monospace;
+            font-size: 0.82em;
+        }
+        .plant-table th {
+            background: #1a1a2e;
+            color: #9966CC;
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 2px solid #9966CC;
+            white-space: nowrap;
+        }
+        .plant-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #222;
+            vertical-align: top;
+            color: #CCCCCC;
+        }
+        .plant-table tr:hover td {
+            background: #111;
+        }
+        .plant-section-header td {
+            background: #0d1a0d;
+            color: #66CC66;
+            font-weight: bold;
+            padding: 7px 8px;
+            border-top: 1px solid #336633;
+            border-bottom: 1px solid #336633;
+            font-size: 0.9em;
+            letter-spacing: 0.3px;
+        }
+        .plant-dead td {
+            opacity: 0.5;
+            color: #888;
+        }
+        .plant-critical td {
+            color: #FF6666;
+        }
+        .plant-wishlist td {
+            color: #9966CC;
+            opacity: 0.8;
+        }
+        .plant-away td {
+            color: #99CCCC;
+            opacity: 0.7;
+        }
+        .plant-tech {
+            color: #888 !important;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+
+        <h1>plants</h1>
+        <i>v9 tracker — updated march 2026</i>
+
+        <!-- Stats -->
+        <div class="plant-stats">
+            <div class="plant-stat">140 <span>total plants</span></div>
+            <div class="plant-stat">112 <span>active growing</span></div>
+            <div class="plant-stat">18 <span>dead / culled</span></div>
+            <div class="plant-stat">8 <span>wishlist</span></div>
+            <div class="plant-stat">2 <span>critical 🔴</span></div>
+        </div>
+
+        <!-- Monthly photo updates -->
+        <h2>monthly progress photos</h2>
+        <div class="plant-monthly-links">
+            <a href="images/plants/plants-monthly-progress-mar.html" class="plant-monthly-link current">📷 mar 2026</a>
+            <a href="images/plants/plants-monthly-progress-feb.html" class="plant-monthly-link">📷 feb 2026</a>
+            <a href="images/plants/plants-monthly-progress.html" class="plant-monthly-link">📷 jan 2026</a>
+        </div>
+
+        <hr>
+
+        <!-- Full tracker table -->
+        <h2>full tracker — v9</h2>
+        <p style="color: #99CCCC; font-size: 0.85em; font-family: monospace;">
+            source: PLANT-v9.xlsx — edit the spreadsheet and re-run the site generator to update this table
+        </p>
+
+        <div class="plant-table-wrap">
+            <table class="plant-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>plant</th>
+                        <th>scientific</th>
+                        <th>status</th>
+                        <th>stage</th>
+                        <th>last watered</th>
+                        <th>notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <tr class="plant-section-header">
+                <td colspan="7">ID</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🌡️  BASEMENT — HEAT MAT</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Strawberry</td>
+                <td class="plant-tech">Fragaria × ananassa</td>
+                <td>🌰 Seeding</td>
+                <td>🌰 Seed</td>
+                <td>—</td>
+                <td>20 seeds, domed.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Broccoli</td>
+                <td class="plant-tech">Brassica oleracea</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Cauliflower</td>
+                <td class="plant-tech">Brassica oleracea</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Kohlrabi</td>
+                <td class="plant-tech">Brassica oleracea</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Collards</td>
+                <td class="plant-tech">Brassica oleracea</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Cabbage</td>
+                <td class="plant-tech">Brassica oleracea</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Lettuce</td>
+                <td class="plant-tech">Lactuca sativa</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Banana Pepper</td>
+                <td class="plant-tech">Capsicum annuum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>NuMex Big Jim Pepper</td>
+                <td class="plant-tech">Capsicum annuum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Black Beauty Eggplant</td>
+                <td class="plant-tech">Solanum melongena</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td>Pinecone Seed</td>
+                <td class="plant-tech">Pinus</td>
+                <td>🌰 Seeding</td>
+                <td>🌰 Seed</td>
+                <td>—</td>
+                <td>1 on heat mat</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Pine/Evergreen Berries</td>
+                <td class="plant-tech">Juniperus / Taxus</td>
+                <td>🌰 Seeding</td>
+                <td>🌰 Seed</td>
+                <td>—</td>
+                <td>Pulp washed off. 20 nuts in bag.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Small Tree Seeds?</td>
+                <td class="plant-tech">Unknown</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In plastic bag.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">💡  BASEMENT — GROW LIGHT</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>Yellow Twist Bud Tobacco</td>
+                <td class="plant-tech">Nicotiana tabacum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed, misted daily.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>Virginia Gold Tobacco</td>
+                <td class="plant-tech">Nicotiana tabacum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed, misted daily.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td>Colson Tobacco</td>
+                <td class="plant-tech">Nicotiana tabacum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Domed, misted daily.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>Radish</td>
+                <td class="plant-tech">Raphanus sativus</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>5 inches tall.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>Carrot Top (A)</td>
+                <td class="plant-tech">Daucus carota</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>6 inches of green growth.</td>
+            </tr>
+            <tr>
+                <td>21</td>
+                <td>Dragon Fruit</td>
+                <td class="plant-tech">Hylocereus undatus</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>10 seedlings, ~1 inch tall.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>Kiwi</td>
+                <td class="plant-tech">Actinidia deliciosa</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>10 seedlings, ~1 inch tall.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td>Starfruit</td>
+                <td class="plant-tech">Averrhoa carambola</td>
+                <td>🌱 Sprouting</td>
+                <td>🌱 Sprouting</td>
+                <td>—</td>
+                <td>2 seeds, taproots down, sprouting true leaves, 1 inch.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td>Sweet Peppers</td>
+                <td class="plant-tech">Capsicum annuum</td>
+                <td>💧 Propagating</td>
+                <td>🌰 Seed</td>
+                <td>—</td>
+                <td>20 seeds in plastic bag.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td>Tomatillo</td>
+                <td class="plant-tech">Physalis philadelphica</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In plastic bag.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td>Weeping Willow Cuttings</td>
+                <td class="plant-tech">Salix babylonica</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>5 cuttings in water; budding.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td>Garlic</td>
+                <td class="plant-tech">Allium sativum</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>22 inches tall.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td>Papaya</td>
+                <td class="plant-tech">Carica papaya</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>15 plants, all about 3-4 inches tall.</td>
+            </tr>
+            <tr>
+                <td>—</td>
+                <td>pine tree</td>
+                <td class="plant-tech">—</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>Corn B (Leftovers)</td>
+                <td class="plant-tech">Zea mays</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>4 plants, 5-10 inches tall.</td>
+            </tr>
+            <tr>
+                <td>31</td>
+                <td>Red Bell Peppers</td>
+                <td class="plant-tech">Capsicum annuum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Under grow light.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td>Cherry Tomatoes</td>
+                <td class="plant-tech">Solanum lycopersicum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Under grow light.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td>Leftover Red Bell Peppers</td>
+                <td class="plant-tech">Capsicum annuum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Under grow light.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td>Sweet Potato A (Main)</td>
+                <td class="plant-tech">Ipomoea batatas</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In water.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td>Japanese Sweet Potato</td>
+                <td class="plant-tech">Ipomoea batatas</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In water.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td>Japanese Sweet Potato (Cut)</td>
+                <td class="plant-tech">Ipomoea batatas</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>Cut in half, in water.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td>Pineapple Top V1</td>
+                <td class="plant-tech">Ananas comosus</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In water.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td>Pineapple Top V2</td>
+                <td class="plant-tech">Ananas comosus</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In water.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td>Hawaiian Sweet Potato</td>
+                <td class="plant-tech">Ipomoea batatas</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>In water.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td>Coconut</td>
+                <td class="plant-tech">Cocos nucifera</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>2 nuts under grow light.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td>Coconut v2</td>
+                <td class="plant-tech">Cocos nucifera</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>2 nuts under grow light.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">☀️  BASEMENT — YELLOW GROW LIGHTS</td>
+            </tr>
+            <tr>
+                <td>41</td>
+                <td>Hass Avocado Pits (x3)</td>
+                <td class="plant-tech">Persea americana</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td>Hass Avocado Pit (1/4 Salvage)</td>
+                <td class="plant-tech">Persea americana</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Salvaged split embryo, in dirt.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td>Lychee x2</td>
+                <td class="plant-tech">Litchi chinensis</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🔆  BASEMENT — RIGHT SIDE BRIGHT</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td>Date Pit</td>
+                <td class="plant-tech">Phoenix dactylifera</td>
+                <td>🌱 Sprouting</td>
+                <td>🌱 Sprouting</td>
+                <td>—</td>
+                <td>Sending taproot down.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td>Cherry (x2)</td>
+                <td class="plant-tech">Prunus</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td>Chives</td>
+                <td class="plant-tech">Allium schoenoprasum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td>Baby Taro</td>
+                <td class="plant-tech">Colocasia esculenta</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td>Dill</td>
+                <td class="plant-tech">Anethum graveolens</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td>Basil</td>
+                <td class="plant-tech">Ocimum basilicum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🪣  BLACK MILK CRATE  —  14" GROW BAGS</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td>Red Bell Peppers</td>
+                <td class="plant-tech">Capsicum annuum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>4 plants in one pot, all 5+ inches.</td>
+            </tr>
+            <tr>
+                <td>51</td>
+                <td>Corn A</td>
+                <td class="plant-tech">Zea mays</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>2 sprouts, both 9 inches tall.</td>
+            </tr>
+            <tr>
+                <td>52</td>
+                <td>Lemons (7 Extra)</td>
+                <td class="plant-tech">Citrus limon</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>0.5 to 4 inches tall.</td>
+            </tr>
+            <tr>
+                <td>53</td>
+                <td>Cherry Tomatoes</td>
+                <td class="plant-tech">Solanum lycopersicum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>6 plants (3 varieties) in one pot.</td>
+            </tr>
+            <tr>
+                <td>54</td>
+                <td>Almond Tree</td>
+                <td class="plant-tech">Prunus dulcis</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>9 inches tall.</td>
+            </tr>
+            <tr>
+                <td>55</td>
+                <td>Black Sunflowers</td>
+                <td class="plant-tech">Helianthus annuus</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>2 plants in grow bag, 11 inches tall.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🪣  GRAY MILK CRATE  —  14" GROW BAGS</td>
+            </tr>
+            <tr>
+                <td>56</td>
+                <td>Lemon (Individual A)</td>
+                <td class="plant-tech">Citrus limon</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>Mar 12, 2026</td>
+                <td>3 inches tall.</td>
+            </tr>
+            <tr>
+                <td>57</td>
+                <td>Lemon (Individual B)</td>
+                <td class="plant-tech">Citrus limon</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>Mar 12, 2026</td>
+                <td>2 inches tall.</td>
+            </tr>
+            <tr>
+                <td>58</td>
+                <td>Honeycrisp Apple A (Oldest)</td>
+                <td class="plant-tech">Malus domestica</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>Oldest one, 6 inches tall.</td>
+            </tr>
+            <tr>
+                <td>59</td>
+                <td>Cherry (Singular)</td>
+                <td class="plant-tech">Prunus</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>One inch tall.</td>
+            </tr>
+            <tr>
+                <td>60</td>
+                <td>Honeycrisp Apple (Singular)</td>
+                <td class="plant-tech">Malus domestica</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>Mar 12, 2026</td>
+                <td>3 inches tall.</td>
+            </tr>
+            <tr>
+                <td>61</td>
+                <td>Bartlett Pear A (Singular)</td>
+                <td class="plant-tech">Pyrus communis</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>Mar 12, 2026</td>
+                <td>3 inches tall.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🪣  LOWER GRAY MILK CRATE  —  14" BAGS</td>
+            </tr>
+            <tr>
+                <td>62</td>
+                <td>Hass Avocado A (Oldest)</td>
+                <td class="plant-tech">Persea americana</td>
+                <td>🌱 Sprouting</td>
+                <td>🌱 Sprouting</td>
+                <td>Mar 12, 2026</td>
+                <td>Sending out taproot below.</td>
+            </tr>
+            <tr>
+                <td>63</td>
+                <td>Roma Tomato</td>
+                <td class="plant-tech">Solanum lycopersicum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>5 plants, all 6 inches tall.</td>
+            </tr>
+            <tr>
+                <td>64</td>
+                <td>Hass Avocado B + Carrot Top B</td>
+                <td class="plant-tech">Persea / Daucus</td>
+                <td>🌱 Sprouting</td>
+                <td>🌱 Sprouting</td>
+                <td>Mar 12, 2026</td>
+                <td>Sharing pot; sending taproot.</td>
+            </tr>
+            <tr>
+                <td>65</td>
+                <td>Ginger v2</td>
+                <td class="plant-tech">Zingiber officinale</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>In dirt.</td>
+            </tr>
+            <tr>
+                <td>66</td>
+                <td>Weeping Willow Cutting A</td>
+                <td class="plant-tech">Salix babylonica</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>Mar 12, 2026</td>
+                <td>Planted strongest looking cutting.</td>
+            </tr>
+            <tr class="plant-critical">
+                <td>67</td>
+                <td>Pear and Apple</td>
+                <td class="plant-tech">Malus / Pyrus</td>
+                <td>🔴 Critical</td>
+                <td>🌱 Sprouting</td>
+                <td>Mar 12, 2026</td>
+                <td>🚨 CODE RED: TAPROOT VIOLATION. SEPARATE IMMEDIATELY.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🪟  BASEMENT — EAST WINDOWS</td>
+            </tr>
+            <tr>
+                <td>68</td>
+                <td>Russet Potato (Poat)</td>
+                <td class="plant-tech">Solanum tuberosum</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>Approximately 2 feet tall.</td>
+            </tr>
+            <tr>
+                <td>69</td>
+                <td>Russet Potato (Potette)</td>
+                <td class="plant-tech">Solanum tuberosum</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>Approximately 23 inches tall.</td>
+            </tr>
+            <tr>
+                <td>70</td>
+                <td>Peanut</td>
+                <td class="plant-tech">Arachis hypogaea</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>3 sprouts, 10 inches tall.</td>
+            </tr>
+            <tr>
+                <td>71</td>
+                <td>Weeping Willow (V2)</td>
+                <td class="plant-tech">Salix babylonica</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Rooted and potted.</td>
+            </tr>
+            <tr class="plant-critical">
+                <td>72</td>
+                <td>Red Oak + Mystery Tree</td>
+                <td class="plant-tech">Quercus rubra / Unknown</td>
+                <td>🔴 Critical</td>
+                <td>🌱 Sprouting</td>
+                <td>—</td>
+                <td>🚨 CODE RED: TAPROOT VIOLATION. SHARING 5 GAL BUCKET.</td>
+            </tr>
+            <tr>
+                <td>74</td>
+                <td>Mango (OG) A</td>
+                <td class="plant-tech">Mangifera indica</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>10 inches tall with five leaves.</td>
+            </tr>
+            <tr>
+                <td>75</td>
+                <td>Leftover Apples and Pears</td>
+                <td class="plant-tech">Malus / Pyrus</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>~12 plants in one large pot.</td>
+            </tr>
+            <tr>
+                <td>79</td>
+                <td>Mango B</td>
+                <td class="plant-tech">Mangifera indica</td>
+                <td>🌱 Sprouting</td>
+                <td>🌱 Sprouting</td>
+                <td>—</td>
+                <td>Large pit sending out taproot.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🌿  BEDROOM — SOUTH / THE DUNGEON</td>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td>Peperomia (Mom's)</td>
+                <td class="plant-tech">Peperomia</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>Prop in water, now in dirt.</td>
+            </tr>
+            <tr>
+                <td>81</td>
+                <td>Swedish Ivy B (Mom's)</td>
+                <td class="plant-tech">Plectranthus</td>
+                <td>💧 Propagating</td>
+                <td>🍃 Propagating</td>
+                <td>—</td>
+                <td>Prop in water, now in dirt.</td>
+            </tr>
+            <tr>
+                <td>82</td>
+                <td>Yard Lurker</td>
+                <td class="plant-tech">Unknown</td>
+                <td>🌱 Sprouting</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>16 inches and sprouting.</td>
+            </tr>
+            <tr>
+                <td>83</td>
+                <td>Swedish Ivy (Swivy) A</td>
+                <td class="plant-tech">Plectranthus</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>Two feet in all directions (Main).</td>
+            </tr>
+            <tr>
+                <td>84</td>
+                <td>Golden Pothos (Oldest)</td>
+                <td class="plant-tech">Epipremnum aureum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Moved back to water; rooting hormone was burning it.</td>
+            </tr>
+            <tr>
+                <td>85</td>
+                <td>Marble Queen Pothos</td>
+                <td class="plant-tech">Epipremnum aureum</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Potted in mini cups.</td>
+            </tr>
+            <tr>
+                <td>86</td>
+                <td>Treubii Moonlight Pothos</td>
+                <td class="plant-tech">Scindapsus treubii</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Potted in mini cups.</td>
+            </tr>
+            <tr>
+                <td>87</td>
+                <td>Snow Queen Pothos</td>
+                <td class="plant-tech">Epipremnum aureum</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Potted in mini cups.</td>
+            </tr>
+            <tr>
+                <td>88</td>
+                <td>Brasil Philodendron</td>
+                <td class="plant-tech">Philodendron hederaceum</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Potted in mini cups.</td>
+            </tr>
+            <tr>
+                <td>89</td>
+                <td>Shangri-La Pothos</td>
+                <td class="plant-tech">Epipremnum aureum</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Potted in mini cups.</td>
+            </tr>
+            <tr>
+                <td>90</td>
+                <td>Pothos Njoy</td>
+                <td class="plant-tech">Epipremnum aureum 'Njoy'</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>8 inches to 1 foot tall.</td>
+            </tr>
+            <tr>
+                <td>91</td>
+                <td>Albo Pothos ---?</td>
+                <td class="plant-tech">Epipremnum aureum</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Potted in mini cups.</td>
+            </tr>
+            <tr>
+                <td>92</td>
+                <td>Velvet Philodendron</td>
+                <td class="plant-tech">Philodendron hederaceum</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>18 inches tall.</td>
+            </tr>
+            <tr>
+                <td>93</td>
+                <td>String of Pearls</td>
+                <td class="plant-tech">Senecio rowleyanus</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>3 inches over edge.</td>
+            </tr>
+            <tr>
+                <td>94</td>
+                <td>String of Dolphins</td>
+                <td class="plant-tech">Curio × peregrinus</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>Pretty small, ~2 inches.</td>
+            </tr>
+            <tr>
+                <td>95</td>
+                <td>String of Hearts</td>
+                <td class="plant-tech">Ceropegia woodii</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Rooting more, 8 inches over edge.</td>
+            </tr>
+            <tr>
+                <td>96</td>
+                <td>Chinese Money Plant</td>
+                <td class="plant-tech">Pilea peperomioides</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>3 stalks, 4 inches tall, 8 inches circumference.</td>
+            </tr>
+            <tr>
+                <td>97</td>
+                <td>Spider Plant 2022 A</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>2' all directions, 1' up.</td>
+            </tr>
+            <tr>
+                <td>98</td>
+                <td>Spider Plant B</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Similar size to OG.</td>
+            </tr>
+            <tr>
+                <td>99</td>
+                <td>Spider Plant C</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Half size of OG.</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>Spider Plant D</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Half size of OG.</td>
+            </tr>
+            <tr>
+                <td>101</td>
+                <td>Curly Spider Plant</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Baby, 4 to 5 inches.</td>
+            </tr>
+            <tr>
+                <td>102</td>
+                <td>Spider Baby Pot 1</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>5-10 babies from OG.</td>
+            </tr>
+            <tr>
+                <td>103</td>
+                <td>Spider Baby Pot 2</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>5-10 babies from OG.</td>
+            </tr>
+            <tr>
+                <td>104</td>
+                <td>Spider Baby Pot 3</td>
+                <td class="plant-tech">Chlorophytum comosum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>3 babies from OG.</td>
+            </tr>
+            <tr>
+                <td>105</td>
+                <td>Jade Bonsai Tree</td>
+                <td class="plant-tech">Crassula ovata</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>9 inches across.</td>
+            </tr>
+            <tr>
+                <td>106</td>
+                <td>Fairy Castle Cactus</td>
+                <td class="plant-tech">Acanthocereus tetragonus</td>
+                <td>🌿 Growing</td>
+                <td>🌱 Seedling</td>
+                <td>—</td>
+                <td>4 inches tall.</td>
+            </tr>
+            <tr>
+                <td>107</td>
+                <td>Peperomia Orba</td>
+                <td class="plant-tech">Peperomia orba</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>One foot tall, special growth on top.</td>
+            </tr>
+            <tr>
+                <td>108</td>
+                <td>Snake Plant</td>
+                <td class="plant-tech">Dracaena trifasciata</td>
+                <td>🌿 Growing</td>
+                <td>🌳 Established</td>
+                <td>—</td>
+                <td>Two feet tall.</td>
+            </tr>
+            <tr>
+                <td>109</td>
+                <td>Spotted Philodendron</td>
+                <td class="plant-tech">Philodendron sp.</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>One foot tall.</td>
+            </tr>
+            <tr>
+                <td>110</td>
+                <td>Dumb Cane</td>
+                <td class="plant-tech">Dieffenbachia</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>10 inches tall.</td>
+            </tr>
+            <tr>
+                <td>111</td>
+                <td>Striped Alocasia</td>
+                <td class="plant-tech">Alocasia zebrina</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>11 inches tall.</td>
+            </tr>
+            <tr>
+                <td>112</td>
+                <td>Lucky Bamboo</td>
+                <td class="plant-tech">Dracaena sanderiana</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Jar: 10.5 inches, New Growth: 7 inches.</td>
+            </tr>
+            <tr>
+                <td>113</td>
+                <td>Holiday Orchid Cactus</td>
+                <td class="plant-tech">Epiphyllum</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Several cuttings, 6 to 10 inches.</td>
+            </tr>
+            <tr>
+                <td>114</td>
+                <td>Wandering Jew(s) Variety ABCD</td>
+                <td class="plant-tech">Tradescantia zebrina</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>4 varieties sharing one pot.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🌳  OUTSIDE</td>
+            </tr>
+            <tr>
+                <td>73</td>
+                <td>Probably Honeysuckle</td>
+                <td class="plant-tech">Unknown</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Exploding with growth, sharing bucket with Oak.</td>
+            </tr>
+            <tr>
+                <td>77</td>
+                <td>Black Walnut</td>
+                <td class="plant-tech">Juglans nigra</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>outside</td>
+            </tr>
+            <tr>
+                <td>78</td>
+                <td>Wild Acorns</td>
+                <td class="plant-tech">Quercus</td>
+                <td>🌿 Growing</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>outside</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">📦  NOT AT HOME</td>
+            </tr>
+            <tr class="plant-away">
+                <td>117</td>
+                <td>Oli Pot Succulent</td>
+                <td class="plant-tech">Unknown</td>
+                <td>📦 Not at Home</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>At Ellie's in Columbia.</td>
+            </tr>
+            <tr class="plant-away">
+                <td>118</td>
+                <td>Carrie Bush Plant</td>
+                <td class="plant-tech">Unknown</td>
+                <td>📦 Not at Home</td>
+                <td>🪴 Vegetative</td>
+                <td>—</td>
+                <td>Owen watered in Feb.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">☠️  DEAD / CULLED</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>119</td>
+                <td>Honey Locust</td>
+                <td class="plant-tech">Gleditsia triacanthos</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Starter leaves out, looks sad.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>120</td>
+                <td>Rice Paddy</td>
+                <td class="plant-tech">Oryza sativa</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>KILLED MOLDED.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>121</td>
+                <td>Walnut</td>
+                <td class="plant-tech">Juglans regia</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>DEAD, TRASHED.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>122</td>
+                <td>Pecan</td>
+                <td class="plant-tech">Carya illinoinensis</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>DEAD, TRASHED.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>123</td>
+                <td>Sweet Potato B</td>
+                <td class="plant-tech">Ipomoea batatas</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>DEAD, ROTTED TRASHED.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>124</td>
+                <td>Golden Potato (Poter)</td>
+                <td class="plant-tech">Solanum tuberosum</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>ROTTED, TRASHED.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>125</td>
+                <td>Mustard</td>
+                <td class="plant-tech">Brassica</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Spice jar fail.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>126</td>
+                <td>Poppy</td>
+                <td class="plant-tech">Papaver</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Spice jar fail.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>127</td>
+                <td>Mango #3</td>
+                <td class="plant-tech">Mangifera indica</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Molded.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>128</td>
+                <td>Chickpeas</td>
+                <td class="plant-tech">Cicer arietinum</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Molded.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>129</td>
+                <td>Mystery "Pineapple" Seeds</td>
+                <td class="plant-tech">Unknown</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Did nothing.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>130</td>
+                <td>Brazil Nut</td>
+                <td class="plant-tech">Bertholletia excelsa</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Molded.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>115</td>
+                <td>Kiwi B</td>
+                <td class="plant-tech">Actinidia deliciosa</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Baby sprouts.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>116</td>
+                <td>DragonFruit B</td>
+                <td class="plant-tech">Hylocereus undatus</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>In humidor.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>76</td>
+                <td>White Onion + Scallions</td>
+                <td class="plant-tech">Allium cepa</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Bundled; frequently harvested green tops.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>11</td>
+                <td>Filberts (Hazelnut)</td>
+                <td class="plant-tech">Corylus avellana</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>In wet paper towel in bag.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>15</td>
+                <td>Peach</td>
+                <td class="plant-tech">Prunus persica</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Shell cracked, soaked 12h, sprouting tail.</td>
+            </tr>
+            <tr class="plant-dead">
+                <td>14</td>
+                <td>Sidewalk Berries?</td>
+                <td class="plant-tech">Unknown</td>
+                <td>💀 Dead/Culled</td>
+                <td>—</td>
+                <td>—</td>
+                <td>In plastic bag.</td>
+            </tr>
+            <tr class="plant-section-header">
+                <td colspan="7">🔮  WISHLIST</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>131</td>
+                <td>Sugarcane</td>
+                <td class="plant-tech">Saccharum officinarum</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Source stalk project.</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>132</td>
+                <td>Valencia Orange</td>
+                <td class="plant-tech">Citrus sinensis</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Source seeds.</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>133</td>
+                <td>Norway Spruce</td>
+                <td class="plant-tech">Picea abies</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Yard project.</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>134</td>
+                <td>Mulberry Tree</td>
+                <td class="plant-tech">Morus</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Source tree for yard.</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>135</td>
+                <td>White / Bur Oak</td>
+                <td class="plant-tech">Quercus</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Sourcing MDC Nursery or field acquisition.</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>136</td>
+                <td>Bald Cypress</td>
+                <td class="plant-tech">Taxodium distichum</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Creek project tree.</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>137</td>
+                <td>"Ketchup 'n' Fries" Graft</td>
+                <td class="plant-tech">S. tuberosum / lycopersicum</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Grow/graft a Pomato (Potato root / Tomato top).</td>
+            </tr>
+            <tr class="plant-wishlist">
+                <td>138</td>
+                <td>Mushroom Spore Syringe</td>
+                <td class="plant-tech">Fungi</td>
+                <td>🛒 Wishlist</td>
+                <td>🔮 Pre-Seed</td>
+                <td>—</td>
+                <td>Source injector juice for inoculation project.</td>
+            </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="_tools/include.js" data-base="."></script>
+</body>
+</html>
