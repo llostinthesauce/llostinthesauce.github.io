@@ -102,8 +102,6 @@ a:hover {
     width: 100%;
     max-width: 100%;
     height: auto;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
     display: block;
     margin: 10px auto;
 }
