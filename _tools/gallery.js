@@ -24,7 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const entryDiv = entryClone.querySelector('.gallery-entry');
                 
                 link.textContent = entry.label || '';
-                link.href = entry.href || '#';
+                // Strip 'galleries/' prefix since index.html is already in galleries/
+                let href = entry.href || '#';
+                if (href.startsWith('galleries/')) {
+                    href = href.substring('galleries/'.length);
+                }
+                link.href = href;
                 
                 if (entry.disabled) {
                     link.classList.add('is-disabled');
