@@ -11,6 +11,11 @@ window.nublogGalleryGroups = [
         title: '2026',
         entries: [
             {
+                label: 'apr 2026',
+                href: 'galleries/monthly/2026-04-apr.html',
+                caption: ''
+            },
+            {
                 label: 'mar 2026',
                 href: 'galleries/monthly/2026-03-mar.html',
                 caption: ''
