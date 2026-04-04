@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>video gallery example - nuBlog</title>
+    <link rel="stylesheet" href="../../styles/style.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+
+<body class="blog-post-page">
+    <div class="content">
+        <div id="site-header"></div>
+        <div style="margin: 10px 0;">
+            <a href="javascript:history.back()" style="color: #9966CC; font-style: italic; text-decoration: underline; font-family: monospace; font-size: 0.9em; font-weight: bold;">
+                &larr; back to galleries
+            </a>
+        </div>
+        <h1 class="underlined-heading">video gallery example</h1>
+        <p>Example gallery showing how to embed videos alongside images</p>
+
+        <div class="gallery-grid">
+            <!-- Example image -->
+            <div class="gallery-grid-item">
+                <img src="../../images/misc/animals/IMG_1234.jpeg" alt="Example photo" class="styled-image" loading="lazy">
+                <p>A regular photo</p>
+            </div>
+
+            <!-- Example video with basic controls -->
+            <div class="gallery-grid-item">
+                <video controls class="styled-image">
+                    <source src="../../videos/example-video.mp4" type="video/mp4">
+                    <source src="../../videos/example-video.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+                <p>A video with controls</p>
+            </div>
+
+            <!-- Example video with autoplay and loop (muted for autoplay to work) -->
+            <div class="gallery-grid-item">
+                <video autoplay muted loop playsinline class="styled-image">
+                    <source src="../../videos/loop-example.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p>Looping video (auto-play)</p>
+            </div>
+
+            <!-- Another image -->
+            <div class="gallery-grid-item">
+                <img src="../../images/misc/animals/IMG_5678.jpeg" alt="Another photo" class="styled-image" loading="lazy">
+                <p>Another photo</p>
+            </div>
+
+            <!-- Video with preload and poster -->
+            <div class="gallery-grid-item">
+                <video controls preload="metadata" poster="../../images/video-poster.jpeg" class="styled-image">
+                    <source src="../../videos/example-with-poster.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p>Video with poster image</p>
+            </div>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../_tools/include.js"></script>
+</body>
+
+</html>

@@ -131,7 +131,8 @@ a:hover {
     justify-content: flex-start;
 }
 
-.gallery-grid-item img {
+.gallery-grid-item img,
+.gallery-grid-item video {
     width: 100%;
     height: auto;
     display: block;
