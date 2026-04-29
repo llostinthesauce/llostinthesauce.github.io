@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+<title>local LLM benchmarks - builds+ - nuBlog</title>
+<link rel="stylesheet" href="../../styles/style.css">
+<link rel="icon" href="../../favicon.ico" type="image/x-icon">
+<style>
+    .bench-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85em;
+        margin: 20px 0;
+    }
+    .bench-table th {
+        text-align: left;
+        color: #9966CC;
+        padding: 8px 6px;
+        border-bottom: 1px solid #444;
+        font-size: 0.8em;
+        white-space: nowrap;
+    }
+    .bench-table th.num { text-align: right; }
+    .bench-table td {
+        padding: 5px 6px;
+        border-bottom: 1px solid #1a1a1a;
+        vertical-align: top;
+    }
+    .bench-table tr:hover td { background: #0d0d0d; }
+    .bench-table .model {
+        font-family: monospace;
+        color: #33CCAA;
+        font-size: 0.85em;
+    }
+    .bench-table .quant {
+        font-family: monospace;
+        color: #CC99FF;
+        font-size: 0.85em;
+        white-space: nowrap;
+    }
+    .bench-table .num {
+        text-align: right;
+        font-family: monospace;
+    }
+    .bench-table .mem-high { color: #ff9966; }
+    .bench-table .mem-ok   { color: #99CCCC; }
+    .bench-table .mem-warn { color: #ffcc66; }
+    .section-row td {
+        color: #9966CC;
+        font-weight: bold;
+        font-size: 0.9em;
+        padding-top: 16px;
+        border-bottom: 1px solid #333;
+    }
+    .bench-note {
+        color: #99CCCC;
+        font-size: 0.85em;
+        margin: 0 0 20px;
+    }
+    .bench-note code {
+        font-family: monospace;
+        color: #CC99FF;
+    }
+</style>
+</head>
+<body>
+<div class="content">
+<div id="site-header"></div>
+<a href="index.html" class="back-link">&larr; back to builds+</a>
+<h1>local LLM benchmarks</h1>
+<div class="blog-post-date">April 2026 — latest</div>
+<div class="bench-note">
+macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 28&ndash;29 &middot; 3-pass suite:
+<code>short</code> 2K ctx / <code>long</code> 16K ctx / <code>security</code> 8K ctx
+&middot; numbers are averages across all passes and runs
+</div>
+
+<div class="blog-post-content">
+
+<table class="bench-table">
+    <thead>
+        <tr><th>model</th><th class="num">quant</th><th class="num">avg gen tps</th><th class="num">short</th><th class="num">long</th><th class="num">security</th><th class="num">avg prompt tps</th><th class="num">peak mem%</th><th class="num">passes</th></tr>
+    </thead>
+    <tbody>
+
+        <!-- Qwen3.6 35B MoE -->
+        <tr class="section-row"><td colspan="9">Qwen3.6 35B-A3B &mdash; MoE, 3.5B active</td></tr>
+        <tr>
+            <td class="model">Qwen3.6-35B-A3B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">55.4</td><td class="num">55.7</td><td class="num">55.2</td><td class="num">58.0</td>
+            <td class="num">1215</td><td class="num mem-ok">71.0%</td><td class="num">19</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-35B-A3B</td>
+            <td class="quant">Q5_K_M</td>
+            <td class="num">57.2</td><td class="num">57.5</td><td class="num">56.7</td><td class="num">57.5</td>
+            <td class="num">1315</td><td class="num mem-warn">76.2%</td><td class="num">15</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-35B-A3B</td>
+            <td class="quant">Q6_K</td>
+            <td class="num">47.4</td><td class="num">47.7</td><td class="num">47.3</td><td class="num">&mdash;</td>
+            <td class="num">815</td><td class="num mem-warn">84.7%</td><td class="num">6</td>
+        </tr>
+
+        <!-- Qwen3.6 27B Dense -->
+        <tr class="section-row"><td colspan="9">Qwen3.6 27B &mdash; dense</td></tr>
+        <tr>
+            <td class="model">Qwen3.6-27B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">14.5</td><td class="num">14.5</td><td class="num">14.4</td><td class="num">14.4</td>
+            <td class="num">251</td><td class="num mem-ok">59.8%</td><td class="num">6</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-27B-UD</td>
+            <td class="quant">Q4_K_XL</td>
+            <td class="num">13.9</td><td class="num">14.1</td><td class="num">13.9</td><td class="num">13.6</td>
+            <td class="num">256</td><td class="num mem-warn">82.0%</td><td class="num">7</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-27B</td>
+            <td class="quant">Q6_K</td>
+            <td class="num">11.4</td><td class="num">11.3</td><td class="num">11.3</td><td class="num">&mdash;</td>
+            <td class="num">245</td><td class="num mem-high">94.4%</td><td class="num">3</td>
+        </tr>
+
+        <!-- Qwen3-Coder Next -->
+        <tr class="section-row"><td colspan="9">Qwen3-Coder Next &mdash; dense</td></tr>
+        <tr>
+            <td class="model">Qwen3-Coder-Next</td>
+            <td class="quant">IQ4_XS</td>
+            <td class="num">49.5</td><td class="num">50.0</td><td class="num">49.4</td><td class="num">49.1</td>
+            <td class="num">1002</td><td class="num mem-high">87.1%</td><td class="num">10</td>
+        </tr>
+
+        <!-- Qwen3-Coder 30B MoE -->
+        <tr class="section-row"><td colspan="9">Qwen3-Coder 30B-A3B &mdash; MoE, 3B active</td></tr>
+        <tr>
+            <td class="model">Qwen3-Coder-30B-A3B</td>
+            <td class="quant">Q4_K_XL</td>
+            <td class="num">81.9</td><td class="num">85.6</td><td class="num">79.8</td><td class="num">80.0</td>
+            <td class="num">805</td><td class="num mem-ok">69.1%</td><td class="num">16</td>
+        </tr>
+
+        <!-- Gemma 4 E4B -->
+        <tr class="section-row"><td colspan="9">Gemma 4 E4B &mdash; MoE, 3.8B active</td></tr>
+        <tr>
+            <td class="model">Gemma-4-E4B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">67.7</td><td class="num">70.0</td><td class="num">66.6</td><td class="num">66.5</td>
+            <td class="num">1622</td><td class="num mem-ok">53.9%</td><td class="num">12</td>
+        </tr>
+
+        <!-- Gemma 4 26B MoE -->
+        <tr class="section-row"><td colspan="9">Gemma 4 26B-A4B &mdash; MoE, 4B active</td></tr>
+        <tr>
+            <td class="model">Gemma-4-26B-A4B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">58.4</td><td class="num">58.9</td><td class="num">58.5</td><td class="num">57.5</td>
+            <td class="num">1252</td><td class="num mem-ok">74.6%</td><td class="num">16</td>
+        </tr>
+        <tr>
+            <td class="model">Gemma-4-26B-A4B</td>
+            <td class="quant">Q6_K</td>
+            <td class="num">54.6</td><td class="num">53.0</td><td class="num">55.3</td><td class="num">&mdash;</td>
+            <td class="num">1378</td><td class="num mem-high">94.7%</td><td class="num">3</td>
+        </tr>
+
+        <!-- Granite -->
+        <tr class="section-row"><td colspan="9">Granite 4.0 h-tiny &mdash; dense</td></tr>
+        <tr>
+            <td class="model">Granite-4.0-h-tiny</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">105.0</td><td class="num">105.5</td><td class="num">105.8</td><td class="num">104.1</td>
+            <td class="num">2076</td><td class="num mem-ok">44.0%</td><td class="num">10</td>
+        </tr>
+
+        <!-- Nemotron -->
+        <tr class="section-row"><td colspan="9">NVIDIA Nemotron-3 Nano 30B-A3B &mdash; MoE, 3B active</td></tr>
+        <tr>
+            <td class="model">Nemotron-3-Nano-30B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">67.4</td><td class="num">68.4</td><td class="num">67.0</td><td class="num">66.8</td>
+            <td class="num">1226</td><td class="num mem-warn">75.9%</td><td class="num">12</td>
+        </tr>
+
+        <!-- Devstral -->
+        <tr class="section-row"><td colspan="9">Devstral Small 2 24B &mdash; dense</td></tr>
+        <tr>
+            <td class="model">Devstral-Small-2-24B</td>
+            <td class="quant">Q4_K_XL</td>
+            <td class="num">18.0</td><td class="num">18.2</td><td class="num">18.0</td><td class="num">17.8</td>
+            <td class="num">274</td><td class="num mem-ok">68.7%</td><td class="num">10</td>
+        </tr>
+
+    </tbody>
+</table>
+
+</div>
+
+<div id="site-footer"></div>
+</div>
+<script src="../../js/include.js" data-base="../.."></script>
+</body>
+</html>

@@ -10,7 +10,6 @@ window.__SITEMAP__ = {
     "guestbook.html",
     "index.html",
     "plants.html",
-    "qa_check.py",
     "README.md",
     "robots.txt",
     "sitemap.html"
@@ -42,6 +41,7 @@ window.__SITEMAP__ = {
         "builds": {
           "files": [
             "apple-music-toolkit.html",
+            "benchmarks.html",
             "calibre.html",
             "index.html",
             "ipod.html",
@@ -62,6 +62,10 @@ window.__SITEMAP__ = {
           "folders": {}
         }
       }
+    },
+    "docs": {
+      "files": [],
+      "folders": {}
     },
     "galleries": {
       "files": [
