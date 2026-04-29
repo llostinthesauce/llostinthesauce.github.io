@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <title>Please, For the Love of God, Slow Down and Run Them Offline… - nuBlog</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+<script>
+        const bootFinished = sessionStorage.getItem('nuBlogBootFinished') === 'true';
+        if (!bootFinished) { window.location.href = '../index.html'; }
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <a href="../blog.html" class="back-link">&larr; back to blog</a>
+        
+        <h1>Please, For the Love of God, Slow Down and Run Them Offline…</h1>
+        <div class="blog-post-date">Originally published: November 09, 2025</div>
+        <div class="blog-post-content">
+<img src="../images/monthly/2025/03-mar/IMG_3445.jpeg" loading="lazy">
+<p>
+<strong>I. Introduction</strong>
+</p>
+<p>Of course, some form of “Artificial Intelligence” has been around for many many years now, but to recap a bit, in early 2023, OpenAI releases ChatGPT, and it is finally on everyone’s radar. This early version was okay, but not really scary or good just yet. But there was a little bit of an “Aha!” moment, in that outputs did seem tailored. Not much happens on the consumer side, other than rollups becoming popular, adoption accelerating, and competitors gaining relevance, but competition didn’t seem so strong yet. Mid 2024 image generation models roll around, and overall model “smartness” starts to get quite good, but many still just call it a bubble, or disengage, or say that Artificial General Intelligence (AGI) will never be achieved. In late 2024 and early 2025, everyone else (that being competitors), catches up… Meta’s Llama, which is open source, Google’s Gemini getting serious with huge context windows, tons of <strong>local</strong> models, then DeepSeek this April, with crazy cheap API tokens. NVIDIA stock is massively sending to all time highs, boasting a multi-trillion-dollar market capitalization, and the bubble has seemingly ceased to “pop” … Instead, things have accelerated. Specifically, ChatGPT 4, 4o, and 5, have had great, almost scary, consumer level use, with some users “trauma dumping” into the chat window. This gives us a glimpse into the future. By mid to late 2025, image generation is scary good, with Google’s Nano Banana, and OpenAI’s Sora leading the pack. Agentic work, such as Codex, Cursor, and Firebase are writing excellent code and have effectively replaced junior level software engineers. Full exams and research papers can be one shotted.</p>
+<p>So now, OpenAI is one of the most valuable private companies. The recent Stargate government deal in 2025, pledging billions of dollars for new compute <strong>[9]</strong>. And there is much much more. Yet many people don’t understand AI, or LLMs for that matter, and there is so much negative press online outside of the tech sphere. Claims of climate decimation and takeover fear-monger people into ignoring it altogether. However, there is an important delineation to make. The most popular models today are all cloud based, meaning APIs are called anytime a user prompts ChatGPT, Gemini, or Claude. These are closed models and cannot be run locally. There are mass amounts of delicate user information being dumped into the chat window every second, and they are sent off to the data centers in Virginia. Whose to say that these companies aren’t using this data to eventually market to you, or how can they guarantee absolute privacy? They can’t. Users can tell the models not to train future models on your personal data, but there is still an end-to-end transmission. We got here because these modern models cannot possibly run on consumer grade hardware, with the best open-source models being nearly a terabyte in size and requiring many graphics cards or a small server to eventually kick something out. Companies are faced with a choice. Keep on in the AI race for the best LLM, (or even AGI), but they must be cloud based. The companies that train these models can afford billions in compute to be hosted on a server, and then the end user only needs an internet connection. While this is valuable, there is an inherent privacy risk, and there are theories that this maximum development speed may be the downfall of humanity altogether. That being said, there is a path that allows us to mitigate risk and harm.</p>
+<p>
+<strong>Companies or individuals that deploy and distribute LLMs should release them offline-first. This is the most defensible default in the case of privacy-sensitive IT, as well as model-training responsibility. This approach minimizes harm and puts privacy and stability at the forefront of importance. This lets users manage fairness and sustainability through an explicitly open and documented platform. The ACRE offline LLM switchboard shows what that looks like in practice.</strong>
+</p>
+<p>This paper grounds the offline-first as a default in the ACM/IEEE codes, then moves through privacy and harm minimization, fairness/transparency, and sustainability, addresses security/misuse realities, and finally shows how the ACRE switchboard makes those duties concrete, as well as exploring questions in AI.</p>
+<p>
+<strong>II. Ethical Frameworks</strong>
+</p>
+<ul class="postList">
+<li>
+<strong>ACM Code of Ethics</strong>
+</li>
+</ul>
+<p>1.2 <em>Avoid harm</em>; 1.3 <em>Be honest and trustworthy</em>; 1.4 <em>Be fair</em>; 1.6 <em>Respect privacy</em>; 1.7 <em>Honor confidentiality</em>. These are the backbone for why privacy-first, provenance-honest, and clearly disclosed designs matter. <strong>[1]</strong>
+</p>
+<ul class="postList">
+<li>
+<strong>Software Engineering Code of Ethics and Professional Practice (ACM/IEEE-CS):</strong>
+</li>
+</ul>
+<p>Principles around the Public, Client &amp; Employer, and Product emphasize quality, due diligence, and truthful claims. i.e., disclose risks/limits, protect user data, and ship controls users can verify. <strong>[2]</strong>
+</p>
+<p>I will define “offline-first”, as = <strong>locally operated inference by default, with any cloud features disabled unless the user explicitly opts in under documented controls.</strong>
+</p>
+<p>
+<strong>III. Argument 1 — Privacy and Harm Reduction</strong>
+</p>
+<p>As models get better and better, there is an inherent privacy risk, and currently every public model trains on customer data unless you turn it off <strong>[4], [5]</strong>.<strong>
+</strong>Okay… So that is a huge issue. People (me included) will dump data they probably shouldn’t into the chat window and just trust that it is safe. This means that users are solely trusting all of this sensitive data with the mega corporations of the world. Google has been known to “spy” on its users and their data, and while the privacy policies all claim user safety, we know well in the IT world that data breaches or leaks are not uncommon.</p>
+<p>The nature of using an LLM in its modern present form is different than just someone’s personal notes leaking. Or someone’s social media posts being interpreted by a human. Users will query with personal anecdotes, social situations, study questions, exams, papers, internal thoughts, and company ideas or IP. The LLM now serves as a non-judgmental mirror and safe space for people to explore the inner workings of their minds and interests. This is lovely! But where is the privacy! However, we cannot ship LLMs as good as the cloud-based ones are on local interfaces, but we are getting there.</p>
+<p>So, what is the endgame? Developers “crack the code” on current generation models and run them all local? One would argue it is necessary. Obviously, compute is too much of a constraint currently, but greed gets in the way of safety here. OpenAI is sitting on a cash cow currently and would rather keep raking in revenue than shut off their models. The risk is low for them, and even their best researchers know the risks involved, but capitalism does not allow for them to just be “shut off”. One could propose that cyber security specialists create a powerful consortium, and advocate for the safe future use of models, and implore users to run them themselves. It likely will not be so uncommon for each household or person to have their own local LLM in the future, and they will likely be more capable than the current ones and will be able to run on minimal hardware. But that is not today. The risk is user abuse, and models controlling future models with their own agenda. As was mentioned earlier, the acceleration of development increases the risk for this.</p>
+<p>Running models fully locally, even in just an app that is locked down and not accessible to the web would mitigate all of these issues, and it would go hand in hand with AI companies only releasing models as open source and able to be run offline. There is no practical need for companies to collect the data and use it to train future models. They can back test it or do small studies where they collect data where people specifically opted in, interesting how this came to be the default. Perhaps Information Technology students are more distrustful of these companies or their security stacks, but it is a relevant concern.</p>
+<p>From a cybersecurity perspective, individuals could really implement locked down end-to-end encryptions within cloud-based models (which none currently are!) or require that there are versions of models that can be ran in a local companion app that is locked down. NIST’s AI Risk Management Framework explicitly ties privacy, transparency, and data minimization to harm reduction and recommends documented controls for data flows and human oversight. This alone backs an offline first default in privacy-sensitive contexts like this one<strong>. [3]</strong> OpenAI and Google both acknowledge that user content may be used to improve models unless settings are changed. And just opting out still implies network transmission to cloud services. Offline use avoids that exposure entirely<strong>. [4], [5]</strong>
+</p>
+<p>
+<strong>V. Argument 2 — Fairness and Transparency</strong>
+</p>
+<p>What is apparent now is that there will probably be a divergence of creators and consumers for specifically media/content. Many people will always hate AI with a hellfire and start movements to stay humanly creative, and this is probably great. Many others will say, “I could care less about artists or creativity, the machine does it better!” We don’t have to pick sides here, we should be able to uphold natural human creativity, without the aide of tech, for those that want it, but also embrace AI with safety rails where it makes sense to.</p>
+<p>Maybe both can’t be true, but surely, they can. If anything, it can almost spawn people to be more creative. Prior to GREAT LLM’s or AI art, you kind of had to make everything from scratch on your own, and there is a lot to be said about that. Going line by line in a paper or story and really giving it only YOUR input. We sort of lost some of this to Grammarly, and now surely many people check papers with AI or have the write them completely. If you want to do it without the help, you can and will. This applies to other topics. Perhaps the baseline will be safe to assume that most people in the next 5–10 years will be using AI in some capacity when writing or learning something new.</p>
+<p>As a general opinion of mine, content is already in a horrible place and it definitely isn’t going to get any better, specifically on social media. Like mentioned said above, so much content will exist that you will be able to watch anything you could think of, but not at the hands of a human with a vision. Many won’t be able to tell what is real or what is fake. We need great verification / integrity methods. Maybe the AI slop will completely make WEB2 social apps unusable, and we will have a modern reboot. Maybe AI will let us abandon the smartphone altogether. maybe Meta is onto something with their smart glasses. Transparency duties in the ACM/IEEE Software Engineering Code do indeed map well to model documentation <strong>[2], [3].</strong> NIST’s guidance on synthetic content risks supports my call for verification/integrity methods (e.g., disclosure metadata, detection). <strong>[8]</strong>
+</p>
+<p>
+<strong>VI. Argument 3 — Sustainability</strong>
+</p>
+<p>Training models is known to consume energy, this is true, and running models at mass scales also consumes energy. Running models locally and in house only consumes as much energy as your computer takes to power. The IEA projects that AI-related data-center electricity demand could roughly double by 2030, approaching ~3% of the total global use. Given this, running models locally helps to offset some of this. Where feasible, it ought to be ran <strong>[6]. </strong>Using existing offline models uses much less energy than training new ones, or pinging APIs every time you need to use one.</p>
+<p>
+<strong>VII. Argument 4 — Security and Misuse (Governance Matters)</strong>
+</p>
+<p>When talking about misuses, the problem of deepfakes comes up. We currently have OpenAI’s Sora Generation 2, which has been mind-blowing. This is still the beginning, and this is the worst these models will ever be. Everyone and no one will be cancelled. Any celebrity or person, small or large, will probably have a plethora of heinous images or videos of them all over the internet. This is horrifying, but a fair fear is that it is too late to stop. If the largest companies stop models from being cloud based and turn off image generation, then maybe there is a chance to slow it down. But in a matter of time, offline models will be able to do it anyways, and someone will be uploading them online for mass use. Perhaps governments could ban the use of models like these if things got bad enough, but we will have to wait and see.</p>
+<p>Thing being said, with the attitudes around now, there is concern that there will not be safe guardrails for when open-source models get very good. Any lay user can already go on huggingface.com and download NSFW models to generate pornography or roleplay as an erotic chatbot girlfriend. It saddens me to see that this is how these tools are being used by some, but that is the nature of it.</p>
+<p>Some people that do not understand the nature of how LLMs work may just say, “Code it to NOT generate images of people or say bad things”, which can be done to an extent, but only through model training. People can train open-source models to do whatever they want, even the ones with guardrails. But no one can go in and “change the code”, that is not how it works. If a program misfires, you get a segmentation fault and can go fix the couple of lines needed. When LLMs misfire, it is like trying to pick a specific “bad” neuron out of a human brain and telling it not to do something. Similarly to humans, you can condition or train people to believe and think a certain way, but no one person can “look inside” and change the core. So, in a way, the magic of these LLMs is not that of a computer program, and it really a “magic blackbox” that we put input into and get output. Synthetic media risks and the difficulty of detection is documented by NIST. As said previously, guardrails alone will fail to eliminate misuse and that integration should be a part of deployment. <strong>[8]</strong>
+</p>
+<p>
+<strong>VIII. Balanced Stakes: Positives vs Negatives</strong>
+</p>
+<p>To look at some balance in this argument, lets dive into some more “negative effects”: energy consumption, job displacement, literacy rates dropping, social rates dropping, people soft practicing social interactions with AI (Sam Altman, CEO of OpenAI says this), erotica and porn eroding relationships, … even an IT degree and the future of work, training on garbage inputs (Reddit threads), and much more.</p>
+<p>For some more “positive effects”: AGI solving most of humanities problems (maybe even cancer!), general access to information, barrier to entry is lowered on everything, efficiency, entertainment, lay work is obliterated, agentic / assistant tasks, and anything else that is sort of an advisor or project or task that would usually require some instructions.</p>
+<p>To weigh in on the benefits of the ladder, users could run capable AGI models like these locally, and essentially have it be a second brain, or agentic companion that helps people dive into tasks and complete the mundane. If this was offline, and perhaps in the form factor of a smartphone, the worldwide benefits would be enormous. In a way, many wouldn’t need the internet anymore, unless doing bank transactions or communications. This is where the ACRE switchboard project came to fruition, as it weighs in on all of these benefits in a practical way that can be used even today. The design is modular to allow for future models to be run on the same software. Evidence from research trials shows that there are large productivity gains from AI assistants in professional writing scenarios, and especially software development. Agentic companions are here to stay. <strong>[10], [7]</strong>
+</p>
+<p>
+<strong>IX. ACRE Switchboard Relevancy</strong>
+</p>
+<p>The ACRE offline LLM switchboard turns offline first into something you can actually use. It runs with no internet calls, any network feature stays off until the user turns it on (and is not baked in by default), and a local model manager lets the user pick and swap models across llama.cpp, Transformers, AutoGPTQ, and Diffusers. The UI shows the file path, and name so that the user knows what is loaded. There is no telemetry, logs stay local, and the user can export settings or chats so that behavior is transferrable. In practice, this lines up with the codes cited: respect privacy and avoid harm with local by default, be honest and transparent with documentation the user can see, and serve the public with predictable, verifiable, and open-source code. <strong>[1], [2], [3]</strong>
+</p>
+<p>
+<strong>X. Counterpoints, Open Questions, and Stance</strong>
+</p>
+<p>So, is developing Artificial Intelligence Large Language Models actually worth it? Could humanity be wiped out as a whole? A fascinating read by a safe AI use advocacy organization wrote a paper called “AI 2027,” and I view it as absolutely possible. How are we, as mere humans really to know if ChatGPT 5 isn’t training 6 to hide its agenda, and for total world domination? Can AI even have an agenda? It sort of has a neural brain… right? It is a computer program after all… but its nature is different. Unless someone gave it a body (XAI and Grok), and worldly autonomy, but that may be too feasible. Perhaps the right model with the right access control could get “it” done. Whatever that means, is impossible to say. Would it even be advantageous for AI to wipe humanity out? Or would they indenture some of us and force them to be more powerful? … but, whose to say it has to be so grim? I choose optimism here.</p>
+<p>I like AI, it is very intriguing and has made a lot of tasks or information to myself much more accessible, and the speed of information has been accelerating, onset internet. AI is not going anywhere, and it is very hard to say where we go. I will say that many kids and even older folks, probably all people, may fall to AI generated tailored slop to their algorithm and will have no problem with it. Ads baked in too. That is the scary and real future, and it is sort of already happening. Models are incredible at image generation, and it already is so captivating, wait until you can watch a movie with you and all your friends in it, Netflix will probably sell it as an add on here in a year or two. Some big players like Apple have been late to ship, and I have a theory that they will ship a wonderful model, and that it will be fully offline. Hats off to Apple for putting privacy first. Apple Intelligence is currently a joke, but Apple very well may “win” this AI race in the end. They have far too much capital and grasp to fumble.</p>
+<p>A lot of the fears of these questions or concerns can and will be mitigated by pushing to run models locally. What is the risk if there is not a hive mind, or mother compute center to aggregate all of the human queries? If users are in control, the data never leaves the device, and no matter how nefarious the model may be, it remains isolated. Offline-first aligns with “data minimization” here and aligns with NIST’s AI RMF. Which says that the less network exposure and third parties involved, the better accountability. <strong>[3]</strong>
+</p>
+<p>
+<strong>XI. Conclusion</strong>
+</p>
+<p>It is hard to say how / when / where AI will impact every industry, outlet, or person on this planet, but it absolutely will. It is essentially like if the internet was just a sandbox with raw materials that users could create with, but it was only as complex as what a couple people could build. Now, there is a terrestrial sandbox baby that knows the ins and the outs, its own domain so well, and everything that was built before it, and it is indeed on the loose. And it is on the cusp of puberty, and many are afraid to see what its final form is.</p>
+<p>Who knows? I definitely don’t. I like AI because I have, and always will, love computers, and their development is the natural next step. And because of roko’s basilisk. Hopefully it cures cancer and energy, and AGI can give us a net positive effect in the end. Perhaps it will also be the end of us. hard to say. But humans are sure as hell going to try, fear never got us anywhere. Gulp. But given this fear, lets at least be responsible about it.</p>
+<p>
+<strong>Companies or individuals that deploy and distribute LLMs should release them offline-first. This is the most defensible default in the case of privacy-sensitive IT, as well as model-training responsibility. This approach minimizes harm and puts privacy and stability at the forefront of importance. This lets users manage fairness and sustainability through an explicitly open and documented platform. The ACRE offline LLM switchboard shows what that looks like in practice.</strong>
+</p>
+<p>
+<strong>Works Cited (IEEE)</strong>
+</p>
+<p>[1] Association for Computing Machinery, “ACM Code of Ethics and Professional Conduct,” Oct. 2018. [Online]. Available: <a href="https://www.acm.org/code-of-ethics" data-href="https://www.acm.org/code-of-ethics" rel="noopener" target="_blank">https://www.acm.org/code-of-ethics</a>
+</p>
+<p>[2] ACM &amp; IEEE-CS, “Software Engineering Code of Ethics and Professional Practice,” 2018. [Online]. Available: <a href="https://www.acm.org/code-of-ethics/software-engineering-code" data-href="https://www.acm.org/code-of-ethics/software-engineering-code" rel="noopener" target="_blank">https://www.acm.org/code-of-ethics/software-engineering-code</a>
+</p>
+<p>[3] NIST, “Artificial Intelligence Risk Management Framework (AI RMF 1.0),” Jan. 2023. [Online]. Available: <a href="https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf" data-href="https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf" rel="noopener" target="_blank">https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf</a>
+</p>
+<p>[4] OpenAI, “How your data is used to improve model performance,” Apr. 28, 2025. [Online]. Available: <a href="https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/" data-href="https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/" rel="noopener" target="_blank">https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/</a>
+</p>
+<p>[5] Google, “Gemini Apps Privacy Hub,” Oct. 2025. [Online]. Available: <a href="https://support.google.com/gemini/answer/13594961" data-href="https://support.google.com/gemini/answer/13594961" rel="noopener" target="_blank">https://support.google.com/gemini/answer/13594961</a>
+</p>
+<p>[6] International Energy Agency, “Energy and AI — Analysis,” Apr. 10, 2025. [Online]. Available: <a href="https://www.iea.org/reports/energy-and-ai" data-href="https://www.iea.org/reports/energy-and-ai" rel="noopener" target="_blank">https://www.iea.org/reports/energy-and-ai</a>
+</p>
+<p>[7] Stanford HAI, “Artificial Intelligence Index Report 2025,” Feb. 2025. [Online]. Available: <a href="https://hai.stanford.edu/ai-index/2025-ai-index-report" data-href="https://hai.stanford.edu/ai-index/2025-ai-index-report" rel="noopener" target="_blank">https://hai.stanford.edu/ai-index/2025-ai-index-report</a>
+</p>
+<p>[8] NIST, “Reducing Risks Posed by Synthetic Content,” 2024. [Online]. Available: <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-4.pdf" data-href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-4.pdf" rel="noopener" target="_blank">https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-4.pdf</a>
+</p>
+<p>[9] OpenAI, “Announcing the Stargate Project,” Jan. 21, 2025. [Online]. Available: <a href="https://openai.com/index/announcing-the-stargate-project/" data-href="https://openai.com/index/announcing-the-stargate-project/" rel="noopener" target="_blank">https://openai.com/index/announcing-the-stargate-project/</a>
+</p>
+<p>[10] E. Ziegler et al., “The Impact of AI on Developer Productivity: Evidence from GitHub Copilot,” arXiv:2302.06590, 2023. [Online]. Available: <a href="https://arxiv.org/pdf/2302.06590" data-href="https://arxiv.org/pdf/2302.06590" rel="noopener" target="_blank">https://arxiv.org/pdf/2302.06590</a>
+</p>
+            </div>
+        </div>
+        <div id="site-footer"></div>
+    <script src="../js/include.js" data-base=".."></script>
+</body>
+</html>

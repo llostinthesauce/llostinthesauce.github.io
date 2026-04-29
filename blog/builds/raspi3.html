@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <title>raspberry pi 3 - builds+ - nuBlog</title>
+    <link rel="stylesheet" href="../../styles/style.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <style>
+        .spec-box {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-left: 3px solid #99CCCC;
+            padding: 16px 20px;
+            margin: 20px 0 28px;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+        .spec-box table { width: 100%; border-collapse: collapse; }
+        .spec-box td { padding: 3px 0; vertical-align: top; }
+        .spec-box td:first-child { color: #99CCCC; width: 130px; }
+        .spec-box td:last-child { color: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <a href="index.html" class="back-link">&larr; back to builds+</a>
+        <h1>raspberry pi 3</h1>
+        <div class="blog-post-date">April 2026 — active</div>
+
+        <img src="../../images/builds/raspi3.jpg" alt="ras pi 3" loading="lazy" class="styled-image">
+
+        <div class="blog-post-content">
+            <div class="spec-box">
+                <table>
+                    <tr><td>model</td><td>Raspberry Pi 3 Model B Rev 1.2</td></tr>
+                    <tr><td>cpu</td><td>Broadcom BCM2837, Cortex-A53 quad-core ARMv8</td></tr>
+                    <tr><td>ram</td><td>1 GB</td></tr>
+                    <tr><td>storage</td><td>15 GB SD card</td></tr>
+                    <tr><td>os</td><td>Debian</td></tr>
+                    <tr><td>services</td><td>Pi-hole (primary), Unbound DNS, Samba, Fail2Ban</td></tr>
+                </table>
+            </div>
+            <p>basically just a Pi-hole. that's it, that's the whole job. wired ethernet only, quietly blocking ads across the whole network 24/7. originally my uncle's, he used it for a game emulator. i repurposed it and actually hosted nuBlog on it back in march 2025. deprecated it as a web server in summer 2025 for privacy reasons and moved the site to GitHub Pages, which is where it lives now.</p>
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../js/include.js" data-base="../.."></script>
+</body>
+</html>

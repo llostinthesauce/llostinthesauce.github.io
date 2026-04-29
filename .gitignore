@@ -1,0 +1,98 @@
+# OS/macOS stuff
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*~
+*.old
+*.bak
+*.orig
+*.swp
+*.tmp
+.remember
+
+# Logs and cache
+*.log
+*.cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+cache/
+tmp/
+__pycache__/
+*.pyc
+.python_history
+
+# Compression & Archives
+*.gz
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
+.claude
+
+corbin-style-guide.md
+corbin-style-guide-builds.md
+
+# Secrets & credentials
+.env
+.env.*
+*.key
+*.pem
+*.crt
+config.php
+secrets/
+private/
+
+# Git & Deployment
+.git/
+.svn/
+
+# IDEs & Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+.classpath
+
+# Node
+node_modules/
+
+# -------- SPECIFIC TO NUBLOG --------
+
+# Local image backups
+images_backup/
+
+# Droplets/Incoming
+_incoming_photos/
+_incoming_posts/
+
+# Scripts & Agent Notes
+plan.md
+/blog/agent/
+
+# Agent Rule Files
+AGENTS.md
+claude.md
+gemini.md
+agents-wiki.md
+
+# Audit & Design Docs (multi-agent audit project)
+audit-guide-and-review-for-deepseek.md
+audit-report-042926.md
+deepseekv4proaudit.md
+geminiflashaudit.md
+glm5-1audit.md
+glm5-1auditthourough.md
+opusreport.md
+qwen3.6moe-report.md
+ssg-migration-design.md
+nublogv2.1 full changes.md
+HANDOFF.md

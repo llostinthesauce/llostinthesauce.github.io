@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <title>image gallery - nuBlog</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Featured row — current month + film cameras */
+        .gallery-featured-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 18px 0 10px;
+        }
+
+        .gallery-featured-card {
+            display: block;
+            background-color: #111;
+            border: 2px solid #9966CC;
+            padding: 20px 16px;
+            text-align: center;
+            text-decoration: none;
+            font-family: monospace;
+            color: #9966CC;
+            font-size: 1.05em;
+            font-weight: bold;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .gallery-featured-card:hover {
+            background-color: #1a0030;
+            border-color: #CC99FF;
+            color: #CC99FF;
+        }
+
+        .gallery-featured-card .gallery-featured-sub {
+            display: block;
+            margin-top: 6px;
+            color: #99CCCC;
+            font-size: 0.8em;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .gallery-featured-card .gallery-featured-badge {
+            display: inline-block;
+            background: #9966CC;
+            color: #000;
+            font-size: 0.65em;
+            padding: 1px 6px;
+            border-radius: 2px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Gallery groups from JS */
+        .gallery-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin: 18px 0 20px;
+        }
+
+        .gallery-group-title {
+            margin: 0 0 6px;
+        }
+
+        .gallery-group-note {
+            margin: 0 0 12px;
+            color: #99CCCC;
+            font-size: 0.9em;
+        }
+
+        .gallery-grid {
+            --gallery-min-width: 140px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(var(--gallery-min-width), 1fr));
+        }
+
+        .gallery-entry {
+            background-color: #111;
+            border: 1px solid #444;
+            padding: 14px 10px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .gallery-entry-label {
+            color: #33CCAA;
+            text-decoration: none;
+            font-size: 0.95em;
+            display: block;
+        }
+
+        .gallery-entry:not(.gallery-entry-preview) > .gallery-entry-label:hover {
+            background-color: #222;
+        }
+
+        .gallery-entry-label.is-disabled {
+            color: #88AFAA;
+            cursor: default;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .gallery-entry-preview {
+            position: relative;
+            width: 100%;
+            background-color: #111;
+            border: 1px solid #444;
+            font-family: monospace;
+            text-align: center;
+            color: #33CCAA;
+            text-decoration: none;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            aspect-ratio: 3 / 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            padding: 0;
+        }
+
+        .gallery-entry-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            transition: background 0.3s ease;
+        }
+
+        .gallery-entry-preview:hover::before {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .gallery-entry-preview:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-entry-preview .gallery-entry-label {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            font-size: 0.95em;
+        }
+
+        .gallery-entry-children {
+            --gallery-child-min-width: 140px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(var(--gallery-child-min-width), 1fr));
+            margin-top: 12px;
+        }
+
+        .gallery-entry-children:empty {
+            display: none;
+        }
+
+        /* Make featured gallery thumbnails a bit bigger */
+        .gallery-group:first-child .gallery-grid {
+            --gallery-min-width: 200px;
+        }
+
+        /* Make the current month pop */
+        .gallery-group:first-child .gallery-grid > .gallery-entry:first-child {
+            border: 2px solid #9966CC !important;
+            box-shadow: 0 0 10px rgba(153, 102, 204, 0.4);
+        }
+
+        .gallery-group:first-child .gallery-grid > .gallery-entry:first-child:hover {
+            border-color: #CC99FF !important;
+            box-shadow: 0 0 15px rgba(204, 153, 255, 0.6);
+        }
+
+        .gallery-group:first-child .gallery-grid > .gallery-entry:first-child .gallery-entry-label {
+            color: #CC99FF;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        @media (max-width: 500px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-entry-children {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+
+        <h1>image gallery</h1>
+        <i>last updated: 4/27/2026</i>
+
+        <!-- All months + film + extras via JS -->
+        <div class="gallery-groups" data-gallery-groups></div>
+
+        <template id="gallery-group-template">
+            <section class="gallery-group">
+                <h2 class="gallery-group-title"></h2>
+                <p class="gallery-group-note"></p>
+                <div class="gallery-grid"></div>
+            </section>
+        </template>
+
+        <template id="gallery-entry-template">
+            <div class="gallery-entry">
+                <a href="#" class="gallery-entry-label"></a>
+                <div class="gallery-entry-children"></div>
+            </div>
+        </template>
+
+        <div id="site-footer"></div>
+    </div>
+
+    <script src="js/include.js" data-base="."></script>
+    <script src="js/gallery-data.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+
+</html>

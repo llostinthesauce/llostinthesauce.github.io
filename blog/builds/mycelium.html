@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <title>mycelium - builds+ - nuBlog</title>
+    <link rel="stylesheet" href="../../styles/style.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <style>
+        .lineage {
+            background: #161616;
+            border-left: 3px solid #99CCCC;
+            padding: 14px 20px;
+            font-family: monospace;
+            font-size: 0.95em;
+            line-height: 1.9;
+            margin: 20px 0 28px;
+        }
+        .lineage .stop { color: #888; }
+        .lineage .arr { color: #99CCCC; margin: 0 5px; }
+        .lineage .pause { color: #666; font-style: italic; }
+        .lineage .v1 { color: #CC99CC; }
+        .lineage .v2 { color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <a href="index.html" class="back-link">&larr; back to builds+</a>
+<h1>mycelium</h1>
+<div class="blog-post-date">April 2026 — active</div>
+
+<div class="blog-post-content">
+<div class="lineage">
+<span class="stop">ACRE</span><span class="arr">→</span><span class="stop">lumen</span><span class="arr">→</span><span class="stop">lumenComposite</span><span class="arr">→</span><span class="stop">ollama-mlx</span><span class="arr">→</span><span class="pause">(two month pause)</span><span class="arr">→</span><span class="stop">LibMem</span><span class="arr">→</span><span class="stop">AI_Lab</span><span class="arr">→</span><span class="stop">Lumen reDux</span><span class="arr">→</span><span class="v1">mycelium v1</span><span class="arr">→</span><span class="v2">mycelium v2</span>
+</div>
+
+<h2>v2: active dev</h2>
+
+<p>this is what i am actively building right now. the vision is one place that is entirely me: a total dashboard, wiki, RAG layer, and personal knowledge graph, all private, offline, and secure by default. nothing leaves the machine unless i explicitly want it to.</p>
+
+<p>the core stack is still being finalized. i am deciding between llama.cpp and ollama or LM Studio as the inference backend. the local models run well, particularly the Qwen MoE which is genuinely fast and capable on my hardware. that said, the architecture will also support connecting to any API endpoint or cloud provider for when i want a smarter model for a specific task. local first, cloud optional.</p>
+
+<p>the wiki layer is multi-domain by design and inspired partly by the Karpathy wiki approach: a knowledge graph that the model itself builds and updates over time. right now the main wiki has 350+ entries across entities, concepts, and auto-generated synthesis notes, seeded from Apple Notes. the taxonomy is intentionally coarse: entity and concept cover almost everything. ingest takes raw notes, classifies them, and writes structured wiki pages. it works.</p>
+
+<p>harvesters in progress: Apple Notes, iMessage, mail, calendar, browser history, local files. the end goal is a personal dashboard that surfaces all of it in one place: wiki search, health logs, a dev project index, everything. Streamlit is the current interface, but that is a placeholder. audio transcription and photo metadata still need preprocessing pipelines before they can ingest. everything else is text and the stack handles it. still a lot to build but the direction is right.</p>
+
+<h2>v1: deprecated</h2>
+
+<p>enough time passed and I got the itch again to continue dev on my vision of ACRE/Lumen/Mycelium. Around this time, OpenClaw dropped and got me thinking, yes, I dont need to completely re-engineer how MLX is processed and served on mac. So I set out once again to create some sort of skill, wrapper, app, or plugin, that is served locally, accessible thru outlets, and possible to run multi node with prompt processing and all of the bells and whistles. I started dev on this again before I even realized I was trying to make my own open claw. the difference is that it isnt so reliant on cloud models or fancy mcp servers or automated workflows. i want skills, but just the ones I build, not a whole marketplace, way too much security risk IMO. also something about building this perfect vision for myself is much more fun than just running open claw. I also get to learn so much while building.</p>
+
+<p>So I am somewhere well along from what I would call a v1 dev release, being that I have inference running thru ollama on my mac for mlx. it just WORKS! i have a full chroma rag db built out with qwen embedding and node setup scripts that one shot it. so i turned my old desktop into a linux server and set it up as a node to utilize its shitey gpu. same with my old mac pro, a engineering beast, but a bit weak for inference, but tons of ram. both of these are "nodes" in my system, that do cronjobs to pull daily use into the rag db and have some edge gguf models that I dont want on my mac. mac is MLX ONLY!</p>
+
+<p>so I am working on the more interesting capabilities, like chromium playwright browser automation, true agent mode, and other special tasks like code reviewer, biohacker, personal writer, send / receive mail and imessage, personal library, security analyst, trader, poster, and many more. if you cant tell, lots of these tasks are pretty much using all of the projects below in some way.</p>
+
+<p>little did i realize what I wanted was a way to talk to my second brain. I have wanted a proper second brain search for YEARS, and i refused to use obsidian, so apple notes and paper notebooks remain my second brain and sure I have a system. But i might as well leverage edge ai, rag embeddings, and ML to conceive this idea, and if i am happy with the project in the end, I will put it on GH. the one liner would essentially be a privacy first, ultra intelligent RAG DB plugin for ai agents (cloud, or local, big emphasis on local here!). I have mainly worked on the plugin skills and just getting inference and UI in the browser smooth, but I need to look at refining the skills, DB search, MCP servers, and more "big boy" plugins. but the main emphasis is personal second brain and private. I will continue dev.</p>
+</div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../js/include.js" data-base="../.."></script>
+</body>
+</html>
