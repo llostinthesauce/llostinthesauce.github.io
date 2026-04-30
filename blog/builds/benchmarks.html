@@ -72,7 +72,7 @@
 <h1>local LLM benchmarks</h1>
 <div class="blog-post-date">April 2026 — latest</div>
 <div class="bench-note">
-macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 28&ndash;29 &middot; 3-pass suite:
+macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 9 runs over Apr 28&ndash;30 &middot; 3-pass suite:
 <code>short</code> 2K ctx / <code>long</code> 16K ctx / <code>security</code> 8K ctx
 &middot; numbers are averages across all passes and runs
 </div>
@@ -90,8 +90,8 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 
         <tr>
             <td class="model">Qwen3.6-35B-A3B</td>
             <td class="quant">Q4_K_M</td>
-            <td class="num">55.4</td><td class="num">55.7</td><td class="num">55.2</td><td class="num">58.0</td>
-            <td class="num">1215</td><td class="num mem-ok">71.0%</td><td class="num">19</td>
+            <td class="num">56.2</td><td class="num">56.3</td><td class="num">55.0</td><td class="num">57.3</td>
+            <td class="num">1240</td><td class="num mem-ok">74.0%</td><td class="num">22</td>
         </tr>
         <tr>
             <td class="model">Qwen3.6-35B-A3B</td>
@@ -111,8 +111,8 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 
         <tr>
             <td class="model">Qwen3.6-27B</td>
             <td class="quant">Q4_K_M</td>
-            <td class="num">14.5</td><td class="num">14.5</td><td class="num">14.4</td><td class="num">14.4</td>
-            <td class="num">251</td><td class="num mem-ok">59.8%</td><td class="num">6</td>
+            <td class="num">14.5</td><td class="num">14.6</td><td class="num">14.4</td><td class="num">14.4</td>
+            <td class="num">250</td><td class="num mem-ok">71.2%</td><td class="num">9</td>
         </tr>
         <tr>
             <td class="model">Qwen3.6-27B-UD</td>
@@ -141,8 +141,17 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 
         <tr>
             <td class="model">Qwen3-Coder-30B-A3B</td>
             <td class="quant">Q4_K_XL</td>
-            <td class="num">81.9</td><td class="num">85.6</td><td class="num">79.8</td><td class="num">80.0</td>
-            <td class="num">805</td><td class="num mem-ok">69.1%</td><td class="num">16</td>
+            <td class="num">82.0</td><td class="num">85.8</td><td class="num">79.9</td><td class="num">80.1</td>
+            <td class="num">834</td><td class="num mem-ok">71.8%</td><td class="num">19</td>
+        </tr>
+
+        <!-- Qwen3.5 9B -->
+        <tr class="section-row"><td colspan="9">Qwen3.5 9B &mdash; dense</td></tr>
+        <tr>
+            <td class="model">Qwen3.5-9B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">43.0</td><td class="num">43.3</td><td class="num">42.5</td><td class="num">43.2</td>
+            <td class="num">874</td><td class="num mem-ok">62.5%</td><td class="num">3</td>
         </tr>
 
         <!-- Gemma 4 E4B -->
@@ -150,8 +159,8 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 
         <tr>
             <td class="model">Gemma-4-E4B</td>
             <td class="quant">Q4_K_M</td>
-            <td class="num">67.7</td><td class="num">70.0</td><td class="num">66.6</td><td class="num">66.5</td>
-            <td class="num">1622</td><td class="num mem-ok">53.9%</td><td class="num">12</td>
+            <td class="num">67.7</td><td class="num">69.9</td><td class="num">66.8</td><td class="num">66.3</td>
+            <td class="num">1619</td><td class="num mem-ok">60.2%</td><td class="num">15</td>
         </tr>
 
         <!-- Gemma 4 26B MoE -->
@@ -159,14 +168,23 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 8 runs over Apr 
         <tr>
             <td class="model">Gemma-4-26B-A4B</td>
             <td class="quant">Q4_K_M</td>
-            <td class="num">58.4</td><td class="num">58.9</td><td class="num">58.5</td><td class="num">57.5</td>
-            <td class="num">1252</td><td class="num mem-ok">74.6%</td><td class="num">16</td>
+            <td class="num">58.4</td><td class="num">59.0</td><td class="num">58.5</td><td class="num">57.7</td>
+            <td class="num">1284</td><td class="num mem-ok">74.6%</td><td class="num">19</td>
         </tr>
         <tr>
             <td class="model">Gemma-4-26B-A4B</td>
             <td class="quant">Q6_K</td>
             <td class="num">54.6</td><td class="num">53.0</td><td class="num">55.3</td><td class="num">&mdash;</td>
             <td class="num">1378</td><td class="num mem-high">94.7%</td><td class="num">3</td>
+        </tr>
+
+        <!-- Gemma 4 31B Dense -->
+        <tr class="section-row"><td colspan="9">Gemma 4 31B &mdash; dense</td></tr>
+        <tr>
+            <td class="model">Gemma-4-31B</td>
+            <td class="quant">Q4_K_M</td>
+            <td class="num">13.2</td><td class="num">13.7</td><td class="num">13.0</td><td class="num">13.1</td>
+            <td class="num">210</td><td class="num mem-warn">75.5%</td><td class="num">3</td>
         </tr>
 
         <!-- Granite -->
