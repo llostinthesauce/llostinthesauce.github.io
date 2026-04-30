@@ -2,6 +2,7 @@
 window.__SITEMAP__ = {
   "files": [
     ".nojekyll",
+    "404.html",
     "about.html",
     "all-images.html",
     "blog.html",

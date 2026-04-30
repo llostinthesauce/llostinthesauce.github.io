@@ -96,3 +96,7 @@ qwen3.6moe-report.md
 ssg-migration-design.md
 nublogv2.1 full changes.md
 HANDOFF.md
+
+# Playwright MCP test artifacts
+.playwright-mcp/
+*-snapshot.txt
