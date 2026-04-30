@@ -20,7 +20,7 @@ EXCLUDE_FILES = {
     'glm5-1audit.md', 'glm5-1auditthourough.md',
     'opusreport.md', 'qwen3.6moe-report.md',
     'ssg-migration-design.md', 'nublogv2.1 full changes.md',
-    'HANDOFF.md',
+    'HANDOFF.md', '2025-09-04-review-books-i-have-read-2023-2024-2025.html',
 }
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'}
 PHOTO_EXTS = {'.jpg', '.jpeg', '.png'}
@@ -174,7 +174,7 @@ def build_blog_list():
     title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
 
     for p in sorted(blog_dir.iterdir()):
-        if not p.is_file() or p.suffix != '.html' or p.name.startswith('.'):
+        if not p.is_file() or p.suffix != '.html' or p.name.startswith('.') or p.name in EXCLUDE_FILES:
             continue
         try:
             date_str = p.name[:10]
