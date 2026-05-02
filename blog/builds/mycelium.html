@@ -12,20 +12,19 @@
     <link rel="stylesheet" href="../../styles/style.css">
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
     <style>
-        .lineage {
-            background: #161616;
+        .spec-box {
+            background: #111;
+            border: 1px solid #2a2a2a;
             border-left: 3px solid #99CCCC;
-            padding: 14px 20px;
-            font-family: monospace;
-            font-size: 0.95em;
-            line-height: 1.9;
+            padding: 16px 20px;
             margin: 20px 0 28px;
+            font-family: monospace;
+            font-size: 0.85em;
         }
-        .lineage .stop { color: #888; }
-        .lineage .arr { color: #99CCCC; margin: 0 5px; }
-        .lineage .pause { color: #666; font-style: italic; }
-        .lineage .v1 { color: #CC99CC; }
-        .lineage .v2 { color: #fff; font-weight: bold; }
+        .spec-box table { width: 100%; border-collapse: collapse; }
+        .spec-box td { padding: 3px 0; vertical-align: top; }
+        .spec-box td:first-child { color: #33CCAA; width: 130px; }
+        .spec-box td:last-child { color: #ccc; }
     </style>
 </head>
 <body>
@@ -36,8 +35,18 @@
 <div class="blog-post-date">April 2026 — active</div>
 
 <div class="blog-post-content">
-<div class="lineage">
-<span class="stop">ACRE</span><span class="arr">→</span><span class="stop">lumen</span><span class="arr">→</span><span class="stop">lumenComposite</span><span class="arr">→</span><span class="stop">ollama-mlx</span><span class="arr">→</span><span class="pause">(two month pause)</span><span class="arr">→</span><span class="stop">LibMem</span><span class="arr">→</span><span class="stop">AI_Lab</span><span class="arr">→</span><span class="stop">Lumen reDux</span><span class="arr">→</span><span class="v1">mycelium v1</span><span class="arr">→</span><span class="v2">mycelium v2</span>
+<div class="spec-box">
+<table>
+<tr><td>ACRE</td><td>capstone LLM orchestration</td></tr>
+<tr><td>lumen</td><td>native macOS LLM client</td></tr>
+<tr><td>lumenComposite</td><td>unified inference layer</td></tr>
+<tr><td>ollama-mlx</td><td>local MLX backend</td></tr>
+<tr><td>LibMem</td><td>library memory system</td></tr>
+<tr><td>AI_Lab</td><td>experimental playground</td></tr>
+<tr><td>Lumen reDux</td><td>lumen reboot</td></tr>
+<tr><td>mycelium v1</td><td>first agentic platform</td></tr>
+<tr><td>mycelium v2</td><td>active development</td></tr>
+</table>
 </div>
 
 <h2>v2: active dev</h2>

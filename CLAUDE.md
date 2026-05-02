@@ -118,6 +118,7 @@ Use `python3 scripts/new-page.py -t builds-machine -T "Title"` or `-t builds-pro
 ## Image Compression Policy
 
 Before committing new images, compress any file over **1 MB**. Target: max 2400px on the long edge, JPEG quality 78.
+**Never compress `images/water.gif`** — it is intentionally left untouched.
 
 Quick one-liner to check and compress all over-threshold images:
 

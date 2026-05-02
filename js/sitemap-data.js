@@ -40,7 +40,6 @@ window.__SITEMAP__ = {
       "folders": {
         "builds": {
           "files": [
-            "apple-music-toolkit.html",
             "benchmarks.html",
             "calibre.html",
             "index.html",
@@ -49,7 +48,9 @@ window.__SITEMAP__ = {
             "lumen-acre.html",
             "mac-pro-2013.html",
             "macbook-air-2014.html",
+            "macbook-pro-2012.html",
             "macbook-pro-2021.html",
+            "macbook-pro-2021b.html",
             "macbook-pro-2026.html",
             "misc-plus.html",
             "mycelium.html",
@@ -105,7 +106,8 @@ window.__SITEMAP__ = {
             "2026-01-jan.html",
             "2026-02-feb.html",
             "2026-03-mar.html",
-            "2026-04-apr.html"
+            "2026-04-apr.html",
+            "2026-05-may.html"
           ],
           "folders": {}
         }
@@ -159,7 +161,8 @@ window.__SITEMAP__ = {
             "2026-01.html",
             "2026-02.html",
             "2026-03.html",
-            "2026-04.html"
+            "2026-04.html",
+            "2026-05.html"
           ],
           "folders": {}
         }
