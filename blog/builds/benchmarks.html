@@ -68,6 +68,14 @@
         font-family: monospace;
         color: #CC99FF;
     }
+    .bench-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    @media (max-width: 768px) {
+        .bench-table { font-size: 0.75em; }
+        .bench-table th, .bench-table td { padding: 4px 4px; }
+    }
 </style>
 </head>
 <body>
@@ -84,6 +92,7 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 9 runs over Apr 
 
 <div class="blog-post-content">
 
+<div class="bench-table-wrap">
 <table class="bench-table">
     <thead>
         <tr><th>model</th><th class="num">quant</th><th class="num">avg gen tps</th><th class="num">short</th><th class="num">long</th><th class="num">security</th><th class="num">avg prompt tps</th><th class="num">peak mem%</th><th class="num">passes</th></tr>
@@ -221,6 +230,7 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 9 runs over Apr 
 
     </tbody>
 </table>
+</div>
 
 </div>
 
