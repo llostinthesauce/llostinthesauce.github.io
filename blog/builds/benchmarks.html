@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noai, noimageai">
     <meta property="og:title" content="local LLM benchmarks - builds+">
-    <meta property="og:description" content="macOS · 64GB M5 Pro · llama.cpp + ollama · 9 runs over Apr 28–30 · 3-pass suite: 8K ctx
-· numbers are averages across all passes and runs">
+    <meta property="og:description" content="macOS · 64GB M5 Pro · llama.cpp + ollama · 3-pass suite + llama-bench raw throughput + quality eval judged by DeepSeek V4 Pro">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="nuBlog">
 <title>local LLM benchmarks - builds+ - nuBlog</title>
@@ -76,6 +75,19 @@
         .bench-table { font-size: 0.75em; }
         .bench-table th, .bench-table td { padding: 4px 4px; }
     }
+    .spec-box {
+        background: #111;
+        border: 1px solid #2a2a2a;
+        border-left: 3px solid #99CCCC;
+        padding: 16px 20px;
+        margin: 20px 0 28px;
+        font-family: monospace;
+        font-size: 0.85em;
+    }
+    .spec-box table { width: 100%; border-collapse: collapse; }
+    .spec-box td { padding: 3px 0; vertical-align: top; }
+    .spec-box td:first-child { color: #99CCCC; width: 130px; }
+    .spec-box td:last-child { color: #ccc; }
 </style>
 </head>
 <body>
@@ -84,13 +96,23 @@
 <a href="index.html" class="back-link">&larr; back to builds+</a>
 <h1>local LLM benchmarks</h1>
 <div class="blog-post-date">April 2026 — latest</div>
-<div class="bench-note">
-macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 9 runs over Apr 28&ndash;30 &middot; 3-pass suite:
-<code>short</code> 2K ctx / <code>long</code> 16K ctx / <code>security</code> 8K ctx
-&middot; numbers are averages across all passes and runs
-</div>
 
 <div class="blog-post-content">
+
+<div class="spec-box">
+    <table>
+        <tr><td>machine</td><td>MacBook Pro M5 Pro</td></tr>
+        <tr><td>memory</td><td>64 GB unified</td></tr>
+        <tr><td>backend</td><td>llama.cpp + ollama</td></tr>
+        <tr><td>dates</td><td>April 28&ndash;30, 2026</td></tr>
+        <tr><td>suites</td><td>3-pass + llama-bench + quality eval</td></tr>
+    </table>
+</div>
+
+<div class="bench-note">
+3-pass suite: <code>short</code> 2K ctx / <code>long</code> 16K ctx / <code>security</code> 8K ctx
+&middot; numbers are averages across all passes and runs
+</div>
 
 <div class="bench-table-wrap">
 <table class="bench-table">
@@ -230,6 +252,254 @@ macOS &middot; 64GB M5 Pro &middot; llama.cpp + ollama &middot; 9 runs over Apr 
 
     </tbody>
 </table>
+</div>
+
+<br><hr><br>
+
+<h2>llama-bench raw throughput</h2>
+<div class="bench-note">
+GGUF &middot; q8_0 KV cache &middot; all passes clean &middot; single-pass measurements
+</div>
+
+<div class="bench-table-wrap">
+<table class="bench-table">
+    <thead>
+        <tr><th>model</th><th>arch</th><th class="num">size</th><th class="num">avg gen t/s</th><th class="num">peak mem</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="model">Qwen3-Coder-30B-A3B UD</td>
+            <td>MoE 30B/3B</td>
+            <td class="num">16.5G</td>
+            <td class="num">74.6</td>
+            <td class="num mem-warn">76.6%</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-35B LMS</td>
+            <td>MoE 35B/3B</td>
+            <td class="num">19.7G</td>
+            <td class="num">69.7</td>
+            <td class="num mem-ok">70.2%</td>
+        </tr>
+        <tr>
+            <td class="model">Gemma-4-26B UD</td>
+            <td>MoE 26B/4B</td>
+            <td class="num">15.7G</td>
+            <td class="num">56.3</td>
+            <td class="num mem-ok">73.0%</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-35B UD</td>
+            <td>MoE 35B/3B</td>
+            <td class="num">20.6G</td>
+            <td class="num">54.7</td>
+            <td class="num mem-ok">78.0%</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.5-9B LMS</td>
+            <td>Dense 9B</td>
+            <td class="num">5.2G</td>
+            <td class="num">44.1</td>
+            <td class="num mem-ok">64.1%</td>
+        </tr>
+        <tr>
+            <td class="model">Qwen3.6-27B LMS</td>
+            <td>Dense 27B</td>
+            <td class="num">15.4G</td>
+            <td class="num">14.8</td>
+            <td class="num mem-ok">73.9%</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<div class="bench-note">
+<b>takeaways:</b><br>
+&bull; Coder-30B is the speed king (74.6 t/s) &mdash; 30B MoE with only 3B active<br>
+&bull; Dense 27B is tragically slow (14.8 t/s) &mdash; ALL 27B params active every token, no MoE sparsity<br>
+&bull; 9B dense is only 44 t/s despite being tiny &mdash; Gated DeltaNet architecture trades raw speed for quality<br>
+&bull; The LMS 35B variant holds TPS nearly constant across all context sizes (70.3 &rarr; 68.1) &mdash; excellent KV cache efficiency
+</div>
+
+<br><hr><br>
+
+<h2>quality eval</h2>
+<div class="bench-note">
+13 prompts &middot; judged by DeepSeek V4 Pro &middot; 1&ndash;10 scale
+</div>
+
+<h3>head-to-head: Qwen3.6 35B MoE &mdash; LMS Community vs Unsloth Dynamic</h3>
+
+<div class="bench-table-wrap">
+<table class="bench-table">
+    <thead>
+        <tr><th>dimension</th><th class="num">LMS (non-UD)</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>overall</td>
+            <td class="num">4.54</td>
+        </tr>
+        <tr>
+            <td>reasoning (5 prompts)</td>
+            <td class="num">7.87</td>
+        </tr>
+        <tr>
+            <td>coding (5 prompts)</td>
+            <td class="num">0.0*</td>
+        </tr>
+        <tr>
+            <td>general (3 prompts)</td>
+            <td class="num">6.56</td>
+        </tr>
+        <tr>
+            <td>correctness</td>
+            <td class="num">4.62</td>
+        </tr>
+        <tr>
+            <td>depth</td>
+            <td class="num">4.38</td>
+        </tr>
+        <tr>
+            <td>clarity</td>
+            <td class="num">4.62</td>
+        </tr>
+        <tr>
+            <td>gen speed (avg t/s)</td>
+            <td class="num">69.7</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<div class="bench-note">
+* = almost entirely judge parse errors on markdown code blocks, not model failures<br>
+UD is more consistent (fewer parse errors) and edges out LMS on the coding prompts that did parse. When the judge works, both models score 9&ndash;10 on most prompts.
+</div>
+
+<h3>detailed per-prompt &mdash; 35B LMS (non-UD)</h3>
+
+<div class="bench-table-wrap">
+<table class="bench-table">
+    <thead>
+        <tr><th>prompt</th><th class="num">score</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>R1 Water Jug</td><td class="num">9.7</td></tr>
+        <tr><td>R2 Causal Inference</td><td class="num">10.0</td></tr>
+        <tr><td>R3 Optimization</td><td class="num">9.7</td></tr>
+        <tr><td>R4 Logic Puzzle</td><td class="num">10.0</td></tr>
+        <tr><td>R5 Distributed Systems</td><td class="num">0.0*</td></tr>
+        <tr><td>C1 LRU Cache</td><td class="num">0.0*</td></tr>
+        <tr><td>C2 Debug Async</td><td class="num">0.0*</td></tr>
+        <tr><td>C3 Redis Limiter</td><td class="num">0.0*</td></tr>
+        <tr><td>C4 Refactor Order</td><td class="num">0.0*</td></tr>
+        <tr><td>C5 Webhook System</td><td class="num">0.0*</td></tr>
+        <tr><td>G1 Raft</td><td class="num">0.0*</td></tr>
+        <tr><td>G2 Vector DB</td><td class="num">10.0</td></tr>
+        <tr><td>G3 MoE Blog</td><td class="num">9.7</td></tr>
+    </tbody>
+</table>
+</div>
+
+<div class="bench-note">
+The LMS variant has 7 parse errors vs UD's 3 &mdash; the judge chokes on its markdown code blocks more often.
+</div>
+
+<h3>full model rankings (quality)</h3>
+
+<div class="bench-table-wrap">
+<table class="bench-table">
+    <thead>
+        <tr><th class="num">rank</th><th>model</th><th class="num">overall</th><th class="num">reasoning</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="num">1</td>
+            <td class="model">Qwen3.6-35B UD</td>
+            <td class="num">5.92</td>
+            <td class="num">9.53</td>
+        </tr>
+        <tr>
+            <td class="num">2</td>
+            <td class="model">Qwen3.6-27B LMS</td>
+            <td class="num">5.08</td>
+            <td class="num">9.40</td>
+        </tr>
+        <tr>
+            <td class="num">3</td>
+            <td class="model">Qwen3.6-35B LMS</td>
+            <td class="num">4.54</td>
+            <td class="num">7.87</td>
+        </tr>
+        <tr>
+            <td class="num">4</td>
+            <td class="model">Qwen3.5-9B LMS</td>
+            <td class="num">3.74</td>
+            <td class="num">7.73</td>
+        </tr>
+        <tr>
+            <td class="num">5</td>
+            <td class="model">Gemma-4-26B UD</td>
+            <td class="num">3.72</td>
+            <td class="num">7.67</td>
+        </tr>
+        <tr>
+            <td class="num">6</td>
+            <td class="model">Qwen3-Coder-30B UD</td>
+            <td class="num">0.85</td>
+            <td class="num">1.00</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<br><hr><br>
+
+<h2>critical issues found</h2>
+<p><b>Qwen3-Coder-30B &mdash; all empty responses (0.85 overall).</b> This model's card states "supports only non-thinking mode" &mdash; our <code>&lt;think&gt;\n\n&lt;/think&gt;\n\n</code> suppression in the quality eval prompt format causes it to output nothing. This is an eval bug, not a model flaw. Fix: skip think suppression for <code>family=coder</code> or <code>qwen3_moe</code> architectures.</p>
+<p><b>Parse errors plague coding scores.</b> DeepSeek judge consistently fails on responses containing markdown code blocks, Python source, or long structured text. 40&ndash;50% of coding prompt scores are parse errors. The raw responses are correct &mdash; the judge just can't extract the JSON.</p>
+
+<br><hr><br>
+
+<h2>verdict &mdash; which model when?</h2>
+
+<div class="bench-table-wrap">
+<table class="bench-table">
+    <thead>
+        <tr><th>use case</th><th>pick</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>best quality, correctness-critical</td>
+            <td class="model">Qwen3.6-35B UD</td>
+        </tr>
+        <tr>
+            <td>best speed, interactive coding</td>
+            <td class="model">Qwen3.6-35B LMS</td>
+        </tr>
+        <tr>
+            <td>fastest, agentic coding loops</td>
+            <td class="model">Qwen3-Coder-30B UD</td>
+        </tr>
+        <tr>
+            <td>lightweight / quick tasks</td>
+            <td class="model">Qwen3.5-9B LMS</td>
+        </tr>
+        <tr>
+            <td>solid all-round alternative</td>
+            <td class="model">Gemma-4-26B UD</td>
+        </tr>
+        <tr>
+            <td>deep reasoning, don't care about speed</td>
+            <td class="model">Qwen3.6-27B LMS</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<div class="bench-note">
+Head-to-head on the 35B MoE: Unsloth Dynamic wins on quality (+30% overall score), LMS Community wins on speed (+28% faster) and lower memory (+8% headroom). If you're doing deep reasoning work, use UD. If you're iterating code fast, use LMS. They're close enough that the right answer is "use whichever you're in the mood for."
 </div>
 
 </div>
