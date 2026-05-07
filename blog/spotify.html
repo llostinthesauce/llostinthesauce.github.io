@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <title>playlists - nuBlog</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <style>
+        .playlist-section {
+            border: 1px solid #1a1a1a;
+            border-left: 3px solid #1DB954;
+            padding: 20px 24px;
+            margin: 28px 0;
+            background: #050505;
+        }
+        .playlist-section:first-of-type {
+            border-left-color: #9966CC;
+        }
+        .playlist-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .playlist-name {
+            font-family: monospace;
+            font-size: 1.3em;
+            color: #33CCAA;
+            text-decoration: none;
+        }
+        .playlist-name:hover {
+            color: #66FFCC;
+            text-decoration: underline;
+        }
+        .playlist-meta {
+            font-family: monospace;
+            font-size: 0.75em;
+            color: #666;
+            letter-spacing: 1px;
+        }
+        .playlist-tracks {
+            list-style: none;
+            padding: 0;
+            margin: 14px 0 16px;
+        }
+        .playlist-tracks li {
+            padding: 6px 0;
+            border-bottom: 1px solid #111;
+            font-size: 0.95em;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .playlist-tracks li:last-child {
+            border-bottom: none;
+        }
+        .track-number {
+            font-family: monospace;
+            color: #555;
+            font-size: 0.8em;
+            min-width: 18px;
+        }
+        .track-title {
+            color: #ddd;
+        }
+        .track-artist {
+            color: #99CCCC;
+            font-size: 0.85em;
+        }
+        .track-artist::before {
+            content: "— ";
+            color: #444;
+        }
+        .spotify-embed {
+            margin: 12px 0 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .spotify-embed iframe {
+            border: none;
+            border-radius: 12px;
+        }
+        .page-subtitle {
+            color: #99CCCC;
+            font-style: italic;
+            font-size: 0.9em;
+            margin: -8px 0 24px;
+        }
+        .spotify-badge {
+            display: inline-block;
+            font-family: monospace;
+            font-size: 0.6em;
+            color: #1DB954;
+            border: 1px solid #1DB954;
+            padding: 1px 6px;
+            border-radius: 2px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+        .profile-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 0.85em;
+            color: #1DB954;
+            text-decoration: none;
+            border: 1px solid #1a1a1a;
+            padding: 6px 14px;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .profile-link:hover {
+            border-color: #1DB954;
+            background: #0a0a0a;
+            color: #1ed760;
+        }
+        @media (max-width: 600px) {
+            .playlist-section {
+                padding: 14px 16px;
+            }
+            .playlist-header {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <h1>playlists</h1>
+        <p class="page-subtitle">recent listening — nov 2025 through may 2026</p>
+
+        <!-- 2026 Q2 -->
+        <div class="playlist-section">
+            <div class="playlist-header">
+                <a class="playlist-name" href="https://open.spotify.com/playlist/7uh9WTgnDSzVhmwcUIYin2" target="_blank" rel="noopener noreferrer">2026q2 ca la sj cc sf ut abq</a>
+                <span class="playlist-meta">37 songs</span>
+            </div>
+            <ul class="playlist-tracks">
+                <li>
+                    <span class="track-number">1</span>
+                    <span class="track-title">Twilight</span>
+                    <span class="track-artist">Elliott Smith</span>
+                </li>
+                <li>
+                    <span class="track-number">2</span>
+                    <span class="track-title">Bottle Up And Explode!</span>
+                    <span class="track-artist">Elliott Smith</span>
+                </li>
+                <li>
+                    <span class="track-number">3</span>
+                    <span class="track-title">Bending Hectic</span>
+                    <span class="track-artist">The Smile</span>
+                </li>
+            </ul>
+            <div class="spotify-embed">
+                <iframe src="https://open.spotify.com/embed/playlist/7uh9WTgnDSzVhmwcUIYin2?utm_source=generator&theme=0" width="100%" height="152" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <!-- 2026 Q1 -->
+        <div class="playlist-section">
+            <div class="playlist-header">
+                <a class="playlist-name" href="https://open.spotify.com/playlist/49Hp19v8hRETTEQemE9GXA" target="_blank" rel="noopener noreferrer">2026 q1</a>
+                <span class="playlist-meta">75 songs</span>
+            </div>
+            <ul class="playlist-tracks">
+                <li>
+                    <span class="track-number">1</span>
+                    <span class="track-title">B-A-B-Y</span>
+                    <span class="track-artist">Carla Thomas</span>
+                </li>
+                <li>
+                    <span class="track-number">2</span>
+                    <span class="track-title">Heaven Knows I'm Miserable Now</span>
+                    <span class="track-artist">The Smiths</span>
+                </li>
+                <li>
+                    <span class="track-number">3</span>
+                    <span class="track-title">I Know It's Over</span>
+                    <span class="track-artist">The Smiths</span>
+                </li>
+            </ul>
+            <div class="spotify-embed">
+                <iframe src="https://open.spotify.com/embed/playlist/49Hp19v8hRETTEQemE9GXA?utm_source=generator&theme=0" width="100%" height="152" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <!-- 2025 -->
+        <div class="playlist-section">
+            <div class="playlist-header">
+                <a class="playlist-name" href="https://open.spotify.com/playlist/5JrFtLLcXUISKo8CEl8Tlv" target="_blank" rel="noopener noreferrer">2025</a>
+                <span class="playlist-meta">490 songs</span>
+            </div>
+            <ul class="playlist-tracks">
+                <li>
+                    <span class="track-number">1</span>
+                    <span class="track-title">OTHERSIDE (feat. Sickboyrari)</span>
+                    <span class="track-artist">Bladee</span>
+                </li>
+                <li>
+                    <span class="track-number">2</span>
+                    <span class="track-title">BBY</span>
+                    <span class="track-artist">Bladee</span>
+                </li>
+                <li>
+                    <span class="track-number">3</span>
+                    <span class="track-title">It Suxx</span>
+                    <span class="track-artist">Bladee</span>
+                </li>
+            </ul>
+            <div class="spotify-embed">
+                <iframe src="https://open.spotify.com/embed/playlist/5JrFtLLcXUISKo8CEl8Tlv?utm_source=generator&theme=0" width="100%" height="152" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <a class="profile-link" href="https://open.spotify.com/user/corbinslab" target="_blank" rel="noopener noreferrer">→ full profile on spotify</a>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../js/include.js" data-base=".."></script>
+</body>
+</html>
