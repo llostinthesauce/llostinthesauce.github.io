@@ -14,7 +14,6 @@
         "2025-09-12-what-the-labubu.html",
         "2025-09-07-300.html",
         "2025-09-05-perpetuity.html",
-        "2025-09-04-review-books-i-have-read-2023-2024-2025.html",
         "2025-08-28-a-scruple-scruples.html",
         "2025-06-04-regeneration.html",
         "2025-05-15-review-nausea-plus-other.html",

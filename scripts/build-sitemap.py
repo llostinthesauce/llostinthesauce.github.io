@@ -21,6 +21,7 @@ EXCLUDE_FILES = {
     'opusreport.md', 'qwen3.6moe-report.md',
     'ssg-migration-design.md', 'nublogv2.1 full changes.md',
     'HANDOFF.md', '2025-09-04-review-books-i-have-read-2023-2024-2025.html',
+    'spotify.html',
 }
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'}
 PHOTO_EXTS = {'.jpg', '.jpeg', '.png'}
@@ -139,7 +140,8 @@ def build_blog_nav():
 
     posts = sorted(
         (p.name for p in blog_dir.iterdir()
-         if p.is_file() and p.suffix == '.html' and not p.name.startswith('.')),
+         if p.is_file() and p.suffix == '.html' and not p.name.startswith('.')
+         and p.name not in EXCLUDE_FILES),
         reverse=True,
     )
     body = ',\n'.join(f'        "{name}"' for name in posts)
