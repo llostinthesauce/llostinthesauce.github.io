@@ -92,8 +92,7 @@ def build_all_images():
         return
 
     items = '\n'.join(
-        f'            <div class="gallery-grid-item">'
-        f'<img src="{p}" alt="" class="styled-image" loading="lazy"></div>'
+        f'    <img src="{p}" alt="" loading="lazy">'
         for p in img_paths
     )
 
@@ -104,24 +103,9 @@ def build_all_images():
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noai, noimageai">
     <title>all images - nuBlog</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div class="content">
-        <div id="site-header"></div>
-        <a href="index.html" class="back-link">&larr; back</a>
-        <h1 class="underlined-heading">all images</h1>
-        <p>a flat view of literally every image file in the repository. auto-generated {img_paths.__len__()} images.</p>
-
-        <div class="gallery-grid">
 {items}
-        </div>
-
-        <div id="site-footer"></div>
-    </div>
-    <script src="js/include.js" data-base="."></script>
-    <script src="js/gallery.js"></script>
 </body>
 </html>
 """
