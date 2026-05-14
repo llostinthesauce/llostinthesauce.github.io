@@ -11,7 +11,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).parent.parent.resolve()
-EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules'}
+EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials'}
 EXCLUDE_FILES = {
     'CLAUDE.md', 'agents-wiki.md',
     'corbin-style-guide.md', 'corbin-style-guide-builds.md',

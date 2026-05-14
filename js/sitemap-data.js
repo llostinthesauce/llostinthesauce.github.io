@@ -35,7 +35,8 @@ window.__SITEMAP__ = {
         "2025-11-09-please-for-the-love-of-god-slow-down-and-run-them-offline.html",
         "2025-12-01-aoip.html",
         "2026-03-29-untitled.html",
-        "2026-04-23-field-notes-march-30-april-8.html"
+        "2026-04-23-field-notes-march-30-april-8.html",
+        "now.html"
       ],
       "folders": {
         "builds": {
@@ -63,10 +64,6 @@ window.__SITEMAP__ = {
           "folders": {}
         }
       }
-    },
-    "docs": {
-      "files": [],
-      "folders": {}
     },
     "galleries": {
       "files": [
@@ -144,13 +141,6 @@ window.__SITEMAP__ = {
       ],
       "folders": {}
     },
-    "partials": {
-      "files": [
-        "footer.html",
-        "header.html"
-      ],
-      "folders": {}
-    },
     "plants": {
       "files": [
         "collection.html"
@@ -167,13 +157,6 @@ window.__SITEMAP__ = {
           "folders": {}
         }
       }
-    },
-    "scripts": {
-      "files": [
-        "build-sitemap.py",
-        "new-page.py"
-      ],
-      "folders": {}
     },
     "styles": {
       "files": [
