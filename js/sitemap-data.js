@@ -4,7 +4,6 @@ window.__SITEMAP__ = {
     ".nojekyll",
     "404.html",
     "about.html",
-    "AGENTS.md",
     "all-images.html",
     "blog.html",
     "favicon.ico",

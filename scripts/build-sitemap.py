@@ -13,7 +13,7 @@ from PIL import ExifTags, Image
 ROOT = Path(__file__).parent.parent.resolve()
 EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials'}
 EXCLUDE_FILES = {
-    'CLAUDE.md', 'agents-wiki.md',
+    'AGENTS.md', 'CLAUDE.md', 'agents-wiki.md',
     'corbin-style-guide.md', 'corbin-style-guide-builds.md',
     'audit-report-042926.md', 'audit-guide-and-review-for-deepseek.md',
     'deepseekv4proaudit.md', 'geminiflashaudit.md',
