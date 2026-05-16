@@ -739,7 +739,6 @@ window.allImagesData = [
     ["images/monthly/2026/05-may/IMG_2583.jpeg", 1920, 2560, "images/.thumbs/monthly/2026/05-may/IMG_2583.jpg"],
     ["images/monthly/2026/05-may/IMG_2612.jpeg", 2560, 1920, "images/.thumbs/monthly/2026/05-may/IMG_2612.jpg"],
     ["images/monthly/2026/05-may/IMG_2613.jpeg", 1920, 2560, "images/.thumbs/monthly/2026/05-may/IMG_2613.jpg"],
-    ["images/monthly/2026/05-may/IMG_2630.jpeg", 2560, 1920, "images/.thumbs/monthly/2026/05-may/IMG_2630.jpg"],
     ["images/monthly/2026/05-may/IMG_2639.jpeg", 1920, 2560, "images/.thumbs/monthly/2026/05-may/IMG_2639.jpg"],
     ["images/monthly/2026/05-may/IMG_2641.jpeg", 1920, 2560, "images/.thumbs/monthly/2026/05-may/IMG_2641.jpg"],
     ["images/monthly/2026/05-may/IMG_2647.jpeg", 1920, 2560, "images/.thumbs/monthly/2026/05-may/IMG_2647.jpg"],
