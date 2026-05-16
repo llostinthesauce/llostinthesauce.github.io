@@ -8,7 +8,7 @@
 
 window.nublogGalleryGroups = [
     {
-        title: 'featured collections',
+        title: '',
         entries: [
             {
                 label: 'may 2026 ~ current',

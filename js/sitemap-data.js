@@ -4,6 +4,7 @@ window.__SITEMAP__ = {
     ".nojekyll",
     "404.html",
     "about.html",
+    "AGENTS.md",
     "all-images.html",
     "blog.html",
     "favicon.ico",
@@ -130,11 +131,13 @@ window.__SITEMAP__ = {
     },
     "js": {
       "files": [
+        "all-images-data.js",
         "blog-nav.js",
         "bot-blocker.js",
         "counter.js",
         "gallery-data.js",
         "gallery.js",
+        "image-canvas.js",
         "include.js",
         "oneko.js",
         "sitemap-data.js"

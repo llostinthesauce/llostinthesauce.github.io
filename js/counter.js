@@ -3,28 +3,54 @@
     var counterName = 'first-counter-2997';
     var offset = 9000;
     var endpoint = 'https://api.counterapi.dev/v1/' + namespace + '/' + counterName + '/up';
+    var CACHE_KEY = 'nuBlogCounterCache';
 
-    function renderCount(countSpan, count) {
-        var total = Number(count) + offset;
-        if (!Number.isFinite(total)) throw new Error('Counter returned a non-numeric value');
-        countSpan.innerHTML = 'VISITOR COUNT: <span style="color: #33CCAA;">' + total + '+</span>';
+    function readCachedTotal() {
+        try {
+            var raw = localStorage.getItem(CACHE_KEY);
+            if (!raw) return null;
+            var total = JSON.parse(raw).total;
+            return Number.isFinite(total) ? total : null;
+        } catch (_) { return null; }
+    }
+
+    function writeCachedTotal(total) {
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ total: total, ts: Date.now() }));
+        } catch (_) { /* private mode / quota: ignore */ }
+    }
+
+    function paint(span, label) {
+        while (span.firstChild) span.removeChild(span.firstChild);
+        span.appendChild(document.createTextNode('VISITOR COUNT: '));
+        var inner = document.createElement('span');
+        inner.style.color = '#33CCAA';
+        inner.textContent = label;
+        span.appendChild(inner);
     }
 
     function initCounter() {
-        var countSpan = document.getElementById('hit-counter');
-        if (!countSpan) return;
+        var span = document.getElementById('hit-counter');
+        if (!span) return;
+
+        // Optimistic paint from cache so return visitors never see "loading..." or "unavailable" during transient failures.
+        var cached = readCachedTotal();
+        if (cached !== null) paint(span, cached + '+');
 
         fetch(endpoint, { cache: 'no-store' })
-            .then(function(resp) {
+            .then(function (resp) {
                 if (!resp.ok) throw new Error('Counter request failed: ' + resp.status);
                 return resp.json();
             })
-            .then(function(result) {
-                renderCount(countSpan, result.count);
+            .then(function (result) {
+                var total = Number(result.count) + offset;
+                if (!Number.isFinite(total)) throw new Error('Counter returned a non-numeric value');
+                paint(span, total + '+');
+                writeCachedTotal(total);
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.error('Counter Error:', err);
-                countSpan.innerHTML = 'VISITOR COUNT: <span style="color: #33CCAA;">unavailable</span>';
+                if (cached === null) paint(span, 'unavailable');
             });
     }
 

@@ -263,8 +263,8 @@
 
         <div class="home-tiles">
 
-            <!-- brand mark (static; we're already home) -->
-            <div class="tile t-brand">
+            <!-- brand mark → opens the infinite canvas of every image on the site -->
+            <a class="tile t-brand" href="all-images.html" title="open the canvas — every image on the site">
                 <div>
                     <h1 class="brand-title">nuBlog<span class="v">v2.1</span></h1>
                 </div>
@@ -273,8 +273,8 @@
                         <i>my domain is my domain, i am the oldest i have ever been and the youngest i will ever be, and the world i was born into no longer exists! this site's birthday is march 23~ 2025 &nbsp;~&nbsp; my domain is my domain, i am the oldest i have ever been and the youngest i will ever be &nbsp;~&nbsp;</i>
                     </marquee>
                 </div>
-                <div class="brand-tag" style="text-align:right;">last updated 5/16/2026</div>
-            </div>
+                <div class="brand-tag" style="text-align:right;">last updated 5/16/2026 &middot; click to enter canvas &rarr;</div>
+            </a>
 
             <!-- photos (big, spans 2 columns on desktop) -->
             <a class="tile tile-img t-photos" href="galleries/monthly/2026-05-may.html"
@@ -282,54 +282,45 @@
                 <span class="tile-label">photos &middot; may 2026 &nbsp;→</span>
             </a>
 
-            <!-- section tiles row: blog | builds | plants (each links to latest item, not section index) -->
-            <a class="tile tile-section t-blog" href="blog/2026-04-23-field-notes-march-30-april-8.html">
-                <div class="sec-thumb" style="background-image: url('images/blog/field-notes-apr8-church.jpg');"></div>
-                <div class="sec-info">
-                    <div class="sec-name">blog</div>
-                    <div class="sec-latest">→ field notes II</div>
-                </div>
-            </a>
-
-            <a class="tile tile-section t-builds" href="blog/builds/benchmarks.html">
-                <div class="sec-thumb" style="background-image: url('images/benchmarking/full_suite_summary.png');"></div>
-                <div class="sec-info">
-                    <div class="sec-name">builds</div>
-                    <div class="sec-latest">→ local llm benchmarks</div>
-                </div>
-            </a>
-
-            <a class="tile tile-section t-plants" href="plants/progress/2026-05.html">
-                <div class="sec-thumb" style="background-image: url('images/plants/may/IMG_4061.jpeg');"></div>
-                <div class="sec-info">
-                    <div class="sec-name">plants</div>
-                    <div class="sec-latest">→ may 2026 update</div>
-                </div>
-            </a>
-
-            <!-- recent: cross-site activity not already shown in the big panes above -->
+            <!-- recent: cross-site activity (section tiles folded in here; header nav still has blog/builds/plants/photos) -->
             <div class="tile t-recent">
-                <div class="recent-label">recent →</div>
+                <div class="recent-label">recent &middot; across the site &nbsp;→</div>
                 <div class="recent-cards">
                     <a class="recent-card" href="galleries/cameras/canon-2026.html">
                         <div class="card-thumb" style="background-image: url('images/cameras/canon/2026/IMG_4010.jpeg');"></div>
+                        <div class="card-section">photos</div>
                         <div class="card-text">canon sd400 &middot; 2026</div>
+                        <div class="card-when">5/16</div>
+                    </a>
+                    <a class="recent-card" href="plants/progress/2026-05.html">
+                        <div class="card-thumb" style="background-image: url('images/plants/may/IMG_4061.jpeg');"></div>
+                        <div class="card-section">plants</div>
+                        <div class="card-text">may 2026 update</div>
                         <div class="card-when">5/16</div>
                     </a>
                     <a class="recent-card" href="blog/builds/index.html">
                         <div class="card-thumb" style="background-image: url('images/builds/macbook-pro-2026.jpg');"></div>
+                        <div class="card-section">builds</div>
                         <div class="card-text">builds+ refresh</div>
                         <div class="card-when">5/08</div>
                     </a>
                     <a class="recent-card" href="blog/now.html">
                         <div class="card-thumb" style="background-image: url('images/monthly/2026/05-may/IDG_20260506_103306_630.jpeg');"></div>
+                        <div class="card-section">/now</div>
                         <div class="card-text">/now &middot; updated</div>
                         <div class="card-when">5/07</div>
                     </a>
                     <a class="recent-card" href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html">
                         <div class="card-thumb" style="background-image: url('images/monthly/2025/03-mar/IMG_3511.jpeg');"></div>
+                        <div class="card-section">blog</div>
                         <div class="card-text">review: books</div>
                         <div class="card-when">4/26</div>
+                    </a>
+                    <a class="recent-card" href="blog/2026-04-23-field-notes-march-30-april-8.html">
+                        <div class="card-thumb" style="background-image: url('images/blog/field-notes-apr8-church.jpg');"></div>
+                        <div class="card-section">blog</div>
+                        <div class="card-text">field notes II</div>
+                        <div class="card-when">4/23</div>
                     </a>
                 </div>
             </div>

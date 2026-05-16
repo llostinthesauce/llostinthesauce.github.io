@@ -11,7 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const note = groupClone.querySelector('.gallery-group-note');
             const grid = groupClone.querySelector('.gallery-grid');
             
-            title.textContent = group.title || '';
+            if (group.title) {
+                title.textContent = group.title;
+            } else {
+                title.remove();
+            }
             groupClone.querySelector('.gallery-group').setAttribute('data-group', group.title || '');
             if (group.note) {
                 note.textContent = group.note;
