@@ -14,12 +14,6 @@ ROOT = Path(__file__).parent.parent.resolve()
 EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials'}
 EXCLUDE_FILES = {
     'AGENTS.md', 'CLAUDE.md', 'agents-wiki.md',
-    'corbin-style-guide.md', 'corbin-style-guide-builds.md',
-    'audit-report-042926.md', 'audit-guide-and-review-for-deepseek.md',
-    'deepseekv4proaudit.md', 'geminiflashaudit.md',
-    'glm5-1audit.md', 'glm5-1auditthourough.md',
-    'opusreport.md', 'qwen3.6moe-report.md',
-    'ssg-migration-design.md', 'nublogv2.1 full changes.md',
     'HANDOFF.md', '2025-09-04-review-books-i-have-read-2023-2024-2025.html',
     'spotify.html',
 }
