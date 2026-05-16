@@ -9,27 +9,7 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        .gallery-entry {
-            background-color: #111;
-            border: 1px solid #444;
-            margin: 12px 0;
-            padding: 12px;
-            font-family: monospace;
-            text-align: center;
-        }
-
-        .gallery-entry a {
-            color: #33CCAA;
-            text-decoration: none;
-            font-size: 1.05em;
-            display: block;
-        }
-
-        .gallery-entry a:hover {
-            background-color: #222;
-        }
-
-        /* Overlay Boot Screen Styles */
+        /* Boot screen overlay — kept inline since it's index-specific */
         #boot-overlay {
             position: fixed;
             top: 0;
@@ -218,29 +198,19 @@
         }
 
         @keyframes fillMacBar {
-            0% {
-                width: 0%;
-            }
-
-            100% {
-                width: 100%;
-            }
+            0% { width: 0%; }
+            100% { width: 100%; }
         }
 
         @keyframes moveGleam {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
     </style>
 </head>
 
 <body>
-    <!-- Boot Screen Overlay -->
+    <!-- Boot Screen Overlay (one-time, 5s auto-dismiss) -->
     <div id="boot-overlay">
         <div id="mac-os-window">
             <div id="mac-os-title-bar">
@@ -291,14 +261,97 @@
     <div class="content">
         <div id="site-header"></div>
 
-        <h1>you have reached the home of <i>nuBlog</i> </h1>
+        <div class="home-tiles">
 
-        <marquee behavior="scroll" direction="left" scrollamount="10">
-            <i>my domain is my domain, i am the oldest i have ever been and the youngest i will ever be, and the world i
-                was born into no longer exists! this site's birthday is march 23~ 2025</i>
-        </marquee>
+            <!-- brand mark (static; we're already home) -->
+            <div class="tile t-brand">
+                <div>
+                    <h1 class="brand-title">nuBlog<span class="v">v2.1</span></h1>
+                </div>
+                <div class="brand-marquee">
+                    <marquee scrollamount="5" behavior="scroll" direction="left">
+                        <i>my domain is my domain, i am the oldest i have ever been and the youngest i will ever be, and the world i was born into no longer exists! this site's birthday is march 23~ 2025 &nbsp;~&nbsp; my domain is my domain, i am the oldest i have ever been and the youngest i will ever be &nbsp;~&nbsp;</i>
+                    </marquee>
+                </div>
+                <div class="brand-tag" style="text-align:right;">last updated 5/16/2026</div>
+            </div>
 
-        <img src="images/silly.jpg" alt="A silly image" class="styled-image" loading="lazy">
+            <!-- photos (big, spans 2 columns on desktop) -->
+            <a class="tile tile-img t-photos" href="galleries/monthly/2026-05-may.html"
+               style="background-image: url('images/monthly/2026/05-may/may-01.jpg');">
+                <span class="tile-label">photos &middot; may 2026 &nbsp;→</span>
+            </a>
+
+            <!-- section tiles row: blog | builds | plants (each links to latest item, not section index) -->
+            <a class="tile tile-section t-blog" href="blog/2026-04-23-field-notes-march-30-april-8.html">
+                <div class="sec-thumb" style="background-image: url('images/blog/field-notes-apr8-church.jpg');"></div>
+                <div class="sec-info">
+                    <div class="sec-name">blog</div>
+                    <div class="sec-latest">→ field notes II</div>
+                </div>
+            </a>
+
+            <a class="tile tile-section t-builds" href="blog/builds/benchmarks.html">
+                <div class="sec-thumb" style="background-image: url('images/benchmarking/full_suite_summary.png');"></div>
+                <div class="sec-info">
+                    <div class="sec-name">builds</div>
+                    <div class="sec-latest">→ local llm benchmarks</div>
+                </div>
+            </a>
+
+            <a class="tile tile-section t-plants" href="plants/progress/2026-05.html">
+                <div class="sec-thumb" style="background-image: url('images/plants/may/IMG_4061.jpeg');"></div>
+                <div class="sec-info">
+                    <div class="sec-name">plants</div>
+                    <div class="sec-latest">→ may 2026 update</div>
+                </div>
+            </a>
+
+            <!-- recent: cross-site activity not already shown in the big panes above -->
+            <div class="tile t-recent">
+                <div class="recent-label">recent →</div>
+                <div class="recent-cards">
+                    <a class="recent-card" href="galleries/cameras/canon-2026.html">
+                        <div class="card-thumb" style="background-image: url('images/cameras/canon/2026/IMG_4010.jpeg');"></div>
+                        <div class="card-text">canon sd400 &middot; 2026</div>
+                        <div class="card-when">5/16</div>
+                    </a>
+                    <a class="recent-card" href="blog/builds/index.html">
+                        <div class="card-thumb" style="background-image: url('images/builds/macbook-pro-2026.jpg');"></div>
+                        <div class="card-text">builds+ refresh</div>
+                        <div class="card-when">5/08</div>
+                    </a>
+                    <a class="recent-card" href="blog/now.html">
+                        <div class="card-thumb is-placeholder"></div>
+                        <div class="card-text">/now &middot; updated</div>
+                        <div class="card-when">5/07</div>
+                    </a>
+                    <a class="recent-card" href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html">
+                        <div class="card-thumb" style="background-image: url('images/monthly/2025/03-mar/IMG_3511.jpeg');"></div>
+                        <div class="card-text">review: books</div>
+                        <div class="card-when">4/26</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- about (last pane, full width, retro badge row) -->
+            <a class="tile t-about" href="about.html">
+                <div class="about-head">
+                    <div class="about-title">about</div>
+                    <div class="about-blurb">links &middot; badges &middot; cool sites</div>
+                </div>
+                <div class="about-badges">
+                    <img src="images/badges/ehbutton.gif" alt="" loading="lazy">
+                    <img src="images/badges/mp3-button.gif" alt="" loading="lazy">
+                    <img src="images/badges/safewithme-4562.png" alt="" loading="lazy">
+                    <img src="images/badges/ctwpng-4562.png" alt="" loading="lazy">
+                    <img src="images/badges/reshirii.gif" alt="" loading="lazy">
+                    <img src="images/badges/download.gif" alt="" loading="lazy">
+                </div>
+                <div class="about-arrow">enter &nbsp;→</div>
+            </a>
+
+        </div>
 
         <div id="site-footer"></div>
     </div>
@@ -322,7 +375,7 @@
                 }
 
                 bootOverlay.style.opacity = '0';
-                
+
                 // Allow CSS transition to finish before hiding
                 setTimeout(() => {
                     bootOverlay.style.display = 'none';

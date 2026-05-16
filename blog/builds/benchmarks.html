@@ -1,6 +1,340 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Apple M5 Pro Local LLM Backend Benchmark</title><style>
-:root{--bg:#080b10;--panel:#101722;--panel2:#0d131c;--muted:#8ea0b8;--text:#ecf3ff;--line:#233044;--a:#84ccff;--b:#a78bfa;--c:#60d394;--warn:#fbbf24;--bad:#fb7185;--good:#34d399;--chip:#172235}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(1200px 800px at 20% -10%,#17233a 0%,transparent 55%),linear-gradient(180deg,#080b10,#0a0d13);color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}a{color:var(--a);text-decoration:none}.wrap{max-width:1460px;margin:0 auto;padding:28px}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;align-items:stretch}.card{background:linear-gradient(180deg,rgba(18,27,41,.92),rgba(11,16,24,.92));border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 80px rgba(0,0,0,.28);padding:20px}.title{font-size:34px;letter-spacing:-.04em;margin:0 0 8px}.subtitle{color:var(--muted);font-size:15px;max-width:920px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px;border-radius:16px;background:#0b111a;border:1px solid #1f2b3d}.stat b{font-size:24px;display:block}.stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.nav{position:sticky;top:0;z-index:5;background:rgba(8,11,16,.86);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:10px 28px;display:flex;gap:8px;overflow:auto}.nav a{padding:8px 12px;border-radius:999px;background:#111a27;color:#dbeafe;white-space:nowrap;border:1px solid #223149}section{margin-top:26px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}h2{font-size:24px;margin:0;letter-spacing:-.03em}h3{font-size:16px;margin:0 0 10px}.hint{color:var(--muted);font-size:13px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1.25fr .9fr .9fr;gap:16px}.chart{min-height:330px}.chart svg{width:100%;height:auto;display:block}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.chip{background:var(--chip);border:1px solid #293a55;color:#d8e6f8;padding:5px 9px;border-radius:999px;font-size:12px}.muted{color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #1f2b3d;padding:9px 8px;text-align:left;vertical-align:top}th{color:#b9c8dc;font-size:11px;text-transform:uppercase;letter-spacing:.07em;background:#0d1420;position:sticky;top:45px}td.num{text-align:right;font-variant-numeric:tabular-nums}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:16px}details{margin-top:12px}summary{cursor:pointer;color:#dbeafe;background:#0f1724;border:1px solid #223149;border-radius:12px;padding:10px 12px}.inspector{position:fixed;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));z-index:10;background:#0b111a;border:1px solid #2a3a52;border-radius:18px;padding:16px;box-shadow:0 20px 70px rgba(0,0,0,.5)}.inspector h3{margin-bottom:6px}.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 12px;color:#cfe0f5;font-size:13px}.kv div:nth-child(odd){color:#8ea0b8}.bar:hover{filter:brightness(1.25);stroke:#fff;stroke-width:1.5}.warn{color:var(--warn)}.bad{color:var(--bad)}.good{color:var(--good)}.footer{color:var(--muted);padding:28px 0 50px}.pillrow{display:flex;gap:8px;flex-wrap:wrap}.callout{border-left:3px solid var(--a);padding:10px 12px;background:#0b121d;border-radius:12px;color:#cbdaf0}@media(max-width:980px){.hero,.grid2,.grid3{grid-template-columns:1fr}.wrap{padding:18px}.title{font-size:28px}.inspector{position:static;margin:16px 0;width:auto}.nav{padding:10px 18px}}
-</style></head><body><nav class="nav" id="nav"><a href="#top">Top</a><a href="#families">Model charts</a><a href="#frameworks">Framework charts</a><a href="#data-quality">Data quality</a><a href="#all">Aggregate table</a></nav><div class="wrap" id="top"><div class="hero"><div class="card"><h1 class="title">Apple M5 Pro Local LLM Backend Benchmark</h1><p class="subtitle">Chart-first model-card report comparing local inference backends on an Apple M5 Pro with 64 GB unified memory.</p><div class="legend"><span class="chip">Hardware: Apple M5 Pro / 64 GB</span><span class="chip">Quantizations: 4bit, Q4_K_M, Q6_K only</span><span class="chip">Aggregation: model × backend × quant</span></div></div><div class="card stats"><div class="stat"><span>Summary runs</span><b id="runCount">—</b></div><div class="stat"><span>Aggregated tuples</span><b id="variantCount">—</b></div><div class="stat"><span>Date range</span><b style="font-size:13px" id="dateRange">—</b></div><div class="stat"><span>Generated</span><b style="font-size:13px" id="generated">—</b></div></div></div><section><div class="card callout"><b>Scope:</b> this public report compares only MLX Direct, MLX API, llama.cpp Direct, and llama.cpp API. Quantizations are limited to 4bit, Q4_K_M, and Q6_K. Memory bandwidth was not captured by the source summaries, so memory is reported as peak unified-memory pressure.</div></section><div id="families"></div><section id="frameworks"><div class="section-head"><div><h2>Framework / backend comparisons</h2><div class="hint">Each backend gets its own chart set comparing the five model families against one another.</div></div></div></section><section id="data-quality"><div class="card"><h2>Data quality</h2><p class="hint">Token counting methods observed after filtering. Preference order for interpretability remains native/HF-style tokenizers first, OpenAI usage accounting second, fallbacks last; this report does not merge incompatible source schemas beyond the summary-level fields.</p><div class="legend" id="methods"></div></div></section><section id="all"><div class="section-head"><div><h2>All included aggregate rows</h2><div class="hint">Compact table only. The report is chart-first; raw source rows are not listed.</div></div></div><div id="allTable"></div></section><div class="footer"><p><b>Caveats.</b> Results are averaged across matching model/backend/quantization variants from five benchmark runs. Different collection paths may report token accounting differently. llama.cpp raw/direct does not expose TTFT in the same way API-serving paths do, so zero TTFT values should not be read as true first-token latency. Ollama and auxiliary benchmark modes are intentionally outside this report.</p></div></div><div class="inspector" id="inspect"></div><script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <title>local llm benchmarks - nuBlog</title>
+    <link rel="stylesheet" href="../../styles/style.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <style>
+        /* page-specific styles for the local llm benchmark report */
+        .bench-nav {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.92);
+            border-top: 1px solid #5CCCCC;
+            border-bottom: 1px solid #5CCCCC;
+            margin: 12px -20px 14px;
+            padding: 10px 20px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+        .bench-nav::-webkit-scrollbar { display: none; }
+        .bench-nav a {
+            padding: 5px 12px;
+            border: 1px solid #444;
+            background: #111;
+            color: #33CCAA;
+            text-decoration: none;
+            font-family: monospace;
+            font-size: 0.78em;
+            flex-shrink: 0;
+        }
+        .bench-nav a:hover {
+            background: #1a0030;
+            border-color: #9966CC;
+            color: #66FFCC;
+        }
+
+        .bench-hero {
+            display: grid;
+            grid-template-columns: 1.4fr 0.9fr;
+            gap: 14px;
+            margin: 14px 0 18px;
+        }
+        @media (max-width: 900px) {
+            .bench-hero { grid-template-columns: 1fr; }
+        }
+        .bench-card {
+            background: #111;
+            border: 1px solid #444;
+            padding: 16px;
+        }
+        .bench-hero-title {
+            margin: 0 0 6px;
+            font-size: 22px;
+            color: #9966CC;
+            font-family: 'Lucida Grande', sans-serif;
+        }
+        .bench-subtitle {
+            color: #99CCCC;
+            font-size: 0.92em;
+            line-height: 1.5;
+            margin: 4px 0 12px;
+        }
+        .bench-chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .chip {
+            background: #1a0030;
+            border: 1px solid #5CCCCC;
+            color: #99CCCC;
+            padding: 4px 9px;
+            font-family: monospace;
+            font-size: 0.72em;
+            display: inline-block;
+        }
+        .bench-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 14px;
+        }
+        .bench-stat {
+            padding: 12px;
+            background: #050505;
+            border: 1px solid #333;
+            font-family: monospace;
+        }
+        .bench-stat span {
+            display: block;
+            color: #99CCCC;
+            font-size: 0.68em;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            margin-bottom: 6px;
+        }
+        .bench-stat b {
+            color: #33CCAA;
+            font-size: 1.5em;
+            display: block;
+            line-height: 1;
+        }
+
+        .bench-section { margin-top: 22px; }
+        .bench-section h2 {
+            margin: 0;
+            color: #9966CC;
+            font-size: 20px;
+            font-family: 'Lucida Grande', sans-serif;
+        }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 12px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+        .hint { color: #99CCCC; font-size: 0.85em; font-style: italic; margin-top: 4px; }
+        .pillrow { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+        .grid3 { display: grid; grid-template-columns: 1.2fr 0.9fr 0.9fr; gap: 14px; margin-top: 14px; }
+        @media (max-width: 900px) {
+            .grid2, .grid3 { grid-template-columns: 1fr; }
+        }
+
+        .chart { min-height: 320px; }
+        .chart svg { width: 100%; height: auto; display: block; }
+        .chart h3 {
+            margin: 0 0 10px;
+            color: #9966CC;
+            font-size: 15px;
+            font-family: 'Lucida Grande', sans-serif;
+        }
+        .legend { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+        details { margin-top: 12px; }
+        summary {
+            cursor: pointer;
+            background: #111;
+            border: 1px solid #444;
+            color: #33CCAA;
+            font-family: monospace;
+            padding: 8px 12px;
+            font-size: 0.85em;
+        }
+        summary:hover { background: #1a0030; border-color: #9966CC; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: monospace;
+            font-size: 0.78em;
+        }
+        th, td {
+            padding: 7px 8px;
+            border-bottom: 1px solid #222;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            color: #9966CC;
+            font-size: 0.72em;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            background: #050505;
+            position: sticky;
+            top: 0;
+        }
+        td.num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            color: #33CCAA;
+        }
+        .tablewrap {
+            overflow: auto;
+            border: 1px solid #444;
+            background: #050505;
+            max-height: 520px;
+            margin-top: 10px;
+        }
+
+        .warn { color: #fbbf24; }
+        .bad { color: #fb7185; }
+        .good { color: #34d399; }
+
+        .callout {
+            border-left: 3px solid #9966CC;
+            padding: 10px 14px;
+            background: #050505;
+            color: #99CCCC;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .callout b { color: #CC99FF; }
+
+        .inspector {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: min(360px, calc(100vw - 36px));
+            z-index: 10;
+            background: #050505;
+            border: 1px solid #5CCCCC;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.78em;
+        }
+        .inspector h3 {
+            margin: 0 0 8px;
+            color: #9966CC;
+            font-size: 14px;
+            font-family: 'Lucida Grande', sans-serif;
+        }
+        .kv {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 4px 10px;
+        }
+        .kv div:nth-child(odd) { color: #99CCCC; }
+        .kv div:nth-child(even) { color: #33CCAA; }
+
+        .bar:hover {
+            filter: brightness(1.25);
+            stroke: #fff;
+            stroke-width: 1.5;
+        }
+
+        .bench-footer-note {
+            color: #99CCCC;
+            font-size: 0.85em;
+            margin: 24px 0 10px;
+            padding: 12px 14px;
+            background: #050505;
+            border-left: 3px solid #444;
+            line-height: 1.55;
+        }
+        .bench-footer-note b { color: #9966CC; }
+
+        @media (max-width: 900px) {
+            .inspector {
+                position: static;
+                margin: 16px 0;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <a href="index.html" class="back-link">&larr; back to builds+</a>
+        <h1>local llm benchmarks</h1>
+        <div class="blog-post-date">last updated 5/8/2026</div>
+
+        <nav class="bench-nav" id="nav">
+            <a href="#top">top</a>
+            <a href="#families">model charts</a>
+            <a href="#frameworks">framework charts</a>
+            <a href="#data-quality">data quality</a>
+            <a href="#all">aggregate table</a>
+        </nav>
+
+        <div id="top"></div>
+        <div class="bench-hero">
+            <div class="bench-card">
+                <h2 class="bench-hero-title">apple m5 pro local llm backend benchmark</h2>
+                <p class="bench-subtitle">chart-first model-card report comparing local inference backends on an apple m5 pro with 64 GB unified memory.</p>
+                <div class="bench-chips">
+                    <span class="chip">hardware: apple m5 pro / 64 GB</span>
+                    <span class="chip">quantizations: 4bit, Q4_K_M, Q6_K only</span>
+                    <span class="chip">aggregation: model &times; backend &times; quant</span>
+                </div>
+            </div>
+            <div class="bench-card bench-stats">
+                <div class="bench-stat"><span>summary runs</span><b id="runCount">&mdash;</b></div>
+                <div class="bench-stat"><span>aggregated tuples</span><b id="variantCount">&mdash;</b></div>
+                <div class="bench-stat"><span>date range</span><b id="dateRange" style="font-size:0.78em">&mdash;</b></div>
+                <div class="bench-stat"><span>generated</span><b id="generated" style="font-size:0.85em">&mdash;</b></div>
+            </div>
+        </div>
+
+        <section class="bench-section">
+            <div class="callout">
+                <b>scope:</b> this public report compares only MLX Direct, MLX API, llama.cpp Direct, and llama.cpp API. quantizations are limited to 4bit, Q4_K_M, and Q6_K. memory bandwidth was not captured by the source summaries, so memory is reported as peak unified-memory pressure.
+            </div>
+        </section>
+
+        <div id="families"></div>
+
+        <section class="bench-section" id="frameworks">
+            <div class="section-head">
+                <div>
+                    <h2>framework / backend comparisons</h2>
+                    <div class="hint">each backend gets its own chart set comparing the five model families against one another.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bench-section" id="data-quality">
+            <div class="bench-card">
+                <h2 style="margin: 0 0 8px;">data quality</h2>
+                <p class="hint">token counting methods observed after filtering. preference order for interpretability remains native/HF-style tokenizers first, openai usage accounting second, fallbacks last; this report does not merge incompatible source schemas beyond the summary-level fields.</p>
+                <div class="legend" id="methods"></div>
+            </div>
+        </section>
+
+        <section class="bench-section" id="all">
+            <div class="section-head">
+                <div>
+                    <h2>all included aggregate rows</h2>
+                    <div class="hint">compact table only. the report is chart-first; raw source rows are not listed.</div>
+                </div>
+            </div>
+            <div id="allTable"></div>
+        </section>
+
+        <div class="bench-footer-note">
+            <b>caveats.</b> results are averaged across matching model/backend/quantization variants from five benchmark runs. different collection paths may report token accounting differently. llama.cpp raw/direct does not expose TTFT in the same way API-serving paths do, so zero TTFT values should not be read as true first-token latency. ollama and auxiliary benchmark modes are intentionally outside this report.
+        </div>
+
+        <div id="site-footer"></div>
+    </div>
+
+    <div class="inspector" id="inspect"></div>
+
+    <script src="../../js/include.js" data-base="../.."></script>
+    <script>
 const DATA = {"generated":"2026-05-08","hardware":"Apple M5 Pro, 64 GB unified memory","run_count":5,"runs":[{"generated_at":"2026-05-05T18:12:20.192970","row_count":6,"variant_count":2,"label":"Run 1"},{"generated_at":"2026-05-05T22:01:56.097826","row_count":6,"variant_count":2,"label":"Run 2"},{"generated_at":"2026-05-06T00:45:01.241166","row_count":172,"variant_count":40,"label":"Run 3"},{"generated_at":"2026-05-06T23:36:12.159776","row_count":346,"variant_count":79,"label":"Run 4"},{"generated_at":"2026-05-08T02:53:30.952718","row_count":116,"variant_count":29,"label":"Run 5"}],"date_range":["2026-05-05T18:12:20.192970","2026-05-08T02:53:30.952718"],"allowed_backends":["MLX_DIRECT","MLX_API","LLAMACPP_RAW","LLAMACPP_API"],"backend_labels":{"MLX_DIRECT":"MLX Direct","MLX_API":"MLX API","LLAMACPP_RAW":"llama.cpp Direct","LLAMACPP_API":"llama.cpp API"},"allowed_quants":["4bit","Q4_K_M","Q6_K"],"families":["qwen3_35b_moe","qwen3_27b_dense","gemma4_26b_moe","gemma4_31b_dense","granite_tiny"],"family_labels":{"qwen3_27b_dense":"Qwen 27B Dense","qwen3_35b_moe":"Qwen 35B MoE","gemma4_26b_moe":"Gemma 26B MoE","gemma4_31b_dense":"Gemma 31B Dense","granite_tiny":"Granite Tiny"},"aggregates":[{"model_name":"Qwen3.6-35B-A3B-UD-Q4_K_M.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q4_K_M","quant_order":1,"family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","architecture":"MoE","kind":"raw","run_count":5,"avg_gen_tps":57.968,"avg_ttft_s":0.0,"peak_mem_pct":72.32,"max_ctx_used":79558.0,"ok_passes":4.0,"total_passes":4.0,"score":87.738,"token_count_methods":["llama_bench_native"],"micro_gen_tps":57.676,"normal_gen_tps":59.136,"high_gen_tps":58.336,"max_gen_tps":56.732,"model_alias":"Qwen 35B MoE GGUF Q4_K_M"},{"model_name":"Qwen3.6-27B-Q4_K_M.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q4_K_M","quant_order":1,"family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","architecture":"Dense","kind":"raw","run_count":5,"avg_gen_tps":14.054,"avg_ttft_s":0.0,"peak_mem_pct":76.36,"max_ctx_used":68030.0,"ok_passes":3.0,"total_passes":3.2,"score":18.686,"token_count_methods":["llama_bench_native"],"micro_gen_tps":12.374,"normal_gen_tps":14.742,"high_gen_tps":8.788,"max_gen_tps":5.744,"model_alias":"Qwen 27B Dense GGUF Q4_K_M"},{"model_name":"granite-4.0-h-tiny-Q4_K_M.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q4_K_M","quant_order":1,"family_id":"granite_tiny","family_label":"Granite Tiny","architecture":"Small dense/other","kind":"api","run_count":3,"avg_gen_tps":51.437,"avg_ttft_s":0.086,"peak_mem_pct":74.733,"max_ctx_used":131072.0,"ok_passes":4.0,"total_passes":4.0,"score":80.84,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":53.32,"normal_gen_tps":40.137,"high_gen_tps":55.447,"max_gen_tps":56.833,"model_alias":"Granite Tiny GGUF Q4_K_M"},{"model_name":"mlx-community/Qwen3.5-35B-A3B-4bit","backend":"MLX_API","backend_label":"MLX API","backend_order":1,"quant":"4bit","quant_order":0,"family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","architecture":"MoE","kind":"api","run_count":3,"avg_gen_tps":55.723,"avg_ttft_s":1.589,"peak_mem_pct":89.3,"max_ctx_used":0.0,"ok_passes":4.0,"total_passes":4.0,"score":84.057,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":60.677,"normal_gen_tps":54.213,"high_gen_tps":54.74,"max_gen_tps":53.263,"model_alias":"Qwen 35B MoE MLX 4bit"},{"model_name":"mlx-community/gemma-4-26b-a4b-it-4bit","backend":"MLX_API","backend_label":"MLX API","backend_order":1,"quant":"4bit","quant_order":0,"family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","architecture":"MoE","kind":"api","run_count":3,"avg_gen_tps":51.407,"avg_ttft_s":1.154,"peak_mem_pct":84.267,"max_ctx_used":0.0,"ok_passes":4.0,"total_passes":4.0,"score":78.067,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":53.057,"normal_gen_tps":51.253,"high_gen_tps":50.793,"max_gen_tps":50.52,"model_alias":"Gemma 26B MoE MLX 4bit"},{"model_name":"Qwen3.6-27B-Q4_K_M.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q4_K_M","quant_order":1,"family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","architecture":"Dense","kind":"api","run_count":3,"avg_gen_tps":49.503,"avg_ttft_s":0.087,"peak_mem_pct":74.467,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":73.867,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":54.027,"normal_gen_tps":51.863,"high_gen_tps":49.317,"max_gen_tps":42.803,"model_alias":"Qwen 27B Dense GGUF Q4_K_M"},{"model_name":"gemma-4-26B-A4B-it-UD-Q4_K_M.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q4_K_M","quant_order":1,"family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","architecture":"MoE","kind":"api","run_count":3,"avg_gen_tps":49.14,"avg_ttft_s":0.084,"peak_mem_pct":74.633,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":73.483,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":51.783,"normal_gen_tps":52.73,"high_gen_tps":49.467,"max_gen_tps":42.58,"model_alias":"Gemma 26B MoE GGUF Q4_K_M"},{"model_name":"Qwen3.6-35B-A3B-UD-Q4_K_M.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q4_K_M","quant_order":1,"family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","architecture":"MoE","kind":"api","run_count":3,"avg_gen_tps":46.273,"avg_ttft_s":0.084,"peak_mem_pct":74.933,"max_ctx_used":262144.0,"ok_passes":3.333,"total_passes":4.0,"score":69.643,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":18.803,"normal_gen_tps":50.72,"high_gen_tps":45.013,"max_gen_tps":43.133,"model_alias":"Qwen 35B MoE GGUF Q4_K_M"},{"model_name":"mlx-community/gemma-4-31b-4bit","backend":"MLX_API","backend_label":"MLX API","backend_order":1,"quant":"4bit","quant_order":0,"family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","architecture":"Dense","kind":"api","run_count":3,"avg_gen_tps":11.82,"avg_ttft_s":1.703,"peak_mem_pct":90.267,"max_ctx_used":0.0,"ok_passes":4.0,"total_passes":4.0,"score":19.4,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":11.557,"normal_gen_tps":10.713,"high_gen_tps":12.52,"max_gen_tps":12.483,"model_alias":"Gemma 31B Dense MLX 4bit"},{"model_name":"mlx-community/Qwen3.5-27B-4bit","backend":"MLX_API","backend_label":"MLX API","backend_order":1,"quant":"4bit","quant_order":0,"family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","architecture":"Dense","kind":"api","run_count":3,"avg_gen_tps":13.573,"avg_ttft_s":1.463,"peak_mem_pct":87.533,"max_ctx_used":0.0,"ok_passes":4.0,"total_passes":4.0,"score":21.58,"token_count_methods":["openai_usage","word_fallback"],"micro_gen_tps":14.497,"normal_gen_tps":13.107,"high_gen_tps":13.353,"max_gen_tps":13.337,"model_alias":"Qwen 27B Dense MLX 4bit"},{"model_name":"granite-4.0-h-tiny-Q4_K_M.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q4_K_M","quant_order":1,"family_id":"granite_tiny","family_label":"Granite Tiny","architecture":"Small dense/other","kind":"raw","run_count":3,"avg_gen_tps":106.917,"avg_ttft_s":0.0,"peak_mem_pct":55.0,"max_ctx_used":131072.0,"ok_passes":4.0,"total_passes":4.0,"score":161.827,"token_count_methods":["llama_bench_native"],"micro_gen_tps":107.147,"normal_gen_tps":107.553,"high_gen_tps":106.63,"max_gen_tps":106.337,"model_alias":"Granite Tiny GGUF Q4_K_M"},{"model_name":"Qwen3.5-35B-A3B-4bit","backend":"MLX_DIRECT","backend_label":"MLX Direct","backend_order":0,"quant":"4bit","quant_order":0,"family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","architecture":"MoE","kind":"raw","run_count":3,"avg_gen_tps":101.743,"avg_ttft_s":0.996,"peak_mem_pct":92.533,"max_ctx_used":43690.667,"ok_passes":4.0,"total_passes":4.0,"score":153.91,"token_count_methods":["mlx_native"],"micro_gen_tps":102.95,"normal_gen_tps":102.047,"high_gen_tps":101.083,"max_gen_tps":100.903,"model_alias":"Qwen 35B MoE MLX 4bit"},{"model_name":"gemma-4-26b-a4b-it-4bit","backend":"MLX_DIRECT","backend_label":"MLX Direct","backend_order":0,"quant":"4bit","quant_order":0,"family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","architecture":"MoE","kind":"raw","run_count":3,"avg_gen_tps":77.42,"avg_ttft_s":0.598,"peak_mem_pct":83.2,"max_ctx_used":43690.667,"ok_passes":4.0,"total_passes":4.0,"score":116.713,"token_count_methods":["mlx_native"],"micro_gen_tps":81.02,"normal_gen_tps":78.157,"high_gen_tps":76.107,"max_gen_tps":74.4,"model_alias":"Gemma 26B MoE MLX 4bit"},{"model_name":"gemma-4-26B-A4B-it-UD-Q4_K_M.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q4_K_M","quant_order":1,"family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","architecture":"MoE","kind":"raw","run_count":3,"avg_gen_tps":58.377,"avg_ttft_s":0.0,"peak_mem_pct":75.1,"max_ctx_used":117806.0,"ok_passes":4.0,"total_passes":4.0,"score":88.25,"token_count_methods":["llama_bench_native"],"micro_gen_tps":61.443,"normal_gen_tps":59.233,"high_gen_tps":56.91,"max_gen_tps":55.92,"model_alias":"Gemma 26B MoE GGUF Q4_K_M"},{"model_name":"Qwen3.5-27B-4bit","backend":"MLX_DIRECT","backend_label":"MLX Direct","backend_order":0,"quant":"4bit","quant_order":0,"family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","architecture":"Dense","kind":"raw","run_count":3,"avg_gen_tps":18.04,"avg_ttft_s":0.819,"peak_mem_pct":88.033,"max_ctx_used":27573.333,"ok_passes":3.667,"total_passes":4.0,"score":27.167,"token_count_methods":["mlx_native"],"micro_gen_tps":18.283,"normal_gen_tps":18.067,"high_gen_tps":12.02,"max_gen_tps":17.823,"model_alias":"Qwen 27B Dense MLX 4bit"},{"model_name":"gemma-4-31b-4bit","backend":"MLX_DIRECT","backend_label":"MLX Direct","backend_order":0,"quant":"4bit","quant_order":0,"family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","architecture":"Dense","kind":"raw","run_count":3,"avg_gen_tps":15.09,"avg_ttft_s":0.965,"peak_mem_pct":87.633,"max_ctx_used":20372.667,"ok_passes":3.667,"total_passes":4.0,"score":22.907,"token_count_methods":["mlx_native"],"micro_gen_tps":15.447,"normal_gen_tps":15.26,"high_gen_tps":9.81,"max_gen_tps":14.79,"model_alias":"Gemma 31B Dense MLX 4bit"},{"model_name":"mlx-community/granite-4.0-h-tiny-4bit","backend":"MLX_API","backend_label":"MLX API","backend_order":1,"quant":"4bit","quant_order":0,"family_id":"granite_tiny","family_label":"Granite Tiny","architecture":"Small dense/other","kind":"api","run_count":2,"avg_gen_tps":101.76,"avg_ttft_s":0.377,"peak_mem_pct":66.9,"max_ctx_used":0.0,"ok_passes":4.0,"total_passes":4.0,"score":154.115,"token_count_methods":["openai_usage"],"micro_gen_tps":103.8,"normal_gen_tps":101.845,"high_gen_tps":101.285,"max_gen_tps":100.12,"model_alias":"Granite Tiny MLX 4bit"},{"model_name":"gemma-4-31B-it-Q4_K_M.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q4_K_M","quant_order":1,"family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","architecture":"Dense","kind":"api","run_count":2,"avg_gen_tps":58.075,"avg_ttft_s":0.101,"peak_mem_pct":75.0,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":89.03,"token_count_methods":["openai_usage"],"micro_gen_tps":58.37,"normal_gen_tps":58.095,"high_gen_tps":58.07,"max_gen_tps":57.76,"model_alias":"Gemma 31B Dense GGUF Q4_K_M"},{"model_name":"granite-4.0-h-tiny-Q6_K.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q6_K","quant_order":2,"family_id":"granite_tiny","family_label":"Granite Tiny","architecture":"Small dense/other","kind":"api","run_count":1,"avg_gen_tps":58.58,"avg_ttft_s":0.054,"peak_mem_pct":73.1,"max_ctx_used":131072.0,"ok_passes":4.0,"total_passes":4.0,"score":89.53,"token_count_methods":["openai_usage"],"micro_gen_tps":58.33,"normal_gen_tps":60.19,"high_gen_tps":57.65,"max_gen_tps":58.15,"model_alias":"Granite Tiny GGUF Q6_K"},{"model_name":"Qwen3.6-27B-Q6_K.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q6_K","quant_order":2,"family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","architecture":"Dense","kind":"api","run_count":1,"avg_gen_tps":58.01,"avg_ttft_s":0.055,"peak_mem_pct":73.0,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":88.92,"token_count_methods":["openai_usage"],"micro_gen_tps":58.37,"normal_gen_tps":58.01,"high_gen_tps":58.21,"max_gen_tps":57.44,"model_alias":"Qwen 27B Dense GGUF Q6_K"},{"model_name":"Qwen3.6-35B-A3B-UD-Q6_K.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q6_K","quant_order":2,"family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","architecture":"MoE","kind":"api","run_count":1,"avg_gen_tps":57.93,"avg_ttft_s":0.054,"peak_mem_pct":73.0,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":88.77,"token_count_methods":["openai_usage"],"micro_gen_tps":58.36,"normal_gen_tps":58.0,"high_gen_tps":57.54,"max_gen_tps":57.81,"model_alias":"Qwen 35B MoE GGUF Q6_K"},{"model_name":"gemma-4-31B-it-Q6_K.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q6_K","quant_order":2,"family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","architecture":"Dense","kind":"api","run_count":1,"avg_gen_tps":57.92,"avg_ttft_s":0.05,"peak_mem_pct":73.1,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":88.74,"token_count_methods":["openai_usage"],"micro_gen_tps":58.45,"normal_gen_tps":57.95,"high_gen_tps":57.58,"max_gen_tps":57.71,"model_alias":"Gemma 31B Dense GGUF Q6_K"},{"model_name":"gemma-4-26B-A4B-it-UD-Q6_K.gguf","backend":"LLAMACPP_API","backend_label":"llama.cpp API","backend_order":3,"quant":"Q6_K","quant_order":2,"family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","architecture":"MoE","kind":"api","run_count":1,"avg_gen_tps":57.88,"avg_ttft_s":0.048,"peak_mem_pct":73.0,"max_ctx_used":262144.0,"ok_passes":4.0,"total_passes":4.0,"score":88.51,"token_count_methods":["openai_usage"],"micro_gen_tps":58.68,"normal_gen_tps":58.29,"high_gen_tps":57.77,"max_gen_tps":56.76,"model_alias":"Gemma 26B MoE GGUF Q6_K"},{"model_name":"granite-4.0-h-tiny-4bit","backend":"MLX_DIRECT","backend_label":"MLX Direct","backend_order":0,"quant":"4bit","quant_order":0,"family_id":"granite_tiny","family_label":"Granite Tiny","architecture":"Small dense/other","kind":"raw","run_count":2,"avg_gen_tps":162.87,"avg_ttft_s":0.364,"peak_mem_pct":67.2,"max_ctx_used":131072.0,"ok_passes":4.0,"total_passes":4.0,"score":246.715,"token_count_methods":["mlx_native"],"micro_gen_tps":162.3,"normal_gen_tps":163.815,"high_gen_tps":162.145,"max_gen_tps":163.225,"model_alias":"Granite Tiny MLX 4bit"},{"model_name":"granite-4.0-h-tiny-Q6_K.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q6_K","quant_order":2,"family_id":"granite_tiny","family_label":"Granite Tiny","architecture":"Small dense/other","kind":"raw","run_count":1,"avg_gen_tps":98.24,"avg_ttft_s":0.0,"peak_mem_pct":58.8,"max_ctx_used":131072.0,"ok_passes":4.0,"total_passes":4.0,"score":149.67,"token_count_methods":["llama_bench_native"],"micro_gen_tps":98.72,"normal_gen_tps":98.51,"high_gen_tps":98.19,"max_gen_tps":97.54,"model_alias":"Granite Tiny GGUF Q6_K"},{"model_name":"Qwen3.6-35B-A3B-UD-Q6_K.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q6_K","quant_order":2,"family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","architecture":"MoE","kind":"raw","run_count":1,"avg_gen_tps":56.52,"avg_ttft_s":0.0,"peak_mem_pct":78.7,"max_ctx_used":65536.0,"ok_passes":4.0,"total_passes":4.0,"score":86.98,"token_count_methods":["llama_bench_native"],"micro_gen_tps":56.74,"normal_gen_tps":57.45,"high_gen_tps":55.83,"max_gen_tps":56.04,"model_alias":"Qwen 35B MoE GGUF Q6_K"},{"model_name":"gemma-4-26B-A4B-it-UD-Q6_K.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q6_K","quant_order":2,"family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","architecture":"MoE","kind":"raw","run_count":1,"avg_gen_tps":54.45,"avg_ttft_s":0.0,"peak_mem_pct":75.6,"max_ctx_used":74071.0,"ok_passes":4.0,"total_passes":4.0,"score":83.45,"token_count_methods":["llama_bench_native"],"micro_gen_tps":57.62,"normal_gen_tps":54.14,"high_gen_tps":53.98,"max_gen_tps":52.04,"model_alias":"Gemma 26B MoE GGUF Q6_K"},{"model_name":"gemma-4-31B-it-Q4_K_M.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q4_K_M","quant_order":1,"family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","architecture":"Dense","kind":"raw","run_count":2,"avg_gen_tps":13.56,"avg_ttft_s":0.0,"peak_mem_pct":85.85,"max_ctx_used":105037.0,"ok_passes":4.0,"total_passes":4.0,"score":22.6,"token_count_methods":["llama_bench_native"],"micro_gen_tps":14.265,"normal_gen_tps":13.86,"high_gen_tps":13.235,"max_gen_tps":12.895,"model_alias":"Gemma 31B Dense GGUF Q4_K_M"},{"model_name":"Qwen3.6-27B-Q6_K.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q6_K","quant_order":2,"family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","architecture":"Dense","kind":"raw","run_count":1,"avg_gen_tps":11.78,"avg_ttft_s":0.0,"peak_mem_pct":78.4,"max_ctx_used":79847.0,"ok_passes":4.0,"total_passes":4.0,"score":20.13,"token_count_methods":["llama_bench_native"],"micro_gen_tps":11.83,"normal_gen_tps":11.83,"high_gen_tps":11.83,"max_gen_tps":11.61,"model_alias":"Qwen 27B Dense GGUF Q6_K"},{"model_name":"gemma-4-31B-it-Q6_K.gguf","backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","backend_order":2,"quant":"Q6_K","quant_order":2,"family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","architecture":"Dense","kind":"raw","run_count":1,"avg_gen_tps":10.39,"avg_ttft_s":0.0,"peak_mem_pct":83.9,"max_ctx_used":64649.0,"ok_passes":3.0,"total_passes":4.0,"score":15.38,"token_count_methods":["llama_bench_native"],"micro_gen_tps":10.72,"normal_gen_tps":10.48,"high_gen_tps":0.0,"max_gen_tps":9.97,"model_alias":"Gemma 31B Dense GGUF Q6_K"}],"backend_family":[{"backend":"MLX_DIRECT","backend_label":"MLX Direct","family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","quant":"4bit","avg_gen_tps":101.743,"avg_ttft_s":0.996,"peak_mem_pct":92.533,"max_ctx_used":43690.667,"run_count":3,"model_alias":"Qwen 35B MoE MLX 4bit"},{"backend":"MLX_DIRECT","backend_label":"MLX Direct","family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","quant":"4bit","avg_gen_tps":18.04,"avg_ttft_s":0.819,"peak_mem_pct":88.033,"max_ctx_used":27573.333,"run_count":3,"model_alias":"Qwen 27B Dense MLX 4bit"},{"backend":"MLX_DIRECT","backend_label":"MLX Direct","family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","quant":"4bit","avg_gen_tps":77.42,"avg_ttft_s":0.598,"peak_mem_pct":83.2,"max_ctx_used":43690.667,"run_count":3,"model_alias":"Gemma 26B MoE MLX 4bit"},{"backend":"MLX_DIRECT","backend_label":"MLX Direct","family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","quant":"4bit","avg_gen_tps":15.09,"avg_ttft_s":0.965,"peak_mem_pct":87.633,"max_ctx_used":20372.667,"run_count":3,"model_alias":"Gemma 31B Dense MLX 4bit"},{"backend":"MLX_DIRECT","backend_label":"MLX Direct","family_id":"granite_tiny","family_label":"Granite Tiny","quant":"4bit","avg_gen_tps":162.87,"avg_ttft_s":0.364,"peak_mem_pct":67.2,"max_ctx_used":131072.0,"run_count":2,"model_alias":"Granite Tiny MLX 4bit"},{"backend":"MLX_API","backend_label":"MLX API","family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","quant":"4bit","avg_gen_tps":55.723,"avg_ttft_s":1.589,"peak_mem_pct":89.3,"max_ctx_used":0.0,"run_count":3,"model_alias":"Qwen 35B MoE MLX 4bit"},{"backend":"MLX_API","backend_label":"MLX API","family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","quant":"4bit","avg_gen_tps":13.573,"avg_ttft_s":1.463,"peak_mem_pct":87.533,"max_ctx_used":0.0,"run_count":3,"model_alias":"Qwen 27B Dense MLX 4bit"},{"backend":"MLX_API","backend_label":"MLX API","family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","quant":"4bit","avg_gen_tps":51.407,"avg_ttft_s":1.154,"peak_mem_pct":84.267,"max_ctx_used":0.0,"run_count":3,"model_alias":"Gemma 26B MoE MLX 4bit"},{"backend":"MLX_API","backend_label":"MLX API","family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","quant":"4bit","avg_gen_tps":11.82,"avg_ttft_s":1.703,"peak_mem_pct":90.267,"max_ctx_used":0.0,"run_count":3,"model_alias":"Gemma 31B Dense MLX 4bit"},{"backend":"MLX_API","backend_label":"MLX API","family_id":"granite_tiny","family_label":"Granite Tiny","quant":"4bit","avg_gen_tps":101.76,"avg_ttft_s":0.377,"peak_mem_pct":66.9,"max_ctx_used":0.0,"run_count":2,"model_alias":"Granite Tiny MLX 4bit"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","quant":"Q4_K_M","avg_gen_tps":57.968,"avg_ttft_s":0.0,"peak_mem_pct":72.32,"max_ctx_used":79558.0,"run_count":5,"model_alias":"Qwen 35B MoE GGUF Q4_K_M"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","quant":"Q6_K","avg_gen_tps":56.52,"avg_ttft_s":0.0,"peak_mem_pct":78.7,"max_ctx_used":65536.0,"run_count":1,"model_alias":"Qwen 35B MoE GGUF Q6_K"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","quant":"Q4_K_M","avg_gen_tps":14.054,"avg_ttft_s":0.0,"peak_mem_pct":76.36,"max_ctx_used":68030.0,"run_count":5,"model_alias":"Qwen 27B Dense GGUF Q4_K_M"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","quant":"Q6_K","avg_gen_tps":11.78,"avg_ttft_s":0.0,"peak_mem_pct":78.4,"max_ctx_used":79847.0,"run_count":1,"model_alias":"Qwen 27B Dense GGUF Q6_K"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","quant":"Q4_K_M","avg_gen_tps":58.377,"avg_ttft_s":0.0,"peak_mem_pct":75.1,"max_ctx_used":117806.0,"run_count":3,"model_alias":"Gemma 26B MoE GGUF Q4_K_M"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","quant":"Q6_K","avg_gen_tps":54.45,"avg_ttft_s":0.0,"peak_mem_pct":75.6,"max_ctx_used":74071.0,"run_count":1,"model_alias":"Gemma 26B MoE GGUF Q6_K"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","quant":"Q4_K_M","avg_gen_tps":13.56,"avg_ttft_s":0.0,"peak_mem_pct":85.85,"max_ctx_used":105037.0,"run_count":2,"model_alias":"Gemma 31B Dense GGUF Q4_K_M"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","quant":"Q6_K","avg_gen_tps":10.39,"avg_ttft_s":0.0,"peak_mem_pct":83.9,"max_ctx_used":64649.0,"run_count":1,"model_alias":"Gemma 31B Dense GGUF Q6_K"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"granite_tiny","family_label":"Granite Tiny","quant":"Q4_K_M","avg_gen_tps":106.917,"avg_ttft_s":0.0,"peak_mem_pct":55.0,"max_ctx_used":131072.0,"run_count":3,"model_alias":"Granite Tiny GGUF Q4_K_M"},{"backend":"LLAMACPP_RAW","backend_label":"llama.cpp Direct","family_id":"granite_tiny","family_label":"Granite Tiny","quant":"Q6_K","avg_gen_tps":98.24,"avg_ttft_s":0.0,"peak_mem_pct":58.8,"max_ctx_used":131072.0,"run_count":1,"model_alias":"Granite Tiny GGUF Q6_K"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","quant":"Q4_K_M","avg_gen_tps":46.273,"avg_ttft_s":0.084,"peak_mem_pct":74.933,"max_ctx_used":262144.0,"run_count":3,"model_alias":"Qwen 35B MoE GGUF Q4_K_M"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"qwen3_35b_moe","family_label":"Qwen 35B MoE","quant":"Q6_K","avg_gen_tps":57.93,"avg_ttft_s":0.054,"peak_mem_pct":73.0,"max_ctx_used":262144.0,"run_count":1,"model_alias":"Qwen 35B MoE GGUF Q6_K"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","quant":"Q4_K_M","avg_gen_tps":49.503,"avg_ttft_s":0.087,"peak_mem_pct":74.467,"max_ctx_used":262144.0,"run_count":3,"model_alias":"Qwen 27B Dense GGUF Q4_K_M"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"qwen3_27b_dense","family_label":"Qwen 27B Dense","quant":"Q6_K","avg_gen_tps":58.01,"avg_ttft_s":0.055,"peak_mem_pct":73.0,"max_ctx_used":262144.0,"run_count":1,"model_alias":"Qwen 27B Dense GGUF Q6_K"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","quant":"Q4_K_M","avg_gen_tps":49.14,"avg_ttft_s":0.084,"peak_mem_pct":74.633,"max_ctx_used":262144.0,"run_count":3,"model_alias":"Gemma 26B MoE GGUF Q4_K_M"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"gemma4_26b_moe","family_label":"Gemma 26B MoE","quant":"Q6_K","avg_gen_tps":57.88,"avg_ttft_s":0.048,"peak_mem_pct":73.0,"max_ctx_used":262144.0,"run_count":1,"model_alias":"Gemma 26B MoE GGUF Q6_K"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","quant":"Q4_K_M","avg_gen_tps":58.075,"avg_ttft_s":0.101,"peak_mem_pct":75.0,"max_ctx_used":262144.0,"run_count":2,"model_alias":"Gemma 31B Dense GGUF Q4_K_M"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"gemma4_31b_dense","family_label":"Gemma 31B Dense","quant":"Q6_K","avg_gen_tps":57.92,"avg_ttft_s":0.05,"peak_mem_pct":73.1,"max_ctx_used":262144.0,"run_count":1,"model_alias":"Gemma 31B Dense GGUF Q6_K"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"granite_tiny","family_label":"Granite Tiny","quant":"Q4_K_M","avg_gen_tps":51.437,"avg_ttft_s":0.086,"peak_mem_pct":74.733,"max_ctx_used":131072.0,"run_count":3,"model_alias":"Granite Tiny GGUF Q4_K_M"},{"backend":"LLAMACPP_API","backend_label":"llama.cpp API","family_id":"granite_tiny","family_label":"Granite Tiny","quant":"Q6_K","avg_gen_tps":58.58,"avg_ttft_s":0.054,"peak_mem_pct":73.1,"max_ctx_used":131072.0,"run_count":1,"model_alias":"Granite Tiny GGUF Q6_K"}],"method_counts":{"llama_bench_native":23,"openai_usage":33,"word_fallback":24,"mlx_native":14},"source_variant_count":70,"date_range_label":"May 5\u20138, 2026","scope_note":"Public report uses only MLX Direct, MLX API, llama.cpp Direct, and llama.cpp API with 4bit, Q4_K_M, and Q6_K quantizations. Ollama and auxiliary benchmark modes are excluded."};
 const colors = {"4bit":"#84ccff","Q4_K_M":"#a78bfa","Q6_K":"#60d394"};
 const backendOrder = DATA.allowed_backends;
@@ -15,8 +349,8 @@ function setInspector(d,title){
 function scales(vals, minZero=true){ const clean=vals.filter(v=>v!==null&&v!==undefined&&!Number.isNaN(v)); let max=Math.max(...clean,1); let min=minZero?0:Math.min(...clean,0); return {min,max:max*1.12}; }
 function axis(svg,w,h,pad,ymax,label){
   const ns='http://www.w3.org/2000/svg';
-  for(let i=0;i<=4;i++){let y=pad.t+(h-pad.t-pad.b)*(i/4); let val=ymax*(1-i/4); let line=document.createElementNS(ns,'line'); line.setAttribute('x1',pad.l);line.setAttribute('x2',w-pad.r);line.setAttribute('y1',y);line.setAttribute('y2',y);line.setAttribute('stroke','#1f2b3d'); svg.appendChild(line); let t=document.createElementNS(ns,'text'); t.setAttribute('x',pad.l-8);t.setAttribute('y',y+4);t.setAttribute('text-anchor','end');t.setAttribute('fill','#8ea0b8');t.setAttribute('font-size','11');t.textContent=fmt(val, val>10?0:2); svg.appendChild(t);}
-  let lab=document.createElementNS(ns,'text'); lab.setAttribute('x',pad.l);lab.setAttribute('y',18);lab.setAttribute('fill','#b9c8dc');lab.setAttribute('font-size','12');lab.textContent=label; svg.appendChild(lab);
+  for(let i=0;i<=4;i++){let y=pad.t+(h-pad.t-pad.b)*(i/4); let val=ymax*(1-i/4); let line=document.createElementNS(ns,'line'); line.setAttribute('x1',pad.l);line.setAttribute('x2',w-pad.r);line.setAttribute('y1',y);line.setAttribute('y2',y);line.setAttribute('stroke','#222'); svg.appendChild(line); let t=document.createElementNS(ns,'text'); t.setAttribute('x',pad.l-8);t.setAttribute('y',y+4);t.setAttribute('text-anchor','end');t.setAttribute('fill','#99CCCC');t.setAttribute('font-size','11');t.textContent=fmt(val, val>10?0:2); svg.appendChild(t);}
+  let lab=document.createElementNS(ns,'text'); lab.setAttribute('x',pad.l);lab.setAttribute('y',18);lab.setAttribute('fill','#9966CC');lab.setAttribute('font-size','12');lab.textContent=label; svg.appendChild(lab);
 }
 function groupedBar(el, rows, opts){
   const w=900,h=310,pad={l:54,r:18,t:30,b:72}, ns='http://www.w3.org/2000/svg';
@@ -33,7 +367,7 @@ function groupedBar(el, rows, opts){
       let rect=document.createElementNS(ns,'rect'); rect.setAttribute('class','bar'); rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',barW-2);rect.setAttribute('height',bh);rect.setAttribute('rx',4);rect.setAttribute('fill',colors[s]||'#94a3b8'); rect.style.cursor='pointer'; rect.onclick=()=>setInspector(r, opts.title||'Selection'); svg.appendChild(rect);
       let tt=document.createElementNS(ns,'title'); tt.textContent=`${c} / ${s}: ${fmt(r[value])}`; rect.appendChild(tt);
     });
-    let t=document.createElementNS(ns,'text'); t.setAttribute('x',pad.l+i*groupW+groupW/2);t.setAttribute('y',h-36);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#cbdaf0');t.setAttribute('font-size','12');t.textContent=c; svg.appendChild(t);
+    let t=document.createElementNS(ns,'text'); t.setAttribute('x',pad.l+i*groupW+groupW/2);t.setAttribute('y',h-36);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#99CCCC');t.setAttribute('font-size','12');t.textContent=c; svg.appendChild(t);
   });
   // series legend handled outside
 }
@@ -41,14 +375,14 @@ function simpleBars(el, rows, opts){
   const w=900,h=290,pad={l:56,r:18,t:30,b:88}, ns='http://www.w3.org/2000/svg'; const svg=document.createElementNS(ns,'svg'); svg.setAttribute('viewBox',`0 0 ${w} ${h}`); el.innerHTML=''; el.appendChild(svg);
   const vals=rows.map(r=>r[opts.value]).filter(v=>v!=null); const {max}=scales(vals); axis(svg,w,h,pad,max,opts.ylabel||opts.value);
   const plotW=w-pad.l-pad.r, plotH=h-pad.t-pad.b, bw=Math.max(6, plotW/Math.max(rows.length,1)*.72);
-  rows.forEach((r,i)=>{let x=pad.l+i*(plotW/rows.length)+(plotW/rows.length-bw)/2; let bh=(r[opts.value]/max)*plotH; let y=pad.t+plotH-bh; let rect=document.createElementNS(ns,'rect'); rect.setAttribute('class','bar');rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',bw);rect.setAttribute('height',bh);rect.setAttribute('rx',5);rect.setAttribute('fill',colors[r.quant]||'#94a3b8'); rect.style.cursor='pointer'; rect.onclick=()=>setInspector(r, opts.title||'Selection'); svg.appendChild(rect); let t=document.createElementNS(ns,'text'); t.setAttribute('x',x+bw/2);t.setAttribute('y',h-54);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#cbdaf0');t.setAttribute('font-size','11');t.setAttribute('transform',`rotate(-32 ${x+bw/2} ${h-54})`);t.textContent=opts.label?opts.label(r):((r.backend_label||r.backend)+' '+r.quant); svg.appendChild(t);});
+  rows.forEach((r,i)=>{let x=pad.l+i*(plotW/rows.length)+(plotW/rows.length-bw)/2; let bh=(r[opts.value]/max)*plotH; let y=pad.t+plotH-bh; let rect=document.createElementNS(ns,'rect'); rect.setAttribute('class','bar');rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',bw);rect.setAttribute('height',bh);rect.setAttribute('rx',5);rect.setAttribute('fill',colors[r.quant]||'#94a3b8'); rect.style.cursor='pointer'; rect.onclick=()=>setInspector(r, opts.title||'Selection'); svg.appendChild(rect); let t=document.createElementNS(ns,'text'); t.setAttribute('x',x+bw/2);t.setAttribute('y',h-54);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#99CCCC');t.setAttribute('font-size','11');t.setAttribute('transform',`rotate(-32 ${x+bw/2} ${h-54})`);t.textContent=opts.label?opts.label(r):((r.backend_label||r.backend)+' '+r.quant); svg.appendChild(t);});
 }
 function passChart(el, rows){
   const passRows=[]; rows.forEach(r=>['micro','normal','high','max'].forEach(p=>passRows.push({...r, pass:p, pass_tps:r[p+'_gen_tps']})));
   const w=900,h=330,pad={l:54,r:18,t:30,b:70}, ns='http://www.w3.org/2000/svg'; const svg=document.createElementNS(ns,'svg'); svg.setAttribute('viewBox',`0 0 ${w} ${h}`); el.innerHTML=''; el.appendChild(svg);
   const vals=passRows.map(r=>r.pass_tps).filter(v=>v!=null); const {max}=scales(vals); axis(svg,w,h,pad,max,'generation tokens/sec by pass');
   const passes=['micro','normal','high','max']; const combos=rows.map(r=>r.backend_label+' '+r.quant); const plotW=w-pad.l-pad.r, plotH=h-pad.t-pad.b, groupW=plotW/passes.length, barW=Math.max(3,(groupW-16)/Math.max(combos.length,1));
-  passes.forEach((p,i)=>{let base=pad.l+i*groupW+8; rows.forEach((r,j)=>{let val=r[p+'_gen_tps']; if(val==null)return; let bh=(val/max)*plotH, x=base+j*barW, y=pad.t+plotH-bh; let rect=document.createElementNS(ns,'rect'); rect.setAttribute('class','bar');rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',Math.max(2,barW-1));rect.setAttribute('height',bh);rect.setAttribute('rx',3);rect.setAttribute('fill',colors[r.quant]||'#94a3b8');rect.style.cursor='pointer';rect.onclick=()=>setInspector(r, `${r.family_label} ${p} pass`); svg.appendChild(rect);}); let t=document.createElementNS(ns,'text'); t.setAttribute('x',pad.l+i*groupW+groupW/2);t.setAttribute('y',h-38);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#dbeafe');t.setAttribute('font-size','12');t.textContent=p; svg.appendChild(t);});
+  passes.forEach((p,i)=>{let base=pad.l+i*groupW+8; rows.forEach((r,j)=>{let val=r[p+'_gen_tps']; if(val==null)return; let bh=(val/max)*plotH, x=base+j*barW, y=pad.t+plotH-bh; let rect=document.createElementNS(ns,'rect'); rect.setAttribute('class','bar');rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',Math.max(2,barW-1));rect.setAttribute('height',bh);rect.setAttribute('rx',3);rect.setAttribute('fill',colors[r.quant]||'#94a3b8');rect.style.cursor='pointer';rect.onclick=()=>setInspector(r, `${r.family_label} ${p} pass`); svg.appendChild(rect);}); let t=document.createElementNS(ns,'text'); t.setAttribute('x',pad.l+i*groupW+groupW/2);t.setAttribute('y',h-38);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#33CCAA');t.setAttribute('font-size','12');t.textContent=p; svg.appendChild(t);});
 }
 function legendHtml(){return `<div class="legend">${quantOrder.map(q=>`<span class="chip"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${colors[q]};margin-right:6px"></span>${q}</span>`).join('')}<span class="chip">Filtered: MLX Direct, MLX API, llama.cpp Direct, llama.cpp API only</span></div>`}
 function aggTable(rows){
@@ -92,28 +426,7 @@ function render(){
  setInspector(DATA.aggregates.sort((a,b)=>(b.avg_gen_tps||0)-(a.avg_gen_tps||0))[0]||{}, 'Fastest included tuple');
 }
 render();
-const siteNav=document.getElementById('nav');
-if(siteNav && !siteNav.dataset.siteLinksInjected){
-  const links=[
-    ['home','../../index.html'],
-    ['photos','../../galleries.html'],
-    ['blog','../../blog.html'],
-    ['builds','../../blog/builds/index.html'],
-    ['plants','../../plants.html'],
-    ['about','../../about.html']
-  ];
-  const frag=document.createDocumentFragment();
-  links.forEach(([label,href])=>{
-    const a=document.createElement('a');
-    a.href=href;
-    a.textContent=label;
-    frag.appendChild(a);
-  });
-  const divider=document.createElement('span');
-  divider.className='chip';
-  divider.textContent='site';
-  frag.appendChild(divider);
-  siteNav.prepend(frag);
-  siteNav.dataset.siteLinksInjected='true';
-}
-</script></body></html>
+
+</script>
+</body>
+</html>

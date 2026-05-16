@@ -373,7 +373,7 @@ hr {
     border-radius: 2px;
     margin-bottom: 6px;
     font-weight: bold;
-    letter-spacing: 0.5px;
+    letter-spacing: 0;
 }
 
 .gallery-groups {
@@ -509,6 +509,330 @@ hr {
     .gallery-groups .gallery-grid,
     .gallery-entry-children {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ---- Home Tiles (index.html) ---- */
+.home-tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 280px 100px auto auto;
+    gap: 14px;
+    margin: 14px 0 8px;
+}
+
+.tile {
+    position: relative;
+    background-color: #111;
+    border: 1px solid #444;
+    font-family: monospace;
+    color: #33CCAA;
+    text-decoration: none;
+    display: flex;
+    overflow: hidden;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.2s ease;
+}
+a.tile:hover {
+    background-color: #1a0030;
+    border-color: #9966CC;
+}
+
+/* a tile that's really a labeled image */
+.tile-img {
+    background-size: cover;
+    background-position: center;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0;
+}
+.tile-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    transition: background 0.3s ease;
+}
+.tile-img:hover::before { background: rgba(0, 0, 0, 0.35); }
+.tile-img:hover { transform: scale(1.015); border-color: #CC99FF; }
+.tile-img .tile-label {
+    position: relative;
+    z-index: 1;
+    padding: 10px 12px;
+    font-size: 0.95em;
+    color: #66FFCC;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    letter-spacing: 0.5px;
+}
+
+/* section tile: thumbnail + name + latest item */
+.tile-section {
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+}
+.sec-thumb {
+    width: 78px;
+    flex-shrink: 0;
+    border-right: 1px solid #333;
+    background-color: #050505;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-size: 0.6em;
+    letter-spacing: 0;
+    color: #444;
+    text-transform: uppercase;
+}
+.sec-thumb.is-placeholder {
+    background-image: repeating-linear-gradient(45deg, #0c0c0c 0 8px, #050505 8px 16px);
+}
+.sec-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 12px;
+    gap: 4px;
+    min-width: 0;
+}
+.sec-name {
+    font-family: 'Lucida Grande', sans-serif;
+    color: #9966CC;
+    font-size: 1.05em;
+    line-height: 1;
+}
+.sec-latest {
+    font-family: monospace;
+    color: #33CCAA;
+    font-size: 0.78em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sec-meta {
+    font-family: monospace;
+    color: #99CCCC;
+    font-style: italic;
+    font-size: 0.7em;
+}
+.tile-section:hover .sec-name { color: #CC99FF; }
+.tile-section:hover .sec-latest { color: #66FFCC; }
+
+/* grid placement */
+.t-brand   { grid-column: 1; grid-row: 1; }
+.t-photos  { grid-column: 2 / span 2; grid-row: 1; }
+.t-blog    { grid-column: 1; grid-row: 2; }
+.t-builds  { grid-column: 2; grid-row: 2; }
+.t-plants  { grid-column: 3; grid-row: 2; }
+.t-recent  { grid-column: 1 / span 3; grid-row: 3; }
+.t-about   { grid-column: 1 / span 3; grid-row: 4; }
+
+/* ---- brand tile (non-clickable: we're already home) ---- */
+.t-brand {
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-color: #9966CC;
+    background-color: #050505;
+    background-image: url('../images/silly.jpg');
+    background-size: cover;
+    background-position: center;
+    box-shadow: inset 0 0 24px rgba(153, 102, 204, 0.15);
+    overflow: hidden;
+}
+.t-brand::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5, 5, 5, 0.85) 0%, rgba(10, 1, 24, 0.78) 100%);
+    z-index: 0;
+}
+.t-brand > * {
+    position: relative;
+    z-index: 1;
+}
+.brand-title {
+    color: #9966CC;
+    font-family: 'Lucida Grande', sans-serif;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 0;
+    line-height: 1;
+    margin: 0;
+}
+.brand-title .v {
+    color: #99CCCC;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0;
+    margin-left: 4px;
+    vertical-align: super;
+}
+.brand-marquee {
+    font-family: monospace;
+    color: #33CCAA;
+    font-size: 0.78em;
+    border-top: 1px dashed #333;
+    border-bottom: 1px dashed #333;
+    padding: 4px 0;
+}
+.brand-marquee marquee { color: #33CCAA; }
+.brand-tag {
+    font-family: monospace;
+    color: #99CCCC;
+    font-size: 0.72em;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+/* ---- about tile (full-width row, last pane) ---- */
+.t-about {
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 18px;
+    gap: 18px;
+    background: #050505;
+    overflow: hidden;
+}
+.about-head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 120px;
+}
+.about-title {
+    color: #9966CC;
+    font-family: 'Lucida Grande', sans-serif;
+    font-size: 18px;
+    line-height: 1;
+}
+.about-blurb {
+    color: #99CCCC;
+    font-family: monospace;
+    font-size: 0.72em;
+    letter-spacing: 0;
+}
+.about-badges {
+    flex: 1;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.about-badges img {
+    max-height: 56px;
+    max-width: 88px;
+    object-fit: contain;
+    filter: grayscale(25%);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+.t-about:hover .about-badges img { filter: grayscale(0%); }
+.about-badges img:hover { transform: scale(1.08); }
+.about-arrow {
+    flex-shrink: 0;
+    font-family: monospace;
+    color: #33CCAA;
+    font-size: 0.85em;
+}
+.t-about:hover .about-title { color: #CC99FF; }
+.t-about:hover .about-arrow { color: #66FFCC; }
+
+/* ---- recent-activity tile (full-width card strip) ---- */
+.t-recent {
+    flex-direction: column;
+    padding: 12px 14px;
+    gap: 10px;
+}
+.recent-label {
+    font-family: monospace;
+    font-size: 0.65em;
+    color: #9966CC;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 6px;
+}
+.recent-cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.recent-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    color: #33CCAA;
+    font-family: monospace;
+    min-width: 0;
+}
+.card-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-size: cover;
+    background-position: center;
+    background-color: #050505;
+    border: 1px solid #333;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card-thumb.is-placeholder {
+    background-image: repeating-linear-gradient(45deg, #0c0c0c 0 8px, #050505 8px 16px);
+}
+.recent-card:hover .card-thumb {
+    border-color: #9966CC;
+    transform: scale(1.04);
+}
+.recent-card:hover .card-text { color: #66FFCC; }
+.card-text {
+    font-size: 0.72em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-when {
+    font-size: 0.7em;
+    color: #99CCCC;
+    line-height: 1;
+}
+.t-recent:hover .recent-label { color: #CC99FF; }
+
+/* mobile collapse for tiles: single-column stack; source order is mobile order */
+@media (max-width: 720px) {
+    .home-tiles {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+    }
+    .t-brand, .t-photos, .t-blog, .t-plants, .t-builds, .t-about, .t-recent {
+        grid-column: 1;
+        grid-row: auto;
+    }
+    .t-brand   { min-height: 180px; }
+    .t-photos  { height: 200px; }
+    .t-blog, .t-plants, .t-builds { height: 72px; }
+    .t-about   {
+        flex-direction: column;
+        align-items: stretch;
+        min-height: 170px;
+    }
+    .about-badges { justify-content: center; }
+    .about-arrow { text-align: right; }
+    .recent-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .recent-cards {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

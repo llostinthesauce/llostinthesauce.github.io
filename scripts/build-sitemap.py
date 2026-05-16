@@ -5,10 +5,10 @@ Run from repo root:  python3 scripts/build-sitemap.py
 """
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
-from PIL import Image
+from PIL import ExifTags, Image
 
 ROOT = Path(__file__).parent.parent.resolve()
 EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials'}
@@ -26,6 +26,91 @@ EXCLUDE_FILES = {
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'}
 PHOTO_EXTS = {'.jpg', '.jpeg', '.png'}
 MB = 1024 * 1024
+EXIF_TAGS = {value: key for key, value in ExifTags.TAGS.items()}
+CAPTURE_DATE_TAGS = ('DateTimeOriginal', 'DateTimeDigitized', 'DateTime')
+IDG_NAME_RE = re.compile(r'^IDG_(\d{8})_(\d{6})(?:_\d+)?', re.IGNORECASE)
+IMG_NAME_RE = re.compile(r'^IMG_(\d+)', re.IGNORECASE)
+MONTH_DAY_NAME_RE = re.compile(r'^[a-z]{3}-([0-9]{2})$', re.IGNORECASE)
+
+
+def parse_exif_datetime(value):
+    """Parse EXIF datetime strings such as YYYY:MM:DD HH:MM:SS."""
+    if not value:
+        return None
+    if isinstance(value, bytes):
+        value = value.decode('utf-8', errors='ignore')
+    text = str(value).strip()
+    if len(text) < 19:
+        return None
+    try:
+        return datetime.strptime(text[:19], '%Y:%m:%d %H:%M:%S')
+    except ValueError:
+        return None
+
+
+def image_capture_datetime(path: Path):
+    """Return the best capture datetime embedded in an image, if present."""
+    try:
+        with Image.open(path) as img:
+            exif = img.getexif()
+        for tag_name in CAPTURE_DATE_TAGS:
+            dt = parse_exif_datetime(exif.get(EXIF_TAGS.get(tag_name)))
+            if dt:
+                return dt
+    except Exception:
+        return None
+    return None
+
+
+def duplicate_capture_datetime(path: Path, year: str):
+    """Find capture time from a same-named camera original when a gallery copy lost EXIF."""
+    cameras_dir = ROOT / 'images' / 'cameras'
+    if not cameras_dir.is_dir():
+        return None
+    for candidate in sorted(cameras_dir.glob(f'*/{year}/{path.name}')):
+        if candidate == path:
+            continue
+        dt = image_capture_datetime(candidate)
+        if dt:
+            return dt
+    return None
+
+
+def filename_capture_datetime(path: Path, year: str, month_num: str):
+    """Infer month-gallery ordering from timestamped names or stable IMG sequences."""
+    match = IDG_NAME_RE.match(path.stem)
+    if match:
+        try:
+            return datetime.strptime(''.join(match.groups()), '%Y%m%d%H%M%S')
+        except ValueError:
+            return None
+
+    match = MONTH_DAY_NAME_RE.match(path.stem)
+    if match:
+        try:
+            return datetime(int(year), int(month_num), int(match.group(1)), 12, 0, 0)
+        except ValueError:
+            return None
+
+    match = IMG_NAME_RE.match(path.stem)
+    if match:
+        try:
+            return datetime(int(year), int(month_num), 1) + timedelta(seconds=int(match.group(1)))
+        except ValueError:
+            return None
+
+    return None
+
+
+def monthly_sort_key(path: Path, year: str, month_num: str):
+    dt = (
+        image_capture_datetime(path)
+        or duplicate_capture_datetime(path, year)
+        or filename_capture_datetime(path, year, month_num)
+    )
+    if dt:
+        return (0, dt, path.name.lower())
+    return (1, path.name.lower())
 
 
 def build_tree(path: Path):
@@ -246,7 +331,11 @@ def build_monthly_galleries():
         vertical = []
 
         if image_dir.is_dir():
-            for img_file in sorted(image_dir.iterdir()):
+            img_files = sorted(
+                image_dir.iterdir(),
+                key=lambda p: monthly_sort_key(p, year, month_num),
+            )
+            for img_file in img_files:
                 if not img_file.is_file() or img_file.name.startswith('.'):
                     continue
                 if img_file.suffix.lower() not in PHOTO_EXTS:
