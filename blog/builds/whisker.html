@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noai, noimageai">
+    <meta property="og:title" content="whisker - builds+">
+    <meta property="og:description" content="iPhone keyboard that tunnels voice dictation to a Mac-hosted ASR server over LAN or Tailscale. Phone does capture, Mac owns the models.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="nuBlog">
+    <title>whisker - builds+ - nuBlog</title>
+    <link rel="stylesheet" href="../../styles/style.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <style>
+        .spec-box {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-left: 3px solid #99CCCC;
+            padding: 16px 20px;
+            margin: 20px 0 28px;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+        .spec-box table { width: 100%; border-collapse: collapse; }
+        .spec-box td { padding: 3px 0; vertical-align: top; }
+        .spec-box td:first-child { color: #33CCAA; width: 150px; }
+        .spec-box td:last-child { color: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div id="site-header"></div>
+        <a href="index.html" class="back-link">&larr; back to builds+</a>
+<h1>whisker</h1>
+<div class="blog-post-date">May 2026 — active</div>
+
+<div class="blog-post-content">
+<div class="spec-box">
+<table>
+<tr><td>iPhone app</td><td>SwiftUI capture + history</td></tr>
+<tr><td>keyboard</td><td>native-look extension, app-group handoff</td></tr>
+<tr><td>server</td><td>FastAPI on Mac, bearer auth</td></tr>
+<tr><td>backend</td><td>parakeet-mlx (Apple Silicon)</td></tr>
+<tr><td>models</td><td>fast / balanced / best profiles</td></tr>
+<tr><td>transport</td><td>LAN or Tailscale, loopback default</td></tr>
+<tr><td>repo</td><td><a href="https://github.com/llostinthesauce/whisker" target="_blank" rel="noopener">github.com/llostinthesauce/whisker</a></td></tr>
+</table>
+</div>
+
+<p>whisker is my OS-level voice-to-text tunnel. the iPhone keyboard captures audio, ships it to a private Mac transcription server over LAN or Tailscale, and inserts the cleaned text back into whatever field you were typing in. the phone is just the mic; the Mac owns the models, cleanup, and speed.</p>
+
+<p>server is FastAPI with bearer auth, three parakeet-mlx profiles (fast, balanced, best). default bind is loopback, real use goes over a tailnet IP. still iterating.</p>
+</div>
+
+        <div id="site-footer"></div>
+    </div>
+    <script src="../../js/include.js" data-base="../.."></script>
+</body>
+</html>
