@@ -28,6 +28,20 @@ CAPTURE_DATE_TAGS = ('DateTimeOriginal', 'DateTimeDigitized', 'DateTime')
 IDG_NAME_RE = re.compile(r'^IDG_(\d{8})_(\d{6})(?:_\d+)?', re.IGNORECASE)
 IMG_NAME_RE = re.compile(r'^IMG_(\d+)', re.IGNORECASE)
 MONTH_DAY_NAME_RE = re.compile(r'^[a-z]{3}-([0-9]{2})$', re.IGNORECASE)
+MONTHLY_SECTION_ORDER = {
+    'pre-trip': 0,
+    'chicago': 1,
+    'great-lakes-ohio': 2,
+    'appalachia': 3,
+    'east-coast': 4,
+}
+MONTHLY_SECTION_LABELS = {
+    'pre-trip': 'pre-trip',
+    'chicago': 'chicago',
+    'great-lakes-ohio': 'great lakes, indiana, michigan, ohio',
+    'appalachia': 'appalachia',
+    'east-coast': 'east coast',
+}
 
 
 def parse_exif_datetime(value):
@@ -108,6 +122,46 @@ def monthly_sort_key(path: Path, year: str, month_num: str):
     if dt:
         return (0, dt, path.name.lower())
     return (1, path.name.lower())
+
+
+def monthly_section_sort_key(path: Path):
+    return (MONTHLY_SECTION_ORDER.get(path.name, 100), path.name.lower())
+
+
+def monthly_section_label(path: Path):
+    if path.name in MONTHLY_SECTION_LABELS:
+        return MONTHLY_SECTION_LABELS[path.name]
+    return path.name.replace('-', ' ')
+
+
+def monthly_gallery_item(img_file: Path):
+    try:
+        with Image.open(img_file) as img:
+            img.size
+        alt = img_file.stem
+        rel_path = img_file.relative_to(ROOT)
+        return (
+            f'            <div class="gallery-grid-item">'
+            f'<img src="../../{rel_path}" alt="{alt}"'
+            f' class="styled-image" loading="lazy"></div>'
+        )
+    except Exception:
+        return None
+
+
+def monthly_gallery_grid(items):
+    if items:
+        body = '\n'.join(items)
+    else:
+        body = (
+            '            <p style="grid-column: 1 / -1; color: #666;">'
+            'no photos this month</p>'
+        )
+    return (
+        '        <div class="gallery-grid">\n'
+        f'{body}\n'
+        '        </div>'
+    )
 
 
 def build_tree(path: Path):
@@ -371,30 +425,76 @@ def build_monthly_galleries():
             continue
         year, month_num, month_name = parts  # "2025", "01", "jan"
 
-        image_dir = images_monthly / year / f'{month_num}-{month_name}'
-        horizontal = []
-        vertical = []
+        source_match = re.search(r'<!-- AUTOGEN-SOURCE ([^>]+) -->', original)
+        explicit_source = bool(source_match)
+        if explicit_source:
+            image_dir = ROOT / source_match.group(1).strip()
+        else:
+            image_dir = images_monthly / year / f'{month_num}-{month_name}'
+        sections = []
 
         if image_dir.is_dir():
-            img_files = sorted(
-                image_dir.iterdir(),
+            loose_files = sorted(
+                [
+                    p for p in image_dir.iterdir()
+                    if p.is_file()
+                    and not p.name.startswith('.')
+                    and p.suffix.lower() in PHOTO_EXTS
+                ],
                 key=lambda p: monthly_sort_key(p, year, month_num),
             )
+            section_dirs = []
+            if not explicit_source:
+                section_dirs = sorted(
+                    [
+                        p for p in image_dir.iterdir()
+                        if p.is_dir()
+                        and not p.name.startswith('.')
+                        and any(
+                            child.is_file()
+                            and not child.name.startswith('.')
+                            and child.suffix.lower() in PHOTO_EXTS
+                            for child in p.iterdir()
+                        )
+                    ],
+                    key=monthly_section_sort_key,
+                )
+
+            if section_dirs:
+                if loose_files:
+                    sections.append(('unfiled', loose_files, True))
+                for section_dir in section_dirs:
+                    section_files = sorted(
+                        [
+                            p for p in section_dir.iterdir()
+                            if p.is_file()
+                            and not p.name.startswith('.')
+                            and p.suffix.lower() in PHOTO_EXTS
+                        ],
+                        key=lambda p: monthly_sort_key(p, year, month_num),
+                    )
+                    sections.append((monthly_section_label(section_dir), section_files, True))
+            else:
+                sections.append(('', loose_files, False))
+
+        blocks = []
+        for label, img_files, sectioned in sections:
+            items = []
+            horizontal = []
+            vertical = []
             for img_file in img_files:
-                if not img_file.is_file() or img_file.name.startswith('.'):
+                item = monthly_gallery_item(img_file)
+                if not item:
                     continue
-                if img_file.suffix.lower() not in PHOTO_EXTS:
+                if sectioned:
+                    items.append(item)
                     continue
                 try:
                     with Image.open(img_file) as img:
                         w, h = img.size
-                    alt = img_file.stem
-                    rel_path = img_file.relative_to(ROOT)
-                    item = (
-                        f'            <div class="gallery-grid-item">'
-                        f'<img src="../../{rel_path}" alt="{alt}"'
-                        f' class="styled-image" loading="lazy"></div>'
-                    )
+                        orient = img.getexif().get(EXIF_TAGS.get('Orientation'), 1)
+                    if orient in (5, 6, 7, 8):
+                        w, h = h, w
                     if w >= h:
                         horizontal.append(item)
                     else:
@@ -402,26 +502,24 @@ def build_monthly_galleries():
                 except Exception:
                     continue
 
-        if not horizontal and not vertical:
-            items = (
-                '            <p style="grid-column: 1 / -1; color: #666;">'
-                'no photos this month</p>'
-            )
-        else:
-            parts_list = horizontal[:]
-            if horizontal and vertical:
-                parts_list.append(
-                    '            <div style="grid-column: 1 / -1; height: 0; '
-                    'margin: 0; padding: 0;"></div>'
-                )
-            parts_list.extend(vertical)
-            items = '\n'.join(parts_list)
+            if not sectioned:
+                items = horizontal[:]
+                if horizontal and vertical:
+                    items.append(
+                        '            <div style="grid-column: 1 / -1; height: 0; '
+                        'margin: 0; padding: 0;"></div>'
+                    )
+                items.extend(vertical)
 
-        grid = (
-            '        <div class="gallery-grid">\n'
-            f'{items}\n'
-            '        </div>'
-        )
+            if label:
+                blocks.append(f'        <h2>{label}</h2>')
+            blocks.append(monthly_gallery_grid(items))
+
+        if not blocks:
+            blocks.append(monthly_gallery_grid([]))
+
+        grid = '\n'.join(blocks)
+
         replacement = (
             '        <!-- AUTOGEN-START gallery-grid -->\n'
             f'{grid}\n'
@@ -432,7 +530,6 @@ def build_monthly_galleries():
 
     if updated:
         print(f"Updated {updated} monthly gallery page(s)")
-
 
 def check_image_sizes():
     """Warn about images exceeding 1 MB."""

@@ -104,7 +104,12 @@ window.__SITEMAP__ = {
             "2026-02-feb.html",
             "2026-03-mar.html",
             "2026-04-apr.html",
-            "2026-05-may.html"
+            "2026-05-appalachia.html",
+            "2026-05-chicago.html",
+            "2026-05-east-coast.html",
+            "2026-05-great-lakes-ohio.html",
+            "2026-05-may.html",
+            "2026-05-pre-trip.html"
           ],
           "folders": {}
         }
