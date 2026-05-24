@@ -59,7 +59,8 @@ window.__SITEMAP__ = {
             "neocities-tcwishes.html",
             "nullm.html",
             "raspi3.html",
-            "this-site.html"
+            "this-site.html",
+            "whisker.html"
           ],
           "folders": {}
         }
