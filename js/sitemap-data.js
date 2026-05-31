@@ -110,7 +110,8 @@ window.__SITEMAP__ = {
             "2026-05-east-coast.html",
             "2026-05-great-lakes-ohio.html",
             "2026-05-may.html",
-            "2026-05-pre-trip.html"
+            "2026-05-pre-trip.html",
+            "2026-05-return.html"
           ],
           "folders": {}
         }
