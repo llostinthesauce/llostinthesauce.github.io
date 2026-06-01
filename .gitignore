@@ -92,4 +92,5 @@ HANDOFF.md
 
 # Playwright MCP test artifacts
 .playwright-mcp/
+.antigravitycli/
 *-snapshot.txt
