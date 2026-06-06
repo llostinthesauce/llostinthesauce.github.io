@@ -845,3 +845,24 @@ a.t-brand:hover .brand-title { color: #CC99FF; }
         font-size: 0.7em;
     }
 }
+
+/* GitHub repo links styling */
+.github-link {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.85em;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-left: 3px solid #33CCAA;
+    padding: 6px 12px;
+    margin: 10px 0;
+    text-decoration: none;
+    color: #33CCAA !important;
+}
+
+.github-link:hover {
+    border-color: #9966CC;
+    color: #66FFCC !important;
+    background: #1a0030;
+}
+

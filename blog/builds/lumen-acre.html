@@ -28,6 +28,7 @@
             <p>acre was my final capstone project before i could graduate. it was poised by me in august of 2025, and i had just gotten interested in running ai models on edge hardware. it was indeed a group project, but i myself pitched the idea and we developed it accordingly. the framework was posited as a LMStudio or Ollama competitor, but truly open source, and designed to be lightweight, universal across machines and OS, and accessible. We gained access to a brand new NVIDIA Jetson edge device (glorified pi with GPU cores) to show that it operates fully offline, as a proof of concept.</p>
 
             <p>this project really captured my interest, and I wanted to know what the limits were of self hosting and how hard it actually is to build a full GUI app with multiple framework libraries and so on. We encountered a lot of hurdles. Cross platforming was fucking hard, and rag was very hard to make useful on the Jetson. it could run decent inference, but nothing compared to my MacBook. However, i wish I had more time to finish the project, but it got to a demonstrable state by the end, and we got a perfect grade, namely because we delivered what we set out to back in august, which was, develop a full multi-platform LLM inference engine for macOS, unix, and windows, which in the end, it did. fully fleshed out with "dev settings", or no-brainer settings, themes, chat history, safe words, and encryption.</p>
+            <p><a href="https://github.com/llostinthesauce/acre" class="github-link" target="_blank" rel="noopener">&rarr; github.com/llostinthesauce/acre</a></p>
 
             <br><hr><br>
 
@@ -37,6 +38,7 @@
             <p>still tho, i was excited to build acre again, but just in native swift using mlx-lm. This was much harder than I had anticipated, as there really just isnt/wasnt a ton of mlx support that was open source. i wanted a local iOS app too that could share chat history and settings via apple id or local network, ie, able to run inference from my phone via my MacBook, if i was on the same network, and in theory if i used tail scale or something, could use it anywhere. Youtube videos of people homelabbing or clustering mac minis got me inspired.</p>
 
             <p>So I got lumen composite to a point where it had a nice macOS native GUI and did everything I wanted it to. had simple rag, inference, all of the parameters you could want in the world, and mlx-lm framework. However, I noticed that I kept getting issues when downloading new models from HF because I was sorta trying to re-invent the wheel, when i could just use LM studio for mlx inference, serve it, and build a more complex RAG wrapper app outside of that, which is what I really want. Dev paused on this around xmas because I got burned out.</p>
+            <p><a href="https://github.com/llostinthesauce/lumen" class="github-link" target="_blank" rel="noopener">&rarr; github.com/llostinthesauce/lumen</a></p>
         </div>
 
         <div id="site-footer"></div>

@@ -11,10 +11,10 @@ window.nublogGalleryGroups = [
         title: '',
         entries: [
             {
-                label: 'may 2026 ~ current',
-                href: 'galleries/monthly/2026-05-may.html',
+                label: 'june 2026 ~ current',
+                href: 'galleries/monthly/2026-06-june.html',
                 caption: '',
-                previewImage: 'images/monthly/2026/05-may/pre-trip/may-01.jpg'
+                previewImage: 'images/monthly/2026/06-june/IMG_4428.jpg'
             },
             {
                 label: 'plants',
@@ -63,6 +63,11 @@ window.nublogGalleryGroups = [
     {
         title: '2026',
         entries: [
+            {
+                label: 'june 2026',
+                href: 'galleries/monthly/2026-06-june.html',
+                caption: ''
+            },
             {
                 label: 'may 2026',
                 href: 'galleries/monthly/2026-05-may.html',

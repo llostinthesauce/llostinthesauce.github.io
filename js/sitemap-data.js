@@ -42,7 +42,6 @@ window.__SITEMAP__ = {
         "builds": {
           "files": [
             "benchmarks.html",
-            "calibre.html",
             "index.html",
             "ipod.html",
             "linux-box-2014.html",
@@ -53,11 +52,10 @@ window.__SITEMAP__ = {
             "macbook-pro-2021.html",
             "macbook-pro-2021b.html",
             "macbook-pro-2026.html",
+            "media-servers.html",
             "misc-plus.html",
             "mycelium.html",
-            "navidrome.html",
             "neocities-tcwishes.html",
-            "nullm.html",
             "raspi3.html",
             "this-site.html",
             "whisker.html"
@@ -111,7 +109,8 @@ window.__SITEMAP__ = {
             "2026-05-great-lakes-ohio.html",
             "2026-05-may.html",
             "2026-05-pre-trip.html",
-            "2026-05-return.html"
+            "2026-05-return.html",
+            "2026-06-june.html"
           ],
           "folders": {}
         }
