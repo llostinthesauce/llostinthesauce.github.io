@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     entryDiv.classList.add('gallery-entry-preview');
                     entryDiv.style.backgroundImage = `url(${entry.previewImage})`;
                 }
+
+                if (entry.cssClass) {
+                    entryDiv.classList.add(entry.cssClass);
+                }
                 
                 grid.appendChild(entryClone);
             });

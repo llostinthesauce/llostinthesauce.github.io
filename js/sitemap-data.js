@@ -77,8 +77,13 @@ window.__SITEMAP__ = {
             "canon-2024.html",
             "canon-2025.html",
             "canon-2026.html",
+            "canon-elan-ii-2025-2026.html",
+            "canon-elan-ii-unknown.html",
+            "canon-elan-ii.html",
             "canon-sd400.html",
             "disposable.html",
+            "vivitar-big-sur.html",
+            "vivitar-il-ne-mo-ut.html",
             "vivitar-pz3090.html",
             "vivitar-san-diego.html",
             "vivitar-utah.html"

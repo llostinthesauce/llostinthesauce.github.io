@@ -14,7 +14,33 @@ window.nublogGalleryGroups = [
                 label: 'june 2026 ~ current',
                 href: 'galleries/monthly/2026-06-june.html',
                 caption: '',
-                previewImage: 'images/monthly/2026/06-june/IMG_4428.jpg'
+                previewImage: 'images/monthly/2026/06-june/IMG_4408.jpeg'
+            },
+            {
+                label: 'canon eos elan ii 35mm',
+                href: 'galleries/cameras/canon-elan-ii.html',
+                caption: '',
+                previewImage: 'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
+                cssClass: 'camera-highlight'
+            },
+            {
+                label: 'vivitar pz3090 35mm',
+                href: 'galleries/cameras/vivitar-pz3090.html',
+                caption: '',
+                previewImage: 'images/cameras/vivitar/roll-4/R1-08311-009A.JPG',
+                cssClass: 'camera-highlight'
+            },
+            {
+                label: 'disposable 35mm',
+                href: 'galleries/cameras/disposable.html',
+                caption: '',
+                previewImage: 'images/cameras/disposable/k8.jpeg'
+            },
+            {
+                label: 'canon sd400 digital',
+                href: 'galleries/cameras/canon-sd400.html',
+                caption: '',
+                previewImage: 'images/cameras/canon/2026/IMG_4010.jpeg'
             },
             {
                 label: 'plants',
@@ -28,35 +54,12 @@ window.nublogGalleryGroups = [
                 caption: '',
                 previewImage: 'images/galleries/animals.jpeg'
             },
-            {
-                label: 'builds+',
-                href: 'blog/builds/index.html',
-                caption: '',
-                previewImage: 'images/builds/macbook-pro-2021.jpg'
-            },
+
             {
                 label: 'videos',
                 href: 'galleries/videos.html',
                 caption: '',
                 previewImage: 'images/galleries/videos.jpeg'
-            },
-            {
-                label: 'canon sd400 digital',
-                href: 'galleries/cameras/canon-sd400.html',
-                caption: '',
-                previewImage: 'images/cameras/canon/2026/IMG_4010.jpeg'
-            },
-            {
-                label: 'vivitar pz3090 35mm',
-                href: 'galleries/cameras/vivitar-pz3090.html',
-                caption: '',
-                previewImage: 'images/cameras/vivitar/film/vivitar13.JPG'
-            },
-            {
-                label: 'disposable 35mm',
-                href: 'galleries/cameras/disposable.html',
-                caption: '',
-                previewImage: 'images/cameras/disposable/k8.jpeg'
             }
         ]
     },
