@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <style>
+        /* one full-width video per row so player titles/controls stay usable */
+        .gallery-grid {
+            grid-template-columns: 1fr;
+        }
         .youtube-embed {
             width: 100%;
             aspect-ratio: 16 / 9;
