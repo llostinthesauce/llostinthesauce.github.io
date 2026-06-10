@@ -8,13 +8,6 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        .blog-pinned {
-            border: 1px solid #2a1040;
-            border-left: 3px solid #9966CC;
-            padding: 16px 20px 8px;
-            margin: 20px 0 30px;
-            background: #050505;
-        }
         .blog-pinned-label {
             display: block;
             font-family: monospace;
@@ -22,15 +15,15 @@
             color: #9966CC;
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 14px;
+            margin: 20px 0 0;
         }
-        .blog-pinned .blog-item {
-            border-bottom-color: #1a1a1a;
+        /* pinned pages as thumbnail tiles, same style as plants/builds boxes */
+        .blog-pinned-row {
+            margin: 14px 0 30px;
         }
-        .blog-pinned .blog-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .blog-pinned-row .big-link-box {
+            font-size: 1.2em;
+            border-left: 3px solid #9966CC;
         }
     </style>
 </head>
@@ -39,14 +32,22 @@
         <div id="site-header"></div>
         <h1>blog</h1>
 
-        <div class="blog-pinned">
-            <span class="blog-pinned-label">pinned</span>
-            <div class="blog-item"><a href="blog/builds/index.html">builds+</a> <span class="blog-item-date">June 6, 2026</span></div>
-            <div class="blog-item"><a href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html">review: books i have read (2023-2026)</a> <span class="blog-item-date">April 26, 2026</span></div>
-            <div class="blog-item"><a href="blog/now.html">/now</a> <span class="blog-item-date">June 6, 2026</span></div>
+        <span class="blog-pinned-label">pinned</span>
+        <div class="camera-preview-row blog-pinned-row">
+            <a href="blog/builds/index.html" class="big-link-box"
+               style="background-image: url('images/builds/macbook-pro-2026.jpg');">
+                <span>builds+</span>
+            </a>
+            <a href="blog/now.html" class="big-link-box"
+               style="background-image: url('images/monthly/2026/06-june/IMG_4408.jpeg');">
+                <span>/now</span>
+            </a>
         </div>
 
   <div id="blog-list">
+    <!-- hand-pinned above the autogen list: this post is in the build script's
+         EXCLUDE_FILES, so it must stay outside the AUTOGEN markers -->
+            <div class="blog-item"><a href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html">review: books i have read (2023-2026)</a> <span class="blog-item-date">June 10, 2026</span></div>
     <!-- AUTOGEN-START blog-list — populated by scripts/build-sitemap.py -->
             <div class="blog-item"><a href="blog/2026-04-23-field-notes-march-30-april-8.html">field notes: march 30 - april 8</a> <span class="blog-item-date">April 23, 2026</span></div>
             <div class="blog-item"><a href="blog/2026-03-29-untitled.html">field notes: march 18 - march 29</a> <span class="blog-item-date">March 29, 2026</span></div>
