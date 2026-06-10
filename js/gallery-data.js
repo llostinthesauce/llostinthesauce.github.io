@@ -1,8 +1,5 @@
 // gallery-data.js — nuBlog gallery index
 //
-// To add/edit captions: set the `caption` field on any entry.
-// Captions appear below the label on each card. Keep them short.
-//
 // To add a preview image: set `previewImage` to a path relative to site root.
 // Example: previewImage: 'images/builds/ipod-1.jpg'
 
@@ -13,52 +10,44 @@ window.nublogGalleryGroups = [
             {
                 label: 'june 2026 ~ current',
                 href: 'galleries/monthly/2026-06-june.html',
-                caption: '',
                 previewImage: 'images/monthly/2026/06-june/IMG_4408.jpeg'
             },
             {
                 label: 'canon eos elan ii 35mm',
                 href: 'galleries/cameras/canon-elan-ii.html',
-                caption: '',
                 previewImage: 'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
                 cssClass: 'camera-highlight'
             },
             {
                 label: 'vivitar pz3090 35mm',
                 href: 'galleries/cameras/vivitar-pz3090.html',
-                caption: '',
                 previewImage: 'images/cameras/vivitar/roll-4/R1-08311-009A.JPG',
                 cssClass: 'camera-highlight'
             },
             {
                 label: 'disposable 35mm',
                 href: 'galleries/cameras/disposable.html',
-                caption: '',
                 previewImage: 'images/cameras/disposable/k8.jpeg'
             },
             {
                 label: 'canon sd400 digital',
                 href: 'galleries/cameras/canon-sd400.html',
-                caption: '',
                 previewImage: 'images/cameras/canon/2026/IMG_4010.jpeg'
             },
             {
                 label: 'plants',
                 href: 'plants.html',
-                caption: '',
                 previewImage: 'images/plants/plantos4.JPG'
             },
             {
                 label: 'animals',
                 href: 'galleries/animals.html',
-                caption: '',
                 previewImage: 'images/galleries/animals.jpeg'
             },
 
             {
                 label: 'videos',
                 href: 'galleries/videos.html',
-                caption: '',
                 previewImage: 'images/galleries/videos.jpeg'
             }
         ]

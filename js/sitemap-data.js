@@ -155,9 +155,7 @@ window.__SITEMAP__ = {
       "folders": {}
     },
     "plants": {
-      "files": [
-        "collection.html"
-      ],
+      "files": [],
       "folders": {
         "progress": {
           "files": [

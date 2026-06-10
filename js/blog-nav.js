@@ -33,18 +33,19 @@
     var backLink = document.querySelector('a.back-link');
     if (!backLink) return;
 
-    var base = window.nublogBase || '..';
+    var base = (window.nublogBase != null) ? window.nublogBase : '..';
 
     backLink.innerHTML = '\u2190 back to blog';
     backLink.href = base + '/blog.html';
 
-    var nextIndex = currentIndex + 1;
-    if (nextIndex < blogPosts.length) {
+    // blogPosts is newest-first, so index+1 is the chronologically older post.
+    var olderIndex = currentIndex + 1;
+    if (olderIndex < blogPosts.length) {
         var sep = document.createTextNode('\u00a0\u00a0\u00a0\u00a0');
-        var nextLink = document.createElement('a');
-        nextLink.href = blogPosts[nextIndex];
-        nextLink.style.cssText = 'color:#99CCCC;font-style:italic;text-decoration:underline;font-size:1em;';
-        nextLink.textContent = 'next \u2192';
-        backLink.after(sep, nextLink);
+        var olderLink = document.createElement('a');
+        olderLink.href = blogPosts[olderIndex];
+        olderLink.style.cssText = 'color:#99CCCC;font-style:italic;text-decoration:underline;font-size:1em;';
+        olderLink.textContent = 'older \u2192';
+        backLink.after(sep, olderLink);
     }
 })();

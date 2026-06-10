@@ -1,18 +1,27 @@
 (function () {
+    // Bump when partials/header.html or partials/footer.html change,
+    // so cached copies are invalidated without defeating HTTP caching.
+    const PARTIALS_VERSION = '2026-06-09';
+
     const script = document.currentScript;
     const rawBase = (script && script.dataset.base) ? script.dataset.base : '.';
-    const base = (rawBase || '.').replace(/\/+$/, '') || '.';
+    // data-base="/" means site root (used by 404.html, which GitHub Pages
+    // serves at any URL depth, so relative paths can never work there).
+    const isRootBase = rawBase === '/';
+    const base = isRootBase ? '' : ((rawBase || '.').replace(/\/+$/, '') || '.');
 
-    // Validate data-base matches page depth
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const depth = Math.max(0, pathSegments.length - 1);
-    const expectedBase = depth === 0 ? '.' : new Array(depth).fill('..').join('/');
-    if (base !== expectedBase) {
-        console.warn(
-            `[nuBlog] data-base mismatch: page depth=${depth}, ` +
-            `expected "${expectedBase}", got "${base}" — ` +
-            `nav, CSS, and JS paths may be broken`
-        );
+    // Validate data-base matches page depth (skip for root-absolute pages)
+    if (!isRootBase) {
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        const depth = Math.max(0, pathSegments.length - 1);
+        const expectedBase = depth === 0 ? '.' : new Array(depth).fill('..').join('/');
+        if (base !== expectedBase) {
+            console.warn(
+                `[nuBlog] data-base mismatch: page depth=${depth}, ` +
+                `expected "${expectedBase}", got "${base}" — ` +
+                `nav, CSS, and JS paths may be broken`
+            );
+        }
     }
 
     // Load bot-blocker first to ensure scrapers are blocked immediately
@@ -25,7 +34,7 @@
     const loadPartial = (file, target) => {
         if (!target) return Promise.resolve();
 
-        return fetch(`${base}/partials/${file}?v=${new Date().getTime()}`)
+        return fetch(`${base}/partials/${file}?v=${PARTIALS_VERSION}`)
             .then((resp) => resp.ok ? resp.text() : '')
             .then((html) => {
                 const rendered = html.replace(/%BASE%/g, base);
