@@ -357,13 +357,9 @@
         } else {
             let autoBootTimeout;
 
-            function bootNuBlog(isAuto = false) {
+            function bootNuBlog() {
                 clearTimeout(autoBootTimeout);
                 sessionStorage.setItem('nuBlogBootFinished', 'true');
-
-                if (!isAuto) {
-                    sessionStorage.setItem('musicPlaying', 'true');
-                }
 
                 bootOverlay.style.opacity = '0';
 
@@ -373,14 +369,10 @@
                 }, 500);
             }
 
-            document.getElementById('mac-os-boot-button').addEventListener('click', function () {
-                bootNuBlog(false);
-            });
+            document.getElementById('mac-os-boot-button').addEventListener('click', bootNuBlog);
 
             // Auto-forward after 5 seconds
-            autoBootTimeout = setTimeout(() => {
-                bootNuBlog(true);
-            }, 5000);
+            autoBootTimeout = setTimeout(bootNuBlog, 5000);
         }
     </script>
 </body>

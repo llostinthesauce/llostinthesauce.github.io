@@ -94,3 +94,6 @@ HANDOFF.md
 .playwright-mcp/
 .antigravitycli/
 *-snapshot.txt
+
+# Local archive of unreferenced/old assets (never deployed)
+archive/

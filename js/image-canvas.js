@@ -403,10 +403,12 @@
     viewport.addEventListener('pointerup', endPointer);
     viewport.addEventListener('pointercancel', endPointer);
 
-    // Suppress native anchor navigation — click is handled in endPointer.
+    // Suppress native anchor navigation — pointer clicks are handled in
+    // endPointer. Keyboard activation (e.detail === 0) keeps the default
+    // anchor behavior so cells stay reachable without a pointer.
     viewport.addEventListener('click', function (e) {
         var cell = e.target.closest('.canvas-cell');
-        if (cell) e.preventDefault();
+        if (cell && e.detail !== 0) e.preventDefault();
     });
 
     // ---- wheel: ctrlKey (pinch / ctrl+wheel) zooms; otherwise pans. ----

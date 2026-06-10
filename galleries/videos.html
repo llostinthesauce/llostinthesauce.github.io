@@ -8,11 +8,59 @@
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <style>
+        /* one full-width video per row so player titles/controls stay usable */
+        .gallery-grid {
+            grid-template-columns: 1fr;
+        }
         .youtube-embed {
             width: 100%;
             aspect-ratio: 16 / 9;
             border: 0;
             display: block;
+        }
+        /* click-to-load facade — swapped for the real iframe by js/lite-yt.js */
+        .lite-yt {
+            position: relative;
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #111;
+        }
+        .lite-yt img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .lite-yt-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 46px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid #33CCAA;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        .lite-yt-play::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-40%, -50%);
+            border-style: solid;
+            border-width: 9px 0 9px 15px;
+            border-color: transparent transparent transparent #33CCAA;
+        }
+        .lite-yt:hover .lite-yt-play {
+            background: rgba(26, 0, 48, 0.85);
+            border-color: #9966CC;
+        }
+        .lite-yt:hover .lite-yt-play::before {
+            border-left-color: #CC99FF;
         }
     </style>
 </head>
@@ -24,41 +72,42 @@
         <h1>videos</h1>
         <p>youtube uploads from glasgow2025</p>
         <div class="gallery-grid">
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/VMn-XNob73M" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/vlZ704q2IME" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/zzduzvLv17k" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/PWIBsozV944" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/8n3V6WuHCPY" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/4V6PQiuvdfA" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/VYJTmH9FAcA" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/tVd8YyCeU2Y" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/XKxJLHaXOPI" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/AdAJ3mATUFU" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/pdKpHM8ZZmk" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/9GnTX2EOuvU" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/b56q_pVscE4" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/4z8M8iSwO0I" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/A8Q2YVKuTF4" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/15iV1DKG48s" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/WiA6dFZmUWY" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/PnLDz_FOhSs" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/3yEUxFZ8nE0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/QG0OB_KzNuo" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/jLijvT4mQy0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/vNJ6tli7J30" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/ATI9H95BYxo" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/ROhc0uKzShg" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/vTIkDMTeK0Q" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/YeCWqQvh_D0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/yjIVmgc-fJo" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/U02rG-bI5G8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/HKxIHNE5oIc" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <div class="gallery-grid-item"><iframe class="youtube-embed" loading="lazy" src="https://www.youtube.com/embed/MI-jhh7eyms" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=VMn-XNob73M" data-yt-id="VMn-XNob73M" title="How Much a 21-Day Solo Car Camping Road Trip to the East Coast ACTUALLY Cost: $2,511 (Full Movie)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/VMn-XNob73M/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=vlZ704q2IME" data-yt-id="vlZ704q2IME" title="Outer Banks, Ocracoke, &amp; Asheville (Ep. 4 SOLO MIDW(EAST) TRAVEL)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/vlZ704q2IME/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=zzduzvLv17k" data-yt-id="zzduzvLv17k" title="Appalachia (Ep. 3 SOLO MIDW(EAST) TRAVEL)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/zzduzvLv17k/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=PWIBsozV944" data-yt-id="PWIBsozV944" title="The Great Lakes (Ep. 2 SOLO MIDW(EAST) TRAVEL)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/PWIBsozV944/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=8n3V6WuHCPY" data-yt-id="8n3V6WuHCPY" title="Chicago+ (Ep. 1 SOLO MIDWEST TRAVEL)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/8n3V6WuHCPY/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=4V6PQiuvdfA" data-yt-id="4V6PQiuvdfA" title="REUPLOAD : may 18-21, 2025 car camping, all american rejects, car trouble" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/4V6PQiuvdfA/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=VYJTmH9FAcA" data-yt-id="VYJTmH9FAcA" title="chipotle lime crema review pt 2." target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/VYJTmH9FAcA/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=tVd8YyCeU2Y" data-yt-id="tVd8YyCeU2Y" title="chipotle lime crema review." target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/tVd8YyCeU2Y/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=XKxJLHaXOPI" data-yt-id="XKxJLHaXOPI" title="Garden check up May 3, 2026" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/XKxJLHaXOPI/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=AdAJ3mATUFU" data-yt-id="AdAJ3mATUFU" title="riveting storm footage 4/17/2026" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/AdAJ3mATUFU/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=pdKpHM8ZZmk" data-yt-id="pdKpHM8ZZmk" title="McDonald’s hunter sauce review" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/pdKpHM8ZZmk/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=9GnTX2EOuvU" data-yt-id="9GnTX2EOuvU" title="harvesting poat and poatette" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/9GnTX2EOuvU/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=b56q_pVscE4" data-yt-id="b56q_pVscE4" title="THE GREAT TACO BURGER SHOWDOWN OF 2026" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/b56q_pVscE4/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=4z8M8iSwO0I" data-yt-id="4z8M8iSwO0I" title="south on one ~ east on forty ~ 2,000 miles" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/4z8M8iSwO0I/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=A8Q2YVKuTF4" data-yt-id="A8Q2YVKuTF4" title="sf, sj, sc, monterey, and carmel" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/A8Q2YVKuTF4/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=15iV1DKG48s" data-yt-id="15iV1DKG48s" title="the journey continues" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/15iV1DKG48s/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=WiA6dFZmUWY" data-yt-id="WiA6dFZmUWY" title="highway 1: march 26, 2026" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/WiA6dFZmUWY/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=PnLDz_FOhSs" data-yt-id="PnLDz_FOhSs" title="los angeles clips" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/PnLDz_FOhSs/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=3yEUxFZ8nE0" data-yt-id="3yEUxFZ8nE0" title="awe" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/3yEUxFZ8nE0/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=QG0OB_KzNuo" data-yt-id="QG0OB_KzNuo" title="highway 1 near malibu" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/QG0OB_KzNuo/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=jLijvT4mQy0" data-yt-id="jLijvT4mQy0" title="days2&amp;3powershotsd400" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/jLijvT4mQy0/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=vNJ6tli7J30" data-yt-id="vNJ6tli7J30" title="nevada 93 ghost town" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/vNJ6tli7J30/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=ATI9H95BYxo" data-yt-id="ATI9H95BYxo" title="bonneville salt flats" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/ATI9H95BYxo/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=ROhc0uKzShg" data-yt-id="ROhc0uKzShg" title="cisco" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/ROhc0uKzShg/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=vTIkDMTeK0Q" data-yt-id="vTIkDMTeK0Q" title="plant/seed tour redux (canon mini) : feb 24, 2026" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/vTIkDMTeK0Q/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=YeCWqQvh_D0" data-yt-id="YeCWqQvh_D0" title="plant and indoor garden tour: feb 20, 2026" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/YeCWqQvh_D0/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=yjIVmgc-fJo" data-yt-id="yjIVmgc-fJo" title="videos on my phone from this year, up to the end of september" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/yjIVmgc-fJo/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=U02rG-bI5G8" data-yt-id="U02rG-bI5G8" title="09/10/2025 : 4class" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/U02rG-bI5G8/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=HKxIHNE5oIc" data-yt-id="HKxIHNE5oIc" title="09/07/2025 : bloop = greedy egg" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/HKxIHNE5oIc/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
+            <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=MI-jhh7eyms" data-yt-id="MI-jhh7eyms" title="09/07/2025 : greedy boy need pats" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/MI-jhh7eyms/hqdefault.jpg" alt="" loading="lazy"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
         </div>
 
         <div id="site-footer"></div>
     </div>
     <script src="../js/include.js" data-base=".."></script>
     <script src="../js/gallery.js"></script>
+    <script src="../js/lite-yt.js"></script>
 </body>
 </html>

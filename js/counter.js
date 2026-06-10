@@ -2,8 +2,11 @@
     var namespace = 'ut_h42O8JiN5ZFc7BJrafpu2s9fzfR8bY8D1uQg3JNN';
     var counterName = 'first-counter-2997';
     var offset = 9000;
-    var endpoint = 'https://api.counterapi.dev/v1/' + namespace + '/' + counterName + '/up';
+    var base = 'https://api.counterapi.dev/v1/' + namespace + '/' + counterName;
     var CACHE_KEY = 'nuBlogCounterCache';
+    // Increment once per browser session ("/up"), then read-only fetches,
+    // so the number approximates visitors instead of raw page views.
+    var SESSION_KEY = 'nuBlogCounted';
 
     function readCachedTotal() {
         try {
@@ -36,6 +39,16 @@
         // Optimistic paint from cache so return visitors never see "loading..." or "unavailable" during transient failures.
         var cached = readCachedTotal();
         if (cached !== null) paint(span, cached + '+');
+
+        var endpoint = base + '/';
+        try {
+            if (!sessionStorage.getItem(SESSION_KEY)) {
+                // Flag before the request so parallel tabs don't double-count;
+                // worst case a failed request costs one missed increment.
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                endpoint = base + '/up';
+            }
+        } catch (_) { /* private mode: stay read-only */ }
 
         fetch(endpoint, { cache: 'no-store' })
             .then(function (resp) {

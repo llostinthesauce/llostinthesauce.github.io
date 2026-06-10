@@ -11,11 +11,10 @@ from pathlib import Path
 from PIL import ExifTags, Image
 
 ROOT = Path(__file__).parent.parent.resolve()
-EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials'}
+EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials', 'archive'}
 EXCLUDE_FILES = {
     'AGENTS.md', 'CLAUDE.md', 'agents-wiki.md',
     'HANDOFF.md', '2025-09-04-review-books-i-have-read-2023-2024-2025.html',
-    'spotify.html',
 }
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'}
 PHOTO_EXTS = {'.jpg', '.jpeg', '.png'}
@@ -237,6 +236,28 @@ def ensure_thumb(src_path: Path):
         return None
 
 
+def prune_stale_thumbs():
+    """Delete thumbs under images/.thumbs/ whose source image no longer exists."""
+    thumbs_dir = ROOT / 'images' / THUMB_DIR_NAME
+    if not thumbs_dir.is_dir():
+        return
+    pruned = 0
+    for thumb in sorted(thumbs_dir.rglob('*')):
+        if not thumb.is_file():
+            continue
+        rel = thumb.relative_to(thumbs_dir)
+        # Thumbs are always .jpg; the source may have any image extension.
+        source_exists = any(
+            (ROOT / 'images' / rel.with_suffix(ext)).is_file()
+            for ext in IMAGE_EXTS | {ext.upper() for ext in IMAGE_EXTS}
+        )
+        if not source_exists:
+            thumb.unlink()
+            pruned += 1
+    if pruned:
+        print(f"Pruned {pruned} stale thumb(s) from images/{THUMB_DIR_NAME}/")
+
+
 def build_all_images_data():
     """Scan images/ and emit js/all-images-data.js as [path, w, h, thumb] tuples.
 
@@ -247,6 +268,7 @@ def build_all_images_data():
     if not images_dir.is_dir():
         print("images/ directory not found, skipping all-images-data.js")
         return
+    prune_stale_thumbs()
 
     entries = []
     skipped = 0
@@ -306,10 +328,13 @@ def build_blog_nav():
         print("blog/ or js/blog-nav.js missing, skipping blog-nav update")
         return
 
+    # Only dated posts (YYYY-MM-DD-*) belong in the prev/next chain; rolling
+    # pages like now.html stay out of it (but remain linked elsewhere).
     posts = sorted(
         (p.name for p in blog_dir.iterdir()
          if p.is_file() and p.suffix == '.html' and not p.name.startswith('.')
-         and p.name not in EXCLUDE_FILES),
+         and p.name not in EXCLUDE_FILES
+         and re.match(r'\d{4}-\d{2}-\d{2}-', p.name)),
         reverse=True,
     )
     body = ',\n'.join(f'        "{name}"' for name in posts)

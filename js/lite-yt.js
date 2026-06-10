@@ -1,0 +1,20 @@
+// Click-to-load YouTube embeds. Pages render <a class="lite-yt" data-yt-id="...">
+// facades (thumbnail + play button); clicking swaps in the real iframe with
+// autoplay. Without JS the facade is a plain link to the video on YouTube.
+(function () {
+    document.addEventListener('click', function (e) {
+        var facade = e.target.closest('a.lite-yt');
+        if (!facade) return;
+        e.preventDefault();
+
+        var iframe = document.createElement('iframe');
+        iframe.className = 'youtube-embed';
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' +
+            facade.dataset.ytId + '?autoplay=1';
+        iframe.title = facade.title;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; ' +
+            'encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        facade.replaceWith(iframe);
+    });
+})();

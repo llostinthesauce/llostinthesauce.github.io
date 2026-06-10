@@ -61,7 +61,7 @@
         nekoEl.style.height = "32px";
         nekoEl.style.position = "fixed";
         nekoEl.style.pointerEvents = "none";
-        const base = window.nublogBase || '.';
+        const base = (window.nublogBase != null) ? window.nublogBase : '.';
         nekoEl.style.backgroundImage = `url('${base}/images/oneko.gif')`;
         nekoEl.style.imageRendering = "pixelated";
         nekoEl.style.left = "16px";
@@ -70,10 +70,10 @@
 
         document.body.appendChild(nekoEl);
 
-        document.onmousemove = (event) => {
+        document.addEventListener("mousemove", (event) => {
             mousePosX = event.clientX;
             mousePosY = event.clientY;
-        };
+        });
 
         window.onekoInterval = setInterval(frame, 100);
     }
@@ -149,7 +149,7 @@
             return;
         }
 
-        direction = diffY / distance > 0.5 ? "N" : "";
+        let direction = diffY / distance > 0.5 ? "N" : "";
         direction += diffY / distance < -0.5 ? "S" : "";
         direction += diffX / distance > 0.5 ? "W" : "";
         direction += diffX / distance < -0.5 ? "E" : "";
