@@ -14,18 +14,21 @@
         .ascii-art {
             font-family: monospace;
             color: #33CCAA;
-            font-size: 0.5em;
+            font-size: 1.25em;
             line-height: 1.15;
             text-align: center;
-            margin: 20px auto;
+            margin: 28px auto;
             white-space: pre;
             max-width: 100%;
             overflow-x: auto;
         }
-        @media (max-width: 600px) {
-            .ascii-art {
-                font-size: 0.35em;
-            }
+        /* 90s mac error vibes: the sad face blinks */
+        .sad-face {
+            animation: sad-blink 1.4s step-end infinite;
+        }
+        @keyframes sad-blink {
+            0%, 60% { opacity: 1; }
+            61%, 100% { opacity: 0; }
         }
         .error-code {
             text-align: center;
@@ -34,13 +37,6 @@
             color: #FF6666;
             margin: 0 0 8px;
             text-shadow: 0 0 10px rgba(255, 100, 100, 0.4);
-        }
-        .error-subtitle {
-            text-align: center;
-            font-family: monospace;
-            color: #99CCCC;
-            font-style: italic;
-            margin-bottom: 24px;
         }
         .nav-links-404 {
             text-align: center;
@@ -60,40 +56,18 @@
         <div id="site-header"></div>
 
         <div class="error-code">404</div>
-        <div class="error-subtitle">lost in the sauce</div>
 
-        <div class="ascii-art">
-    ___________________________________________________
-   |  ,--,                                           |
-   | ( oo )   page not found                         |
-   | /`''\    the bits you're looking for             |
-   |  `--'    have been misplaced                     |
-   |_________________________________________________|
-   |                                                   |
-   |         .--.           .---.                      |
-   |        |_   _|         /     \                     |
-   |          | |          /   _   \                    |
-   |          |_|         /   (_)   \                   |
-   |                     /     _     \                  |
-   |                    /     (_)     \                 |
-   |                ___/_______________\___            |
-   |               |   ________________   |           |
-   |               |__|                |__|           |
-   |                _____________________              |
-   |               ||  .--------------.  ||             |
-   |               ||  |  PAGE NOT    |  ||             |
-   |               ||  |  FOUND   404 |  ||             |
-   |               ||  |              |  ||             |
-   |               ||  |  [  OK  ]    |  ||             |
-   |               ||  '--------------'  ||             |
-   |               ||___________________||             |
-   |                |___________________|              |
-   |                     |       |                      |
-   |                     |_______|                      |
-   |                  ___|       |___                   |
-   |                 /               \                  |
-   |___________________________________________________|
-        </div>
+        <div class="ascii-art"> ___________________
+|  _______________  |
+| |               | |
+| |    <span class="sad-face">X     X</span>    | |
+| |               | |
+| |     <span class="sad-face">_____</span>     | |
+| |    <span class="sad-face">/     \</span>    | |
+| |_______________| |
+|                   |
+|   ===========  o  |
+|___________________|</div>
 
         <div class="nav-links-404">
             <a href="/index.html">home</a>
