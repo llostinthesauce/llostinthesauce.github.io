@@ -785,7 +785,7 @@ a.t-brand:hover .brand-title { color: #CC99FF; }
 .recent-card:hover .card-text { color: #66FFCC; }
 .recent-card:hover .card-section { color: #CC99FF; }
 .card-section {
-    font-size: 0.6em;
+    font-size: 0.7em;
     color: #9966CC;
     text-transform: uppercase;
     letter-spacing: 0.5px;
