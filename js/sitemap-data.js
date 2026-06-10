@@ -149,6 +149,7 @@ window.__SITEMAP__ = {
         "gallery.js",
         "image-canvas.js",
         "include.js",
+        "lite-yt.js",
         "oneko.js",
         "sitemap-data.js"
       ],

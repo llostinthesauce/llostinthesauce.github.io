@@ -328,10 +328,13 @@ def build_blog_nav():
         print("blog/ or js/blog-nav.js missing, skipping blog-nav update")
         return
 
+    # Only dated posts (YYYY-MM-DD-*) belong in the prev/next chain; rolling
+    # pages like now.html stay out of it (but remain linked elsewhere).
     posts = sorted(
         (p.name for p in blog_dir.iterdir()
          if p.is_file() and p.suffix == '.html' and not p.name.startswith('.')
-         and p.name not in EXCLUDE_FILES),
+         and p.name not in EXCLUDE_FILES
+         and re.match(r'\d{4}-\d{2}-\d{2}-', p.name)),
         reverse=True,
     )
     body = ',\n'.join(f'        "{name}"' for name in posts)
