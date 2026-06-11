@@ -74,6 +74,11 @@ body {
     border: 1px solid #444;
 }
 
+/* full-bleed post images: span the whole content column */
+.blog-post-content img.styled-image {
+    max-width: 100%;
+}
+
 .blog-post-date {
     color: #99CCCC;
     font-style: italic;
@@ -228,21 +233,24 @@ footer {
     margin-left: 10px;
 }
 
-/* Camera Gallery Preview Cards */
+/* ---- Image-card link boxes — the ONE canonical card ----
+   .big-link-box (hand-written pages) and .gallery-entry-preview
+   (gallery.js) are the same component; keep these rules merged. */
 .camera-preview-row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin: 30px 0;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 24px 0 40px;
 }
 
-.big-link-box {
+.big-link-box,
+.gallery-entry-preview {
     position: relative;
     width: 100%;
     background-color: #111;
     border: 1px solid #444;
     font-family: monospace;
-    font-size: 1.6em;
+    font-size: 1.1em;
     text-align: center;
     color: #33CCAA;
     text-decoration: none;
@@ -255,22 +263,26 @@ footer {
     justify-content: center;
     transition: transform 0.2s ease;
     cursor: pointer;
+    padding: 0;
 }
 
-.big-link-box::before {
+.big-link-box::before,
+.gallery-entry-preview::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.6);
     transition: background 0.3s ease;
 }
 
-.big-link-box:hover::before {
-    background: rgba(0, 0, 0, 0.45);
+.big-link-box:hover::before,
+.gallery-entry-preview:hover::before {
+    background: rgba(0, 0, 0, 0.4);
 }
 
-.big-link-box:hover {
-    transform: scale(1.03);
+.big-link-box:hover,
+.gallery-entry-preview:hover {
+    transform: scale(1.02);
 }
 
 .big-link-box span {
@@ -279,13 +291,9 @@ footer {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 550px) {
     .camera-preview-row {
         grid-template-columns: 1fr;
-    }
-    .big-link-box {
-        font-size: 1.4em;
-        aspect-ratio: 4 / 3;
     }
 }
 
@@ -403,7 +411,7 @@ hr {
 .gallery-entry-label {
     color: #33CCAA;
     text-decoration: none;
-    font-size: 0.95em;
+    font-size: 1.1em;
     display: block;
     padding: 14px 10px;
 }
@@ -431,42 +439,8 @@ hr {
     pointer-events: none;
 }
 
-.gallery-entry-preview {
-    position: relative;
-    width: 100%;
-    background-color: #111;
-    border: 1px solid #444;
-    font-family: monospace;
-    text-align: center;
-    color: #33CCAA;
-    text-decoration: none;
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    aspect-ratio: 3 / 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-    padding: 0;
-}
-
-.gallery-entry-preview::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    transition: background 0.3s ease;
-}
-
-.gallery-entry-preview:hover::before {
-    background: rgba(0, 0, 0, 0.4);
-}
-
-.gallery-entry-preview:hover {
-    transform: scale(1.02);
-}
-
+/* label fills the card; box visuals live in the merged
+   .big-link-box / .gallery-entry-preview rules above */
 .gallery-entry-preview .gallery-entry-label {
     position: relative;
     z-index: 1;
@@ -476,7 +450,8 @@ hr {
     align-items: center;
     justify-content: center;
     padding: 12px;
-    font-size: 0.95em;
+    font-size: 1.1em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .gallery-entry-children {
@@ -537,7 +512,7 @@ hr {
 }
 
 .gallery-entry.camera-highlight .gallery-entry-label {
-    font-size: 1.05em;
+    font-size: 1.15em;
 }
 
 .gallery-entry.camera-highlight::after,
@@ -555,6 +530,34 @@ hr {
     border-radius: 4px;
     pointer-events: none;
     z-index: 5;
+}
+
+.blog-item.camera-highlight {
+    position: relative;
+    z-index: 1;
+    border: 2px solid #33CCAA;
+    box-shadow: 0 0 10px rgba(51, 204, 170, 0.4);
+    padding: 8px 54px 8px 8px;
+    margin: 0 -10px 12px -10px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.blog-item.camera-highlight:hover {
+    border-color: #66FFCC;
+    box-shadow: 0 0 15px rgba(102, 255, 204, 0.6);
+}
+.blog-item.camera-highlight a {
+    font-weight: bold;
+}
+.blog-item.camera-highlight::after {
+    content: '*new!';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #FF66CC;
+    font-size: 0.75em;
+    font-weight: bold;
+    pointer-events: none;
 }
 
 @media (max-width: 500px) {

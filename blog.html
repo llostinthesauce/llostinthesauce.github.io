@@ -8,49 +8,52 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        .blog-pinned-label {
-            display: block;
+        .blog-section-label {
             font-family: monospace;
-            font-size: 0.65em;
-            color: #9966CC;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin: 20px 0 0;
+            font-size: 0.8em;
+            color: #777;
+            margin: 0 0 10px;
         }
-        /* pinned pages as thumbnail tiles, same style as plants/builds boxes */
-        .blog-pinned-row {
-            margin: 14px 0 30px;
+        .blog-rolling-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin: 0 0 28px;
         }
-        .blog-pinned-row .big-link-box {
-            font-size: 1.2em;
-            border-left: 3px solid #9966CC;
+        .blog-rolling-cards .gallery-entry-preview {
+            aspect-ratio: 3 / 1;
+        }
+        @media (max-width: 500px) {
+            .blog-rolling-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+
 </head>
 <body>
     <div class="content">
         <div id="site-header"></div>
         <h1>blog</h1>
-
-        <span class="blog-pinned-label">pinned</span>
-        <div class="camera-preview-row blog-pinned-row">
-            <a href="blog/builds/index.html" class="big-link-box"
-               style="background-image: url('images/builds/macbook-pro-2026.jpg');">
-                <span>builds+</span>
-            </a>
-            <a href="blog/now.html" class="big-link-box"
-               style="background-image: url('images/monthly/2026/06-june/IMG_4408.jpeg');">
-                <span>/now</span>
-            </a>
+        <p class="blog-section-label">rolling pages: updated intermittently</p>
+        <div class="blog-rolling-cards">
+            <div class="gallery-entry-preview" style="background-image: url('images/monthly/2026/06-june/IMG_4408.jpeg')">
+                <a href="blog/now.html" class="gallery-entry-label">/now</a>
+            </div>
+            <div class="gallery-entry-preview" style="background-image: url('images/builds/macbook-pro-2026.jpg')">
+                <a href="blog/builds/index.html" class="gallery-entry-label">builds+</a>
+            </div>
+            <div class="gallery-entry-preview" style="background-image: url('images/monthly/2025/03-mar/IMG_3511.jpeg')">
+                <a href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html" class="gallery-entry-label">review: books i have read (2023-2026)</a>
+            </div>
         </div>
 
+
   <div id="blog-list">
-    <!-- hand-pinned above the autogen list: this post is in the build script's
-         EXCLUDE_FILES, so it must stay outside the AUTOGEN markers -->
-            <div class="blog-item"><a href="blog/2025-09-04-review-books-i-have-read-2023-2024-2025.html">review: books i have read (2023-2026)</a> <span class="blog-item-date">June 10, 2026</span></div>
     <!-- AUTOGEN-START blog-list — populated by scripts/build-sitemap.py -->
-            <div class="blog-item"><a href="blog/2026-04-23-field-notes-march-30-april-8.html">field notes: march 30 - april 8</a> <span class="blog-item-date">April 23, 2026</span></div>
-            <div class="blog-item"><a href="blog/2026-03-29-untitled.html">field notes: march 18 - march 29</a> <span class="blog-item-date">March 29, 2026</span></div>
+            <div class="blog-item camera-highlight"><a href="blog/2026-06-10-field-notes-2-1.html">field notes iii: may 11 - may 29</a> <span class="blog-item-date">June 10, 2026</span></div>
+            <div class="blog-item"><a href="blog/2026-04-23-field-notes-march-30-april-8.html">field notes ii: march 30 - april 8</a> <span class="blog-item-date">April 23, 2026</span></div>
+            <div class="blog-item"><a href="blog/2026-03-29-untitled.html">field notes i: march 18 - march 29</a> <span class="blog-item-date">March 29, 2026</span></div>
             <div class="blog-item"><a href="blog/2025-12-01-aoip.html">AoIP</a> <span class="blog-item-date">December 1, 2025</span></div>
             <div class="blog-item"><a href="blog/2025-11-09-please-for-the-love-of-god-slow-down-and-run-them-offline.html">Please, For the Love of God, Slow Down and Run Them Offline…</a> <span class="blog-item-date">November 9, 2025</span></div>
             <div class="blog-item"><a href="blog/2025-10-17-some-rambling-thoughts-on-ai.html">some rambling thoughts on ai</a> <span class="blog-item-date">October 17, 2025</span></div>

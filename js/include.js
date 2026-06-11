@@ -1,7 +1,7 @@
 (function () {
     // Bump when partials/header.html or partials/footer.html change,
     // so cached copies are invalidated without defeating HTTP caching.
-    const PARTIALS_VERSION = '2026-06-09';
+    const PARTIALS_VERSION = '2026-06-10';
 
     const script = document.currentScript;
     const rawBase = (script && script.dataset.base) ? script.dataset.base : '.';

@@ -394,9 +394,9 @@ def build_blog_list():
     posts.sort(key=lambda x: x[3], reverse=True)
 
     items = '\n'.join(
-        f'            <div class="blog-item"><a href="blog/{filename}">{title}</a>'
+        f'            <div class="blog-item{" camera-highlight" if i == 0 else ""}"><a href="blog/{filename}">{title}</a>'
         f' <span class="blog-item-date">{date_formatted}</span></div>'
-        for filename, title, date_formatted, _ in posts
+        for i, (filename, title, date_formatted, _) in enumerate(posts)
     )
 
     replacement = (

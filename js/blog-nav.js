@@ -5,6 +5,7 @@
     var currentFile = pathname.split('/').pop();
     // AUTOGEN-START blogPosts — populated by scripts/build-sitemap.py
     var blogPosts = [
+        "2026-06-10-field-notes-2-1.html",
         "2026-04-23-field-notes-march-30-april-8.html",
         "2026-03-29-untitled.html",
         "2025-12-01-aoip.html",
