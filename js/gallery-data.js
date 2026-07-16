@@ -8,9 +8,9 @@ window.nublogGalleryGroups = [
         title: '',
         entries: [
             {
-                label: 'june 2026 ~ current',
-                href: 'galleries/monthly/2026-06-june.html',
-                previewImage: 'images/monthly/2026/06-june/IMG_4408.jpeg'
+                label: 'july 2026 ~ current',
+                href: 'galleries/monthly/2026-07-jul.html',
+                previewImage: 'images/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg'
             },
             {
                 label: 'canon eos elan ii 35mm',
@@ -55,6 +55,11 @@ window.nublogGalleryGroups = [
     {
         title: '2026',
         entries: [
+            {
+                label: 'jul 2026',
+                href: 'galleries/monthly/2026-07-jul.html',
+                caption: ''
+            },
             {
                 label: 'june 2026',
                 href: 'galleries/monthly/2026-06-june.html',
