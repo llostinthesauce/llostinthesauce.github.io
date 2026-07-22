@@ -329,7 +329,7 @@ def build_blog_nav():
         return
 
     # Only dated posts (YYYY-MM-DD-*) belong in the prev/next chain; rolling
-    # pages like now.html stay out of it (but remain linked elsewhere).
+    # pages stay out of it (but remain linked elsewhere).
     posts = sorted(
         (p.name for p in blog_dir.iterdir()
          if p.is_file() and p.suffix == '.html' and not p.name.startswith('.')
