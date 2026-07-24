@@ -27,6 +27,10 @@
             transition: opacity 0.5s ease;
         }
 
+        #boot-overlay[hidden] {
+            display: none;
+        }
+
         #mac-os-window {
             width: 500px;
             background: #ffffff;
@@ -214,7 +218,7 @@
 </head>
 
 <body>
-    <!-- Boot Screen Overlay (one-time, 5s auto-dismiss) -->
+    <!-- Boot Screen Overlay (one-time, 3.5s auto-dismiss) -->
     <div id="boot-overlay" role="dialog" aria-modal="true" aria-labelledby="mac-os-header" aria-describedby="mac-os-subheader">
         <div id="mac-os-window">
             <div id="mac-os-title-bar">
@@ -399,7 +403,7 @@
                 }
             });
 
-            autoBootTimeout = setTimeout(bootNuBlog, 5000);
+            autoBootTimeout = setTimeout(bootNuBlog, 3500);
         }
     </script>
 </body>

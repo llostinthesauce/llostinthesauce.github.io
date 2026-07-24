@@ -167,6 +167,28 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertIn("a:focus-visible", css)
         self.assertIn("button:focus-visible", css)
 
+    def test_home_boot_overlay_hidden_state_removes_it_from_layout(self):
+        homepage = (ROOT / "index.html").read_text()
+        self.assertRegex(
+            homepage,
+            r"#boot-overlay\[hidden\]\s*\{\s*display:\s*none;",
+        )
+
+    def test_home_boot_overlay_finishes_within_prescribed_window(self):
+        homepage = (ROOT / "index.html").read_text()
+        auto_delay = int(
+            re.search(
+                r"autoBootTimeout\s*=\s*setTimeout\(bootNuBlog,\s*(\d+)\)",
+                homepage,
+            ).group(1)
+        )
+        fade_delay = int(
+            re.search(r"reducedMotion\s*\?\s*0\s*:\s*(\d+)", homepage).group(1)
+        )
+        total_delay = auto_delay + fade_delay
+        self.assertGreaterEqual(total_delay, 3000)
+        self.assertLessEqual(total_delay, 5000)
+
     def test_bot_blocker_allows_local_preview_without_weakening_public_block(self):
         script = (ROOT / "js/bot-blocker.js").read_text()
         self.assertIn("isLocalPreview", script)
