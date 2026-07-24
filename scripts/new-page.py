@@ -29,6 +29,7 @@ TEMPLATES = {
 <body>
     <div class="content">
         <div id="site-header"></div>
+        <main id="main-content" tabindex="-1">
         <a href="../blog.html" class="back-link">&larr; back to blog</a>
         
         <h1>{title}</h1>
@@ -36,6 +37,7 @@ TEMPLATES = {
         <div class="blog-post-content">
             <p>start writing here...</p>
         </div>
+        </main>
         <div id="site-footer"></div>
     </div>
     <script src="../js/include.js" data-base=".."></script>
@@ -61,6 +63,7 @@ TEMPLATES = {
 <body>
     <div class="content">
         <div id="site-header"></div>
+        <main id="main-content" tabindex="-1">
         <a href="index.html" class="back-link">&larr; back to builds+</a>
         <h1>{title}</h1>
         <div class="blog-post-date">{date}</div>
@@ -69,6 +72,7 @@ TEMPLATES = {
             <p>start writing here...</p>
         </div>
 
+        </main>
         <div id="site-footer"></div>
     </div>
     <script src="../../js/include.js" data-base="../.."></script>
@@ -109,6 +113,7 @@ TEMPLATES = {
 <body>
     <div class="content">
         <div id="site-header"></div>
+        <main id="main-content" tabindex="-1">
         <a href="index.html" class="back-link">&larr; back to builds+</a>
         <h1>{title}</h1>
         <div class="blog-post-date">{date}</div>
@@ -127,6 +132,7 @@ TEMPLATES = {
             <p>description here...</p>
         </div>
 
+        </main>
         <div id="site-footer"></div>
     </div>
     <script src="../../js/include.js" data-base="../.."></script>
@@ -155,6 +161,7 @@ TEMPLATES = {
 <body>
     <div class="content">
         <div id="site-header"></div>
+        <main id="main-content" tabindex="-1">
         <a href="../../galleries.html" class="back-link">&larr; back to galleries</a>
         <h1>{title}</h1>
         <p>sorted chronologically — horizontal photos first, then vertical photos</p>
@@ -164,6 +171,7 @@ TEMPLATES = {
         </div>
         <!-- AUTOGEN-END gallery-grid -->
 
+        </main>
         <div id="site-footer"></div>
     </div>
     <script src="../../js/include.js" data-base="../.."></script>

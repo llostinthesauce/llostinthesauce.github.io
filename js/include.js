@@ -1,7 +1,7 @@
 (function () {
     // Bump when partials/header.html or partials/footer.html change,
     // so cached copies are invalidated without defeating HTTP caching.
-    const PARTIALS_VERSION = '2026-06-10';
+    const PARTIALS_VERSION = '2026-07-23';
 
     const script = document.currentScript;
     const rawBase = (script && script.dataset.base) ? script.dataset.base : '.';
@@ -30,6 +30,35 @@
     document.head.appendChild(botBlockerScript);
 
     window.nublogBase = base;
+    if (navigator.connection && navigator.connection.saveData) {
+        document.documentElement.classList.add('save-data');
+    }
+
+    const markCurrentNavigation = () => {
+        const currentPath = window.location.pathname.replace(/\/index\.html$/, '/');
+        const navLinks = Array.from(document.querySelectorAll('.nav a'));
+        let currentSection = null;
+        if (currentPath === '/') {
+            currentSection = 'home';
+        } else if (/\/blog\/builds(?:\/|$)/.test(currentPath)) {
+            currentSection = 'builds';
+        } else if (/\/blog(?:\.html|\/)/.test(currentPath)) {
+            currentSection = 'blog';
+        } else if (/\/(?:galleries|all-images)(?:\.html|\/)/.test(currentPath)) {
+            currentSection = 'photos';
+        } else if (/\/plants(?:\.html|\/)/.test(currentPath)) {
+            currentSection = 'plants';
+        } else if (/\/(?:about|guestbook|sitemap)(?:\.html|\/)/.test(currentPath)) {
+            currentSection = 'about';
+        }
+        navLinks.forEach((link) => {
+            if (link.title === currentSection) {
+                link.setAttribute('aria-current', 'page');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    };
 
     const loadPartial = (file, target) => {
         if (!target) return Promise.resolve();
@@ -39,6 +68,7 @@
             .then((html) => {
                 const rendered = html.replace(/%BASE%/g, base);
                 target.innerHTML = rendered;
+                if (file === 'header.html') markCurrentNavigation();
             })
             .catch((err) => {
                 console.error(`Failed to load ${file}`, err);
@@ -55,10 +85,12 @@
         document.body.appendChild(counterScript);
     });
 
-    // Load oneko
-    const onekoScript = document.createElement('script');
-    onekoScript.src = `${base}/js/oneko.js`;
-    document.body.appendChild(onekoScript);
+    // Load oneko only when the visitor has not requested reduced motion.
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const onekoScript = document.createElement('script');
+        onekoScript.src = `${base}/js/oneko.js`;
+        document.body.appendChild(onekoScript);
+    }
 
     // Load blog nav (injects next/prev links on blog posts)
     const blogNavScript = document.createElement('script');

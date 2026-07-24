@@ -1,7 +1,7 @@
 // gallery-data.js — nuBlog gallery index
 //
-// To add a preview image: set `previewImage` to a path relative to site root.
-// Example: previewImage: 'images/builds/ipod-1.jpg'
+// Keep `sourceImage` pointed at the original and use its generated thumbnail
+// for `previewImage`, both relative to the site root.
 
 window.nublogGalleryGroups = [
     {
@@ -10,45 +10,53 @@ window.nublogGalleryGroups = [
             {
                 label: 'july 2026 ~ current',
                 href: 'galleries/monthly/2026-07-jul.html',
-                previewImage: 'images/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg'
+                sourceImage: 'images/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg',
+                previewImage: 'images/.thumbs/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg'
             },
             {
                 label: 'canon eos elan ii 35mm',
                 href: 'galleries/cameras/canon-elan-ii.html',
-                previewImage: 'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
+                sourceImage: 'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
+                previewImage: 'images/.thumbs/cameras/elan-ii/roll-2/R1-08312-0020.jpg',
                 cssClass: 'camera-highlight'
             },
             {
                 label: 'vivitar pz3090 35mm',
                 href: 'galleries/cameras/vivitar-pz3090.html',
-                previewImage: 'images/cameras/vivitar/roll-4/R1-08311-009A.JPG',
+                sourceImage: 'images/cameras/vivitar/roll-4/R1-08311-009A.JPG',
+                previewImage: 'images/.thumbs/cameras/vivitar/roll-4/R1-08311-009A.jpg',
                 cssClass: 'camera-highlight'
             },
             {
                 label: 'disposable 35mm',
                 href: 'galleries/cameras/disposable.html',
-                previewImage: 'images/cameras/disposable/k8.jpeg'
+                sourceImage: 'images/cameras/disposable/k8.jpeg',
+                previewImage: 'images/.thumbs/cameras/disposable/k8.jpg'
             },
             {
                 label: 'canon sd400 digital',
                 href: 'galleries/cameras/canon-sd400.html',
-                previewImage: 'images/cameras/canon/2026/IMG_4010.jpeg'
+                sourceImage: 'images/cameras/canon/2026/IMG_4010.jpeg',
+                previewImage: 'images/.thumbs/cameras/canon/2026/IMG_4010.jpg'
             },
             {
                 label: 'plants',
                 href: 'plants.html',
-                previewImage: 'images/plants/plantos4.JPG'
+                sourceImage: 'images/plants/plantos4.JPG',
+                previewImage: 'images/.thumbs/plants/plantos4.jpg'
             },
             {
                 label: 'animals',
                 href: 'galleries/animals.html',
-                previewImage: 'images/galleries/animals.jpeg'
+                sourceImage: 'images/galleries/animals.jpeg',
+                previewImage: 'images/.thumbs/galleries/animals.jpg'
             },
 
             {
                 label: 'videos',
                 href: 'galleries/videos.html',
-                previewImage: 'images/galleries/videos.jpeg'
+                sourceImage: 'images/galleries/videos.jpeg',
+                previewImage: 'images/.thumbs/galleries/videos.jpg'
             }
         ]
     },

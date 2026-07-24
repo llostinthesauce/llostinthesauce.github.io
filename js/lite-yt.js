@@ -12,6 +12,7 @@
         iframe.src = 'https://www.youtube-nocookie.com/embed/' +
             facade.dataset.ytId + '?autoplay=1';
         iframe.title = facade.title;
+        iframe.loading = 'lazy';
         iframe.allow = 'accelerometer; autoplay; clipboard-write; ' +
             'encrypted-media; gyroscope; picture-in-picture; web-share';
         iframe.allowFullscreen = true;

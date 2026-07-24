@@ -39,14 +39,28 @@
     backLink.innerHTML = '\u2190 back to blog';
     backLink.href = base + '/blog.html';
 
-    // blogPosts is newest-first, so index+1 is the chronologically older post.
+    var navNodes = [];
+
+    // blogPosts is newest-first, so index-1 is newer and index+1 is older.
+    var newerIndex = currentIndex - 1;
+    if (newerIndex >= 0) {
+        var newerLink = document.createElement('a');
+        newerLink.href = blogPosts[newerIndex];
+        newerLink.className = 'post-nav-link';
+        newerLink.textContent = '\u2190 newer';
+        navNodes.push(document.createTextNode('\u00a0\u00a0\u00a0\u00a0'), newerLink);
+    }
+
     var olderIndex = currentIndex + 1;
     if (olderIndex < blogPosts.length) {
-        var sep = document.createTextNode('\u00a0\u00a0\u00a0\u00a0');
         var olderLink = document.createElement('a');
         olderLink.href = blogPosts[olderIndex];
-        olderLink.style.cssText = 'color:#99CCCC;font-style:italic;text-decoration:underline;font-size:1em;';
+        olderLink.className = 'post-nav-link';
         olderLink.textContent = 'older \u2192';
-        backLink.after(sep, olderLink);
+        navNodes.push(document.createTextNode('\u00a0\u00a0\u00a0\u00a0'), olderLink);
+    }
+
+    if (navNodes.length) {
+        backLink.after.apply(backLink, navNodes);
     }
 })();

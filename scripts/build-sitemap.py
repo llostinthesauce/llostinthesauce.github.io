@@ -1,24 +1,31 @@
 #!/usr/bin/env python3
-"""Build js/sitemap-data.js and all-images.html from filesystem scan.
+"""Build generated site data and monthly gallery markup from the filesystem.
 
 Run from repo root:  python3 scripts/build-sitemap.py
 """
 import json
 import re
 from datetime import datetime, timedelta
+from html import escape, unescape
 from pathlib import Path
+from urllib.parse import urlparse
 
 from PIL import ExifTags, Image
 
 ROOT = Path(__file__).parent.parent.resolve()
-EXCLUDE_DIRS = {'.git', '__pycache__', '.remember', '.DS_Store', 'node_modules', 'scripts', 'docs', 'partials', 'archive'}
+EXCLUDE_DIRS = {
+    '.git', '__pycache__', '.remember', '.DS_Store', 'node_modules',
+    'scripts', 'tests', 'docs', 'partials', 'archive',
+}
 EXCLUDE_FILES = {
     'AGENTS.md', 'CLAUDE.md', 'agents-wiki.md',
-    'HANDOFF.md', '2025-09-04-review-books-i-have-read-2023-2024-2025.html',
+    'HANDOFF.md',
 }
+BLOG_FEED_EXCLUDE = {'2025-09-04-review-books-i-have-read-2023-2024-2025.html'}
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'}
 PHOTO_EXTS = {'.jpg', '.jpeg', '.png'}
 MB = 1024 * 1024
+IMAGE_SIZE_WARNING_EXCLUDE = {Path('images/water.gif')}
 THUMB_DIR_NAME = '.thumbs'  # under images/, mirrors layout; consumed by the canvas page
 THUMB_LONG_EDGE = 400
 THUMB_QUALITY = 70
@@ -133,15 +140,18 @@ def monthly_section_label(path: Path):
     return path.name.replace('-', ' ')
 
 
-def monthly_gallery_item(img_file: Path):
+def monthly_gallery_item(img_file: Path, alt_text: str):
     try:
         with Image.open(img_file) as img:
-            img.size
-        alt = img_file.stem
+            width, height = img.size
+            orient = img.getexif().get(EXIF_TAGS.get('Orientation'), 1)
+        if orient in (5, 6, 7, 8):
+            width, height = height, width
         rel_path = img_file.relative_to(ROOT)
         return (
             f'            <div class="gallery-grid-item">'
-            f'<img src="../../{rel_path}" alt="{alt}"'
+            f'<img src="../../{rel_path}" alt="{escape(alt_text, quote=True)}"'
+            f' width="{width}" height="{height}"'
             f' class="styled-image" loading="lazy"></div>'
         )
     except Exception:
@@ -333,7 +343,7 @@ def build_blog_nav():
     posts = sorted(
         (p.name for p in blog_dir.iterdir()
          if p.is_file() and p.suffix == '.html' and not p.name.startswith('.')
-         and p.name not in EXCLUDE_FILES
+         and p.name not in BLOG_FEED_EXCLUDE
          and re.match(r'\d{4}-\d{2}-\d{2}-', p.name)),
         reverse=True,
     )
@@ -369,7 +379,7 @@ def build_blog_list():
     title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
 
     for p in sorted(blog_dir.iterdir()):
-        if not p.is_file() or p.suffix != '.html' or p.name.startswith('.') or p.name in EXCLUDE_FILES:
+        if not p.is_file() or p.suffix != '.html' or p.name.startswith('.') or p.name in BLOG_FEED_EXCLUDE:
             continue
         try:
             date_str = p.name[:10]
@@ -391,7 +401,7 @@ def build_blog_list():
         print("No dated blog posts found, skipping blog list update")
         return
 
-    posts.sort(key=lambda x: x[3], reverse=True)
+    posts.sort(key=lambda x: (x[3], x[0]), reverse=True)
 
     items = '\n'.join(
         f'            <div class="blog-item{" camera-highlight" if i == 0 else ""}"><a href="blog/{filename}">{title}</a>'
@@ -415,6 +425,77 @@ def build_blog_list():
         return
     blog_html_path.write_text(pattern.sub(replacement, original))
     print(f"Updated {blog_html_path} ({len(posts)} blog posts)")
+
+
+def build_homepage_recent_blog():
+    """Keep the homepage's recent blog card synced to the newest dated post."""
+    index_path = ROOT / 'index.html'
+    blog_dir = ROOT / 'blog'
+    if not index_path.is_file() or not blog_dir.is_dir():
+        return
+
+    posts = sorted(
+        (
+            path for path in blog_dir.glob('*.html')
+            if re.match(r'\d{4}-\d{2}-\d{2}-', path.name)
+            and path.name not in BLOG_FEED_EXCLUDE
+        ),
+        key=lambda path: path.name,
+        reverse=True,
+    )
+    if not posts:
+        return
+
+    latest = posts[0]
+    content = latest.read_text()
+    title_match = re.search(r'<title>(.*?) - nuBlog</title>', content)
+    title = unescape(title_match.group(1)) if title_match else latest.stem
+    date = datetime.strptime(latest.name[:10], '%Y-%m-%d')
+
+    og_match = re.search(
+        r'<meta\s+property="og:image"\s+content="([^"]+)"',
+        content,
+        re.IGNORECASE,
+    )
+    source_path = 'images/badges/reshirii.gif'
+    thumb_path = 'images/.thumbs/badges/reshirii.jpg'
+    if og_match:
+        raw_src = og_match.group(1)
+        if raw_src.startswith(('http://', 'https://')):
+            image_rel = urlparse(raw_src).path.lstrip('/')
+        else:
+            image_rel = str((latest.parent / raw_src).resolve().relative_to(ROOT))
+        image_path = Path(image_rel)
+        if image_path.parts and image_path.parts[0] == 'images':
+            candidate = (
+                ROOT / 'images' / THUMB_DIR_NAME
+                / image_path.relative_to('images').with_suffix('.jpg')
+            )
+            if candidate.is_file():
+                source_path = image_rel
+                thumb_path = str(candidate.relative_to(ROOT)).replace('\\', '/')
+
+    card = (
+        '                    <!-- AUTOGEN-START recent-blog -->\n'
+        f'                    <a class="recent-card" href="blog/{latest.name}" data-preview-source="{escape(source_path, quote=True)}">\n'
+        f'                        <div class="card-thumb" style="background-image: url(\'{thumb_path}\');"></div>\n'
+        '                        <div class="card-section">blog</div>\n'
+        f'                        <div class="card-text">{escape(title)}</div>\n'
+        f'                        <div class="card-when">{date.month}/{date.day:02d}</div>\n'
+        '                    </a>\n'
+        '                    <!-- AUTOGEN-END recent-blog -->'
+    )
+    pattern = re.compile(
+        r'                    <!-- AUTOGEN-START recent-blog -->.*?'
+        r'                    <!-- AUTOGEN-END recent-blog -->',
+        re.DOTALL,
+    )
+    original = index_path.read_text()
+    if not pattern.search(original):
+        print(f"AUTOGEN recent-blog markers not found in {index_path}, skipping")
+        return
+    index_path.write_text(pattern.sub(card, original))
+    print(f"Updated {index_path} recent blog card ({latest.name})")
 
 
 def build_monthly_galleries():
@@ -442,6 +523,11 @@ def build_monthly_galleries():
         original = gallery_file.read_text()
         if not marker_pattern.search(original):
             continue
+        title_match = re.search(r'<h1>(.*?)</h1>', original, re.DOTALL)
+        gallery_title = (
+            re.sub(r'<[^>]+>', '', title_match.group(1)).strip()
+            if title_match else gallery_file.stem.replace('-', ' ')
+        )
 
         # Parse YYYY-MM from filename: 2025-01-jan.html
         stem = gallery_file.stem  # "2025-01-jan"
@@ -503,12 +589,17 @@ def build_monthly_galleries():
                 sections.append(('', loose_files, False))
 
         blocks = []
+        photo_number = 0
         for label, img_files, sectioned in sections:
             items = []
             horizontal = []
             vertical = []
             for img_file in img_files:
-                item = monthly_gallery_item(img_file)
+                photo_number += 1
+                context = f'{gallery_title} photo {photo_number}'
+                if label:
+                    context = f'{gallery_title}, {label}, photo {photo_number}'
+                item = monthly_gallery_item(img_file, context)
                 if not item:
                     continue
                 if sectioned:
@@ -556,6 +647,123 @@ def build_monthly_galleries():
     if updated:
         print(f"Updated {updated} monthly gallery page(s)")
 
+
+def enrich_image_metadata():
+    """Add stable alt, width, height, and lazy-loading attributes to HTML images."""
+    image_tag_pattern = re.compile(r'<img\b[^>]*>', re.IGNORECASE | re.DOTALL)
+    attr_pattern = lambda name: re.compile(
+        rf'(\s{name}\s*=\s*)(["\'])(.*?)\2',
+        re.IGNORECASE | re.DOTALL,
+    )
+    filename_alt_pattern = re.compile(
+        r'^(?:IMG|IDG|DSC|R1-|PXL|MVIMG|[0-9A-F]{8}-)[A-Z0-9_.\-\s]*$',
+        re.IGNORECASE,
+    )
+
+    def attr_value(tag, name):
+        match = attr_pattern(name).search(tag)
+        return unescape(match.group(3)) if match else None
+
+    def set_attr(tag, name, value):
+        pattern = attr_pattern(name)
+        rendered = escape(str(value), quote=True)
+        if pattern.search(tag):
+            return pattern.sub(lambda match: f'{match.group(1)}"{rendered}"', tag, count=1)
+        if tag.endswith('/>'):
+            return tag[:-2].rstrip() + f' {name}="{rendered}" />'
+        return tag[:-1] + f' {name}="{rendered}">'
+
+    updated_pages = 0
+    updated_images = 0
+    failures = []
+    for page in sorted(ROOT.rglob('*.html')):
+        if any(part in {'.git', 'archive', 'partials'} for part in page.parts):
+            continue
+        original = page.read_text()
+        tags = image_tag_pattern.findall(original)
+        if not tags:
+            continue
+
+        title_match = re.search(r'<h1\b[^>]*>(.*?)</h1>', original, re.IGNORECASE | re.DOTALL)
+        if not title_match:
+            title_match = re.search(r'<title>(.*?)</title>', original, re.IGNORECASE | re.DOTALL)
+        page_title = page.stem.replace('-', ' ')
+        if title_match:
+            page_title = unescape(re.sub(r'<[^>]+>', '', title_match.group(1))).strip()
+            page_title = re.sub(r'\s+-\s+nuBlog.*$', '', page_title, flags=re.IGNORECASE)
+
+        image_number = 0
+
+        def update_tag(match):
+            nonlocal image_number, updated_images
+            tag = match.group(0)
+            src = attr_value(tag, 'src')
+            if not src:
+                failures.append((str(page.relative_to(ROOT)), '(missing src)'))
+                return tag
+
+            image_number += 1
+            if src.startswith(('https://i.ytimg.com/', 'http://i.ytimg.com/')):
+                width, height = 480, 360
+            elif src.startswith(('http://', 'https://', '//', 'data:')):
+                failures.append((str(page.relative_to(ROOT)), src))
+                return tag
+            else:
+                image_path = (
+                    ROOT / src.lstrip('/')
+                    if src.startswith('/')
+                    else (page.parent / src).resolve()
+                )
+                if not image_path.is_file():
+                    failures.append((str(page.relative_to(ROOT)), src))
+                    return tag
+                try:
+                    with Image.open(image_path) as image:
+                        width, height = image.size
+                        orient = image.getexif().get(EXIF_TAGS.get('Orientation'), 1)
+                    if orient in (5, 6, 7, 8):
+                        width, height = height, width
+                except Exception:
+                    failures.append((str(page.relative_to(ROOT)), src))
+                    return tag
+
+            alt = attr_value(tag, 'alt')
+            stem = Path(urlparse(src).path).stem
+            decorative = '/badges/' in src or 'youtube.com/' in src or 'ytimg.com/' in src
+            if alt is None:
+                alt = '' if decorative else (
+                    f'{page_title} photo {image_number}' if len(tags) > 1
+                    else f'{page_title} photo'
+                )
+            elif alt and (
+                alt.strip().lower() == stem.lower()
+                or filename_alt_pattern.fullmatch(alt.strip())
+                or re.search(r'\.(?:jpe?g|png|gif|webp)$', alt, re.IGNORECASE)
+            ):
+                alt = (
+                    f'{page_title} photo {image_number}' if len(tags) > 1
+                    else f'{page_title} photo'
+                )
+
+            rendered = set_attr(tag, 'alt', alt)
+            rendered = set_attr(rendered, 'width', width)
+            rendered = set_attr(rendered, 'height', height)
+            rendered = set_attr(rendered, 'loading', 'lazy')
+            if rendered != tag:
+                updated_images += 1
+            return rendered
+
+        rendered = image_tag_pattern.sub(update_tag, original)
+        if rendered != original:
+            page.write_text(rendered)
+            updated_pages += 1
+
+    if failures:
+        sample = ', '.join(f'{page}: {src}' for page, src in failures[:5])
+        raise RuntimeError(f'Could not enrich {len(failures)} image(s): {sample}')
+    print(f"Enriched image metadata ({updated_images} images across {updated_pages} pages)")
+
+
 def check_image_sizes():
     """Warn about images exceeding 1 MB."""
     images_dir = ROOT / 'images'
@@ -566,6 +774,8 @@ def check_image_sizes():
         if img.is_file() and img.suffix.lower() in IMAGE_EXTS:
             if THUMB_DIR_NAME in img.parts:
                 continue  # generated thumbs aren't worth warning about
+            if img.relative_to(ROOT) in IMAGE_SIZE_WARNING_EXCLUDE:
+                continue  # intentionally protected animation; see AGENTS.md
             size = img.stat().st_size
             if size > MB:
                 oversized.append((str(img.relative_to(ROOT)), size))
@@ -591,7 +801,9 @@ def main():
     build_all_images_data()
     build_blog_nav()
     build_blog_list()
+    build_homepage_recent_blog()
     build_monthly_galleries()
+    enrich_image_metadata()
     check_image_sizes()
 
 

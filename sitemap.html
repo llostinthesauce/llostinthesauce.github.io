@@ -16,6 +16,17 @@ body {
     margin: 0 auto;
     line-height: 1.4;
 }
+.skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 8px 12px;
+    color: #000;
+    background: #fff;
+    border: 2px solid #000;
+    transform: translateY(-160%);
+}
+.skip-link:focus { transform: translateY(0); }
 h1 {
     border-bottom: 2px solid #000;
     padding-bottom: 8px;
@@ -76,18 +87,21 @@ a:hover {
 </style>
 </head>
 <body>
-<div class="nav">
+<a class="skip-link" href="#main-content">skip to content</a>
+<nav class="nav" aria-label="primary">
   <a href="index.html">home</a>
   <a href="galleries.html">photos</a>
   <a href="blog.html">blog</a>
-  <a href="blog/builds/index.html">builds+</a>
+  <a href="blog/builds/index.html">builds</a>
   <a href="plants.html">plants</a>
-  <a href="about.html">about</a>
-</div>
+  <a href="about.html" aria-current="page">about</a>
+</nav>
 
+<main id="main-content" tabindex="-1">
 <h1>sitemap / directory tree</h1>
 <p>Click [+] to expand folders. All HTML files are clickable.</p>
 <div class="tree-container" id="tree"></div>
+</main>
 
 <script src="js/sitemap-data.js"></script>
 <script>

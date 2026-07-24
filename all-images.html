@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noai, noimageai">
     <title>canvas · all images — nuBlog</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -15,6 +15,17 @@
             background: #000;
             font-family: monospace;
             color: #33CCAA;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         #canvas-viewport {
             position: fixed;
@@ -125,6 +136,8 @@
     </style>
 </head>
 <body>
+    <main id="main-content" tabindex="-1">
+    <h1 class="sr-only">all images canvas</h1>
     <div id="canvas-viewport">
         <div id="canvas-world"></div>
     </div>
@@ -135,6 +148,7 @@
         <span class="meta"><span id="canvas-count">0</span> &middot; <span id="canvas-zoom">100%</span></span>
     </div>
     <div id="canvas-hint">drag or two-finger scroll to pan &middot; pinch or ctrl+wheel to zoom &middot; arrows or +/&minus; on keyboard &middot; click to open</div>
+    </main>
     <script src="js/all-images-data.js"></script>
     <script src="js/image-canvas.js"></script>
 </body>

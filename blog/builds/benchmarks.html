@@ -258,6 +258,7 @@
 <body>
     <div class="content">
         <div id="site-header"></div>
+        <main id="main-content" tabindex="-1">
         <a href="index.html" class="back-link">&larr; back to builds+</a>
         <h1>local llm benchmarks</h1>
         <div class="blog-post-date">last updated 5/8/2026</div>
@@ -328,6 +329,8 @@
         <div class="bench-footer-note">
             <b>caveats.</b> results are averaged across matching model/backend/quantization variants from five benchmark runs. different collection paths may report token accounting differently. llama.cpp raw/direct does not expose TTFT in the same way API-serving paths do, so zero TTFT values should not be read as true first-token latency. ollama and auxiliary benchmark modes are intentionally outside this report.
         </div>
+
+        </main>
 
         <div id="site-footer"></div>
     </div>

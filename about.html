@@ -13,6 +13,7 @@
 <body>
     <div class="content">
         <div id="site-header"></div>
+        <main id="main-content" tabindex="-1">
 
         <h1>about me &amp; this website</h1>
         <p>nuBlog is the home of my favorite photos, writings, builds and coding projects, plants/garden logging, and misc links. i made this site originally on an old raspberry pi in the spring of 2025, with the goal of it being an old web geocities style site. I wrote it all in .php. while this was fun, it was unstable and my first true dive into linux servers. for reliability, i migrated it to github pages sometime late 2025. now the page has blossomed into my digital home base! if you're reading this, please have a great day!!! :3</p>
@@ -30,89 +31,82 @@
         </ul>
 
         <h2>cool websites</h2>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed;">
-            <tr>
-                <th style="text-align: left; color: #99CCCC; padding-bottom: 8px; width: 50%;">neat articles</th>
-                <th style="text-align: left; color: #99CCCC; padding-bottom: 8px; width: 50%;">random resources</th>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; padding-right: 15px;">
-                    <ul class="profile-links" style="margin-top: 0; word-wrap: break-word;">
-                        <li><a href="https://fortelabs.com/blog/basboverview/" target="_blank" rel="noopener noreferrer">Building a Second Brain Overview</a></li>
-                        <li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener noreferrer">llm-wiki (Karpathy)</a></li>
-                        <li><a href="https://en.wikipedia.org/wiki/Tsundoku" target="_blank" rel="noopener noreferrer">Tsundoku (Wikipedia)</a></li>
-                        <li><a href="https://en.wikipedia.org/wiki/O_Captain!_My_Captain!" target="_blank" rel="noopener noreferrer">O Captain! My Captain! (Wikipedia)</a></li>
-                        <li><a href="https://leonachoy.com/therestofthewayposts/72-THE-HOLY-SPIRIT-IS-MY-CELL-TOWER" target="_blank" rel="noopener noreferrer">THE HOLY SPIRIT IS MY CELL TOWER</a></li>
-                    </ul>
-                </td>
-                <td style="vertical-align: top;">
-                    <ul class="profile-links" style="margin-top: 0; word-wrap: break-word;">
-                        <li><a href="https://time.gov/" target="_blank" rel="noopener noreferrer">time.gov</a></li>
-                        <li><a href="https://www.farmersalmanac.com/wp-content/uploads/2025/11/farmers-almanac-2026.pdf" target="_blank" rel="noopener noreferrer">Farmer's Almanac 2026 (PDF)</a></li>
-                        <li><a href="https://discourse.32bit.cafe/t/resources-list-for-the-personal-web/49" target="_blank" rel="noopener noreferrer">Resources List for the Personal Web</a></li>
-                        <li><a href="https://bendodson.com/projects/itunes-artwork-finder/" target="_blank" rel="noopener noreferrer">iTunes Artwork Finder by Ben Dodson</a></li>
-                        <li><a href="https://512pixels.net/projects/default-mac-wallpapers-in-5k/" target="_blank" rel="noopener noreferrer">Default Mac Wallpapers in 5K</a></li>
-                        <li><a href="https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/native-trees-for-missouri" target="_blank" rel="noopener noreferrer">Native Trees for Missouri</a></li>
-                        <li><a href="https://www.buffalowyoming.org/" target="_blank" rel="noopener noreferrer">Discover Historic Buffalo</a></li>
-                        <li><a href="https://www.sohosandiego.org/index.htm" target="_blank" rel="noopener noreferrer">Save Our Heritage Organisation</a></li>
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <th style="text-align: left; color: #99CCCC; padding-top: 20px; padding-bottom: 8px;">other ppls sites</th>
-                <th style="text-align: left; color: #99CCCC; padding-top: 20px; padding-bottom: 8px;">interactives &amp; fun &amp; pics</th>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; padding-right: 15px;">
-                    <ul class="profile-links" style="margin-top: 0; word-wrap: break-word;">
-                        <li><a href="https://tvwishes.com" target="_blank" rel="noopener noreferrer">tvwishes (i do the dev on this site!)</a></li>
-                        <li><a href="https://jk-keller.com/o__o/" target="_blank" rel="noopener noreferrer">Projects •__• JK</a></li>
-                        <li><a href="https://billwurtz.com/other.html" target="_blank" rel="noopener noreferrer">Bill Wurtz - Other</a></li>
-                        <li><a href="https://cise.ufl.edu/~marcinplaza/" target="_blank" rel="noopener noreferrer">Marcin Plaza</a></li>
-                    </ul>
-                </td>
-                <td style="vertical-align: top;">
-                    <ul class="profile-links" style="margin-top: 0; word-wrap: break-word;">
-                        <li><a href="https://www.ritsumei.ac.jp/~akitaoka/index-e.html" target="_blank" rel="noopener noreferrer">Akiyoshi's illusion pages</a></li>
-                        <li><a href="https://dongs2.blogspot.com/" target="_blank" rel="noopener noreferrer">Do Online Now Guys (DONGs)</a></li>
-                        <li><a href="https://walzr.com/flashbang" target="_blank" rel="noopener noreferrer">HDR Flashbang</a></li>
-                        <li><a href="https://www.flickr.com/photos/projectapolloarchive/albums/" target="_blank" rel="noopener noreferrer">hq moon "landing" pics</a></li>
-                        <li><a href="https://artemistimeline.com/#artemis-ii-preflight-nhq202604010205" target="_blank" rel="noopener noreferrer">Artemis mission timeline</a></li>
-                        <li><a href="https://www.flickr.com/photos/greenbankobservatory/albums/72157719610359701/" target="_blank" rel="noopener noreferrer">green bank observatory pics</a></li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
+        <div class="resource-grid">
+            <section class="resource-group">
+                <h3>neat articles</h3>
+                <ul class="profile-links">
+                    <li><a href="https://fortelabs.com/blog/basboverview/" target="_blank" rel="noopener noreferrer">Building a Second Brain Overview</a></li>
+                    <li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener noreferrer">llm-wiki (Karpathy)</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Tsundoku" target="_blank" rel="noopener noreferrer">Tsundoku (Wikipedia)</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/O_Captain!_My_Captain!" target="_blank" rel="noopener noreferrer">O Captain! My Captain! (Wikipedia)</a></li>
+                    <li><a href="https://leonachoy.com/therestofthewayposts/72-THE-HOLY-SPIRIT-IS-MY-CELL-TOWER" target="_blank" rel="noopener noreferrer">THE HOLY SPIRIT IS MY CELL TOWER</a></li>
+                </ul>
+            </section>
+            <section class="resource-group">
+                <h3>random resources</h3>
+                <ul class="profile-links">
+                    <li><a href="https://time.gov/" target="_blank" rel="noopener noreferrer">time.gov</a></li>
+                    <li><a href="https://www.farmersalmanac.com/wp-content/uploads/2025/11/farmers-almanac-2026.pdf" target="_blank" rel="noopener noreferrer">Farmer's Almanac 2026 (PDF)</a></li>
+                    <li><a href="https://discourse.32bit.cafe/t/resources-list-for-the-personal-web/49" target="_blank" rel="noopener noreferrer">Resources List for the Personal Web</a></li>
+                    <li><a href="https://bendodson.com/projects/itunes-artwork-finder/" target="_blank" rel="noopener noreferrer">iTunes Artwork Finder by Ben Dodson</a></li>
+                    <li><a href="https://512pixels.net/projects/default-mac-wallpapers-in-5k/" target="_blank" rel="noopener noreferrer">Default Mac Wallpapers in 5K</a></li>
+                    <li><a href="https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/native-trees-for-missouri" target="_blank" rel="noopener noreferrer">Native Trees for Missouri</a></li>
+                    <li><a href="https://www.buffalowyoming.org/" target="_blank" rel="noopener noreferrer">Discover Historic Buffalo</a></li>
+                    <li><a href="https://www.sohosandiego.org/index.htm" target="_blank" rel="noopener noreferrer">Save Our Heritage Organisation</a></li>
+                </ul>
+            </section>
+            <section class="resource-group">
+                <h3>other ppls sites</h3>
+                <ul class="profile-links">
+                    <li><a href="https://tvwishes.com" target="_blank" rel="noopener noreferrer">tvwishes (i do the dev on this site!)</a></li>
+                    <li><a href="https://jk-keller.com/o__o/" target="_blank" rel="noopener noreferrer">Projects •__• JK</a></li>
+                    <li><a href="https://billwurtz.com/other.html" target="_blank" rel="noopener noreferrer">Bill Wurtz - Other</a></li>
+                    <li><a href="https://cise.ufl.edu/~marcinplaza/" target="_blank" rel="noopener noreferrer">Marcin Plaza</a></li>
+                </ul>
+            </section>
+            <section class="resource-group">
+                <h3>interactives &amp; fun &amp; pics</h3>
+                <ul class="profile-links">
+                    <li><a href="https://www.ritsumei.ac.jp/~akitaoka/index-e.html" target="_blank" rel="noopener noreferrer">Akiyoshi's illusion pages</a></li>
+                    <li><a href="https://dongs2.blogspot.com/" target="_blank" rel="noopener noreferrer">Do Online Now Guys (DONGs)</a></li>
+                    <li><a href="https://walzr.com/flashbang" target="_blank" rel="noopener noreferrer">HDR Flashbang</a></li>
+                    <li><a href="https://www.flickr.com/photos/projectapolloarchive/albums/" target="_blank" rel="noopener noreferrer">hq moon "landing" pics</a></li>
+                    <li><a href="https://artemistimeline.com/#artemis-ii-preflight-nhq202604010205" target="_blank" rel="noopener noreferrer">Artemis mission timeline</a></li>
+                    <li><a href="https://www.flickr.com/photos/greenbankobservatory/albums/72157719610359701/" target="_blank" rel="noopener noreferrer">green bank observatory pics</a></li>
+                </ul>
+            </section>
+        </div>
 
         <div class="retro-collection" style="margin-top: 20px; text-align: center;">
             <div style="display: flex; justify-content: center; gap: 8px; align-items: center; margin: 10px 0;">
-                <img src="images/badges/ctwpng-4562.png" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/reshirii.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
+                <img src="images/badges/ctwpng-4562.png" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="500" height="396">
+                <img src="images/badges/reshirii.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="31">
                 <img src="images/badges/safewithme-4562.png"
-                    style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
+                    style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="100" height="103">
             </div>
             <div
                 style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; align-items: center; max-width: 600px; margin: 0 auto;">
-                <img src="images/badges/download.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/ehbutton.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/mp3-button.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/phonechump.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
+                <img src="images/badges/download.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="150">
+                <img src="images/badges/ehbutton.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="33">
+                <img src="images/badges/mp3-button.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="31">
+                <img src="images/badges/phonechump.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="31">
                 <img src="images/badges/94ffbfcf8e872a520c3f7d484885abaa.gif"
-                    style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/a6.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/a7.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/e107.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/e52.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/e63.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/e81.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/f22.jpg" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/v64.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/vine27.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/y39.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
-                <img src="images/badges/z35.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy">
+                    style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="300" height="307">
+                <img src="images/badges/a6.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="31">
+                <img src="images/badges/a7.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="31">
+                <img src="images/badges/e107.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
+                <img src="images/badges/e52.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
+                <img src="images/badges/e63.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
+                <img src="images/badges/e81.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
+                <img src="images/badges/f22.jpg" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="88" height="31">
+                <img src="images/badges/v64.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
+                <img src="images/badges/vine27.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="868" height="50">
+                <img src="images/badges/y39.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
+                <img src="images/badges/z35.gif" style="max-height: 80px; max-width: 100%; object-fit: contain;" loading="lazy" alt="" width="150" height="20">
             </div>
         </div>
 
+        </main>
         <div id="site-footer"></div>
     </div>
 
