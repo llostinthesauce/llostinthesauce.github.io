@@ -14,8 +14,17 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
+            width: 100%;
+            /* dvh, not vh: on phones 100vh is the LARGE viewport, measured with
+               the URL bar retracted. A vh-tall overlay is therefore taller than
+               what you can actually see, and since the window is centred in it,
+               it hangs off the top and bottom equally. dvh tracks the visible
+               area. vh stays first as the fallback for old browsers. */
             height: 100vh;
+            height: 100dvh;
+            /* so the window never touches the edge on a narrow screen */
+            padding: 16px;
+            box-sizing: border-box;
             background-color: rgba(230, 230, 230, 1);
             background-image: url('images/10-4.jpg');
             background-size: cover;
@@ -32,7 +41,12 @@
         }
 
         #mac-os-window {
-            width: 500px;
+            /* fluid below 500px so a 390px phone gets the whole window, and
+               capped in height so a short viewport scrolls it rather than
+               clipping it — centring an over-tall flex child cuts off the top
+               where nothing can scroll it back into reach */
+            width: min(500px, 100%);
+            max-height: 100%;
             background: #ffffff;
             border-radius: 6px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.15);
@@ -112,6 +126,10 @@
             padding: 30px 40px;
             display: flex;
             flex-direction: column;
+            /* min-height:0 lets this flex child shrink under the window's
+               max-height instead of forcing it taller; overflow is the valve */
+            min-height: 0;
+            overflow-y: auto;
         }
 
         #mac-os-text {
@@ -211,6 +229,26 @@
             100% { transform: translateX(100%); }
         }
 
+        /* Phones: tighten the chrome so the window still fits without scrolling.
+           The 40px side padding alone eats a quarter of a 390px screen. */
+        @media (max-width: 480px) {
+            #mac-os-content {
+                padding: 20px 22px;
+            }
+
+            #mac-os-header {
+                font-size: 22px;
+            }
+
+            #mac-os-subheader {
+                margin-bottom: 16px;
+            }
+
+            .mac-info-table .label {
+                padding-right: 10px;
+            }
+        }
+
         .home-tiles {
             font-size: 1.2em;
         }
@@ -285,7 +323,7 @@
 
             <!-- photos (big, spans 2 columns on desktop) -->
             <a class="tile tile-img t-photos" href="galleries/monthly/2026-07-jul.html"
-               data-preview-source="images/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg" style="background-image: url('images/.thumbs/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg');">
+               data-preview-source="images/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg" style="background-image: url('images/.cards/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.webp');">
                 <span class="tile-label">photos &middot; july 2026 &nbsp;→</span>
             </a>
 
@@ -295,38 +333,38 @@
                 <div class="recent-cards">
                     <!-- AUTOGEN-START recent-blog -->
                     <a class="recent-card" href="blog/2026-07-22-field-notes-iv-july-7-22.html" data-date="2026-07-22" data-preview-source="images/monthly/2026/07-jul/IDG_20260719_111222_IMG_5955.jpg">
-                        <div class="card-thumb" style="background-image: url('images/.thumbs/monthly/2026/07-jul/IDG_20260719_111222_IMG_5955.jpg');"></div>
+                        <div class="card-thumb" style="background-image: url('images/.cards/monthly/2026/07-jul/IDG_20260719_111222_IMG_5955.webp');"></div>
                         <div class="card-section">blog</div>
                         <div class="card-text">field notes iv: july 7-22</div>
                         <div class="card-when">7/22</div>
                     </a>
                     <!-- AUTOGEN-END recent-blog -->
                     <a class="recent-card" href="plants/progress/2026-07.html" data-date="2026-07-01">
-                        <div class="card-thumb" data-preview-source="images/plants/jul/IMG_4250.JPG" style="background-image: url('images/.thumbs/plants/jul/IMG_4250.jpg');"></div>
+                        <div class="card-thumb" data-preview-source="images/plants/jul/IMG_4250.JPG" style="background-image: url('images/.cards/plants/jul/IMG_4250.webp');"></div>
                         <div class="card-section">plants</div>
                         <div class="card-text">jul 2026 update</div>
                         <div class="card-when">7/01</div>
                     </a>
                     <a class="recent-card" href="galleries/cameras/vivitar-big-sur.html" data-date="2026-06-09">
-                        <div class="card-thumb" data-preview-source="images/cameras/vivitar/roll-4/R1-08311-017A.JPG" style="background-image: url('images/.thumbs/cameras/vivitar/roll-4/R1-08311-017A.jpg');"></div>
+                        <div class="card-thumb" data-preview-source="images/cameras/vivitar/roll-4/R1-08311-017A.JPG" style="background-image: url('images/.cards/cameras/vivitar/roll-4/R1-08311-017A.webp');"></div>
                         <div class="card-section">photos</div>
                         <div class="card-text">vivitar &middot; big sur</div>
                         <div class="card-when">6/09</div>
                     </a>
                     <a class="recent-card" href="galleries/cameras/vivitar-il-ne-mo-ut.html" data-date="2026-06-09">
-                        <div class="card-thumb" data-preview-source="images/cameras/vivitar/roll-3/R1-08314-0034.JPG" style="background-image: url('images/.thumbs/cameras/vivitar/roll-3/R1-08314-0034.jpg');"></div>
+                        <div class="card-thumb" data-preview-source="images/cameras/vivitar/roll-3/R1-08314-0034.JPG" style="background-image: url('images/.cards/cameras/vivitar/roll-3/R1-08314-0034.webp');"></div>
                         <div class="card-section">photos</div>
                         <div class="card-text">vivitar &middot; chi/omaha</div>
                         <div class="card-when">6/09</div>
                     </a>
                     <a class="recent-card" href="galleries/cameras/canon-elan-ii-unknown.html" data-date="2026-06-09">
-                        <div class="card-thumb" data-preview-source="images/cameras/elan-ii/roll-2/R1-08312-0020.JPG" style="background-image: url('images/.thumbs/cameras/elan-ii/roll-2/R1-08312-0020.jpg');"></div>
+                        <div class="card-thumb" data-preview-source="images/cameras/elan-ii/roll-2/R1-08312-0020.JPG" style="background-image: url('images/.cards/cameras/elan-ii/roll-2/R1-08312-0020.webp');"></div>
                         <div class="card-section">photos</div>
                         <div class="card-text">elan ii &middot; mo/il</div>
                         <div class="card-when">6/09</div>
                     </a>
                     <a class="recent-card" href="galleries/cameras/canon-elan-ii-2025-2026.html" data-date="2026-06-09">
-                        <div class="card-thumb" data-preview-source="images/cameras/elan-ii/roll-1/R1-08313-0001.JPG" style="background-image: url('images/.thumbs/cameras/elan-ii/roll-1/R1-08313-0001.jpg');"></div>
+                        <div class="card-thumb" data-preview-source="images/cameras/elan-ii/roll-1/R1-08313-0001.JPG" style="background-image: url('images/.cards/cameras/elan-ii/roll-1/R1-08313-0001.webp');"></div>
                         <div class="card-section">photos</div>
                         <div class="card-text">elan ii &middot; 19xx-20xx</div>
                         <div class="card-when">6/09</div>
@@ -375,7 +413,9 @@
             pageShell.inert = true;
             pageShell.setAttribute('inert', '');
             pageShell.setAttribute('aria-hidden', 'true');
-            requestAnimationFrame(() => bootButton.focus());
+            // preventScroll: on a short viewport the window's content scrolls,
+            // and focusing the button would yank the heading out of view.
+            requestAnimationFrame(() => bootButton.focus({ preventScroll: true }));
 
             function bootNuBlog() {
                 clearTimeout(autoBootTimeout);
@@ -399,7 +439,7 @@
                 if (event.key === 'Escape') bootNuBlog();
                 if (event.key === 'Tab') {
                     event.preventDefault();
-                    bootButton.focus();
+                    bootButton.focus({ preventScroll: true });
                 }
             });
 

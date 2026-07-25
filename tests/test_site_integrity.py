@@ -431,6 +431,35 @@ class SiteIntegrityTests(unittest.TestCase):
                     offenders.append(f"{page.relative_to(ROOT)}: {tag[:70]}")
         self.assertEqual(offenders, [])
 
+    def test_card_backgrounds_use_the_card_tier_not_the_canvas_tier(self):
+        """Cards render from ~230px up to the full 958px column, so they read
+        from images/.cards/ (800px WebP). images/.thumbs/ is 400px and exists for
+        the canvas page; there is no hi-res swap behind a card, so a .thumbs
+        background is simply a blurry card."""
+        offenders = []
+        for page in sorted(ROOT.glob("**/*.html")) + sorted(ROOT.glob("js/*.js")):
+            if any(p.startswith(".") or p in {"archive", "node_modules"}
+                   for p in page.relative_to(ROOT).parts[:-1]):
+                continue
+            for line in page.read_text(errors="replace").splitlines():
+                if "images/.thumbs/" in line and "background-image" in line:
+                    offenders.append(f"{page.relative_to(ROOT)}: {line.strip()[:80]}")
+        self.assertEqual(offenders, [])
+
+    def test_every_card_background_has_a_generated_file(self):
+        """The markup declares which images need the card tier and the build
+        script renders them. A ref with no file behind it is an invisible card."""
+        ref = re.compile(r"images/\.cards/([^'\"()\n]+\.webp)")
+        missing = []
+        for page in sorted(ROOT.glob("**/*.html")) + sorted(ROOT.glob("js/*.js")):
+            if any(p.startswith(".") or p in {"archive", "node_modules"}
+                   for p in page.relative_to(ROOT).parts[:-1]):
+                continue
+            for rel in ref.findall(page.read_text(errors="replace")):
+                if not (ROOT / "images" / ".cards" / rel).is_file():
+                    missing.append(f"{page.relative_to(ROOT)}: {rel}")
+        self.assertEqual(missing, [])
+
 
 if __name__ == "__main__":
     unittest.main()

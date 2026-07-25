@@ -54,7 +54,6 @@ window.__SITEMAP__ = {
             "macbook-pro-2021.html",
             "macbook-pro-2021b.html",
             "macbook-pro-2026.html",
-            "media-servers.html",
             "misc-plus.html",
             "mycelium.html",
             "neocities-tcwishes.html",

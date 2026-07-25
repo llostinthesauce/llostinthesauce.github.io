@@ -29,6 +29,21 @@ IMAGE_SIZE_WARNING_EXCLUDE = {Path('images/water.gif')}
 THUMB_DIR_NAME = '.thumbs'  # under images/, mirrors layout; consumed by the canvas page
 THUMB_LONG_EDGE = 400
 THUMB_QUALITY = 70
+# Card backgrounds are a second, larger tier. The canvas shows a thumb at ~150px
+# so 400/q70 is plenty there, but a .big-link-box renders at ~230px and the
+# blog.html strip spans the full 958px column — at 400px those were visibly soft
+# on any retina display, and there is no hi-res swap behind them.
+CARD_DIR_NAME = '.cards'
+CARD_LONG_EDGE = 800
+CARD_QUALITY = 82
+# WebP, not JPEG: measured across all card images at the size they actually
+# render, WebP q82 is both ~26% smaller AND higher fidelity than JPEG q82.
+# It is strictly the better trade, so the tier does not use JPEG at all.
+CARD_FORMAT = 'WEBP'
+CARD_EXT = '.webp'
+# Filenames may contain spaces ("plants/mar/canon - 1.webp"), so stop at the
+# quote or paren that closes the url()/attribute rather than at whitespace.
+CARD_REF_RE = re.compile(r'images/\.cards/([^\'"()\n]+)\.webp')
 EXIF_TAGS = {value: key for key, value in ExifTags.TAGS.items()}
 CAPTURE_DATE_TAGS = ('DateTimeOriginal', 'DateTimeDigitized', 'DateTime')
 IDG_NAME_RE = re.compile(r'^IDG_(\d{8})_(\d{6})(?:_\d+)?', re.IGNORECASE)
@@ -219,31 +234,107 @@ def build_tree(path: Path):
     return result
 
 
-def ensure_thumb(src_path: Path):
-    """Generate a small jpeg thumbnail mirror of src_path under images/.thumbs/.
+def render_derivative(src_path: Path, out_dir_name: str, long_edge: int, quality: int,
+                      fmt: str = 'JPEG', ext: str = '.jpg'):
+    """Resize src_path into images/<out_dir_name>/, mirroring its path.
 
-    Returns the rel path of the thumb, or None to signal 'use the source'.
-    Skips regeneration when the thumb is newer than the source.
+    Returns the repo-rel path of the derivative, or None to signal 'use the
+    source'. Skips regeneration when the derivative is newer than the source.
     """
     if src_path.suffix.lower() == '.svg':
-        return None  # PIL can't rasterize SVG; let the canvas use the original
+        return None  # PIL can't rasterize SVG; let the caller use the original
     rel = src_path.relative_to(ROOT / 'images')
-    thumb = ROOT / 'images' / THUMB_DIR_NAME / rel.with_suffix('.jpg')
-    if thumb.is_file() and thumb.stat().st_mtime >= src_path.stat().st_mtime:
-        return str(thumb.relative_to(ROOT)).replace('\\', '/')
-    thumb.parent.mkdir(parents=True, exist_ok=True)
+    out = ROOT / 'images' / out_dir_name / rel.with_suffix(ext)
+    if out.is_file() and out.stat().st_mtime >= src_path.stat().st_mtime:
+        return str(out.relative_to(ROOT)).replace('\\', '/')
+    out.parent.mkdir(parents=True, exist_ok=True)
     try:
         with Image.open(src_path) as im:
             im = im.convert('RGB')
             w, h = im.size
-            if max(w, h) > THUMB_LONG_EDGE:
-                ratio = THUMB_LONG_EDGE / max(w, h)
+            if max(w, h) > long_edge:
+                ratio = long_edge / max(w, h)
                 im = im.resize((max(1, int(w * ratio)), max(1, int(h * ratio))), Image.LANCZOS)
-            im.save(thumb, 'JPEG', quality=THUMB_QUALITY, optimize=True)
-        return str(thumb.relative_to(ROOT)).replace('\\', '/')
+            opts = {'method': 6} if fmt == 'WEBP' else {'optimize': True}
+            im.save(out, fmt, quality=quality, **opts)
+        return str(out.relative_to(ROOT)).replace('\\', '/')
     except Exception as e:
-        print(f"  thumb failed for {src_path.name}: {e}")
+        print(f"  {out_dir_name} render failed for {src_path.name}: {e}")
         return None
+
+
+def ensure_thumb(src_path: Path):
+    """Canvas-sized thumbnail mirror of src_path under images/.thumbs/."""
+    return render_derivative(src_path, THUMB_DIR_NAME, THUMB_LONG_EDGE, THUMB_QUALITY)
+
+
+def ensure_card(src_path: Path):
+    """Card-sized derivative of src_path under images/.cards/."""
+    return render_derivative(src_path, CARD_DIR_NAME, CARD_LONG_EDGE, CARD_QUALITY,
+                             CARD_FORMAT, CARD_EXT)
+
+
+def find_image_source(stem_rel: str):
+    """Resolve 'builds/navidrome' to the real images/builds/navidrome.<ext>."""
+    for ext in sorted(IMAGE_EXTS):
+        for candidate in (ext, ext.upper()):
+            path = ROOT / 'images' / (stem_rel + candidate)
+            if path.is_file():
+                return path
+    return None
+
+
+def build_card_thumbs():
+    """Build images/.cards/ from the paths the markup actually asks for.
+
+    The markup is the source of truth here: whatever `images/.cards/<path>.jpg`
+    a page references, this renders from the matching original under images/.
+    That keeps the big tier scoped to the few dozen images used as card
+    backgrounds instead of mirroring all ~1500 images at 800px.
+    """
+    wanted = {}
+    for path in sorted(ROOT.rglob('*')):
+        if path.suffix.lower() not in {'.html', '.js'} or not path.is_file():
+            continue
+        if any(part in EXCLUDE_DIRS or part.startswith('.') for part in path.relative_to(ROOT).parts[:-1]):
+            continue
+        for stem in CARD_REF_RE.findall(path.read_text()):
+            wanted.setdefault(stem, []).append(str(path.relative_to(ROOT)))
+
+    missing = []
+    built = 0
+    for stem, referrers in sorted(wanted.items()):
+        src = find_image_source(stem)
+        if src is None:
+            missing.append(f'{stem} (referenced by {referrers[0]})')
+            continue
+        out = ROOT / 'images' / CARD_DIR_NAME / (stem + CARD_EXT)
+        existed = out.is_file() and out.stat().st_mtime >= src.stat().st_mtime
+        if ensure_card(src) and not existed:
+            built += 1
+
+    if missing:
+        raise RuntimeError(
+            f'{len(missing)} card background(s) have no source image: ' + ', '.join(missing)
+        )
+
+    # Compare the full filename, not the stem: a tier that changes format leaves
+    # same-stem files from the old one behind, and those must go too.
+    expected = {stem + CARD_EXT for stem in wanted}
+    pruned = 0
+    cards_dir = ROOT / 'images' / CARD_DIR_NAME
+    if cards_dir.is_dir():
+        for card in sorted(cards_dir.rglob('*')):
+            if card.is_file() and str(card.relative_to(cards_dir)) not in expected:
+                card.unlink()
+                pruned += 1
+
+    parts = [f'{len(wanted)} card images']
+    if built:
+        parts.append(f'{built} rebuilt')
+    if pruned:
+        parts.append(f'{pruned} pruned')
+    print(f'Card thumbs at {CARD_LONG_EDGE}px/q{CARD_QUALITY} (' + ', '.join(parts) + ')')
 
 
 def prune_stale_thumbs():
@@ -286,8 +377,8 @@ def build_all_images_data():
     for img in sorted(images_dir.rglob('*')):
         if not (img.is_file() and img.suffix.lower() in IMAGE_EXTS):
             continue
-        if THUMB_DIR_NAME in img.parts:
-            continue  # never include the thumbs themselves in the data array
+        if THUMB_DIR_NAME in img.parts or CARD_DIR_NAME in img.parts:
+            continue  # never include generated derivatives in the data array
         rel = str(img.relative_to(ROOT)).replace('\\', '/')
         try:
             with Image.open(img) as im:
@@ -461,7 +552,7 @@ def build_homepage_recent_blog():
         re.IGNORECASE,
     )
     source_path = 'images/badges/reshirii.gif'
-    thumb_path = 'images/.thumbs/badges/reshirii.jpg'
+    thumb_path = f'images/{CARD_DIR_NAME}/badges/reshirii{CARD_EXT}'
     if og_match:
         raw_src = og_match.group(1)
         if raw_src.startswith(('http://', 'https://')):
@@ -470,13 +561,12 @@ def build_homepage_recent_blog():
             image_rel = str((latest.parent / raw_src).resolve().relative_to(ROOT))
         image_path = Path(image_rel)
         if image_path.parts and image_path.parts[0] == 'images':
-            candidate = (
-                ROOT / 'images' / THUMB_DIR_NAME
-                / image_path.relative_to('images').with_suffix('.jpg')
-            )
-            if candidate.is_file():
+            # Render the card here rather than testing for it: a brand new post
+            # brings a brand new og:image, which has never been rendered before.
+            rendered = ensure_card(ROOT / image_path)
+            if rendered:
                 source_path = image_rel
-                thumb_path = str(candidate.relative_to(ROOT)).replace('\\', '/')
+                thumb_path = rendered
 
     card = (
         '                    <!-- AUTOGEN-START recent-blog -->\n'
@@ -837,8 +927,8 @@ def check_image_sizes():
     oversized = []
     for img in images_dir.rglob('*'):
         if img.is_file() and img.suffix.lower() in IMAGE_EXTS:
-            if THUMB_DIR_NAME in img.parts:
-                continue  # generated thumbs aren't worth warning about
+            if THUMB_DIR_NAME in img.parts or CARD_DIR_NAME in img.parts:
+                continue  # generated derivatives aren't worth warning about
             if img.relative_to(ROOT) in IMAGE_SIZE_WARNING_EXCLUDE:
                 continue  # intentionally protected animation; see AGENTS.md
             size = img.stat().st_size
@@ -868,6 +958,7 @@ def main():
     build_blog_list()
     build_homepage_recent_blog()
     sort_homepage_recent_cards()  # must follow: the blog card supplies its date
+    build_card_thumbs()  # must follow: the recent-blog card can add a new ref
     build_monthly_galleries()
     enrich_image_metadata()
     check_image_sizes()

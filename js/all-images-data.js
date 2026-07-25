@@ -108,6 +108,7 @@ window.allImagesData = [
     ["images/builds/navidrome.jpg", 1267, 1168, "images/.thumbs/builds/navidrome.jpg"],
     ["images/builds/oldboxes2018.jpeg", 1800, 2400, "images/.thumbs/builds/oldboxes2018.jpg"],
     ["images/builds/raspi3.jpg", 1600, 1200, "images/.thumbs/builds/raspi3.jpg"],
+    ["images/builds/splash-screen.webp", 1294, 982, "images/.thumbs/builds/splash-screen.jpg"],
     ["images/builds/this-site.jpg", 1532, 1514, "images/.thumbs/builds/this-site.jpg"],
     ["images/builds/tvwishes.jpg", 2330, 1774, "images/.thumbs/builds/tvwishes.jpg"],
     ["images/cameras/canon/2022/IMG_2820.jpeg", 1280, 960, "images/.thumbs/cameras/canon/2022/IMG_2820.jpg"],
