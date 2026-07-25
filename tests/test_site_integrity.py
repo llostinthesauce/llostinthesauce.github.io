@@ -387,6 +387,38 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertEqual(offenders, [])
         self.assertIn(".spec-box {", (ROOT / "styles/style.css").read_text())
 
+    def test_homepage_recent_cards_are_newest_first(self):
+        """The strip is called 'recent'; a card out of date order makes it lie.
+        Every card needs data-date or build-sitemap.py cannot sort it."""
+        text = (ROOT / "index.html").read_text()
+        block = re.search(
+            r'<div class="recent-cards">(.*?)\n\s*</div>\s*</div>', text, re.DOTALL
+        )
+        self.assertIsNotNone(block, "recent-cards container not found")
+        cards = re.findall(r'<a class="recent-card"[^>]*>', block.group(1))
+        self.assertGreater(len(cards), 1)
+        undated = [c for c in cards if "data-date=" not in c]
+        self.assertEqual(undated, [])
+        dates = [re.search(r'data-date="([\d-]+)"', c).group(1) for c in cards]
+        self.assertEqual(dates, sorted(dates, reverse=True))
+
+    def test_cards_are_one_size_outside_the_blog_strip(self):
+        """One card size sitewide. The 3:1 rolling strip on blog.html is the
+        single sanctioned exception; a second override means drift restarting."""
+        css = (ROOT / "styles/style.css").read_text()
+        self.assertIn("aspect-ratio: 3 / 2;", css)
+        self.assertIn("box-sizing: border-box;", css)
+
+        overrides = []
+        for page in actual_pages():
+            text = page.read_text(errors="replace")
+            for block in re.findall(r"<style>(.*?)</style>", text, re.DOTALL):
+                if "aspect-ratio" in block and (
+                    "big-link-box" in block or "gallery-entry-preview" in block
+                ):
+                    overrides.append(str(page.relative_to(ROOT)))
+        self.assertEqual(overrides, ["blog.html"])
+
     def test_post_images_use_only_sanctioned_scales(self):
         """Post images come in three widths and no others: the measure
         (default), .wide, and .tall. An inline max-width reintroduces the

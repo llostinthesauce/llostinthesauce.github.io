@@ -480,7 +480,9 @@ def build_homepage_recent_blog():
 
     card = (
         '                    <!-- AUTOGEN-START recent-blog -->\n'
-        f'                    <a class="recent-card" href="blog/{latest.name}" data-preview-source="{escape(source_path, quote=True)}">\n'
+        f'                    <a class="recent-card" href="blog/{latest.name}"'
+        f' data-date="{date.strftime("%Y-%m-%d")}"'
+        f' data-preview-source="{escape(source_path, quote=True)}">\n'
         f'                        <div class="card-thumb" style="background-image: url(\'{thumb_path}\');"></div>\n'
         '                        <div class="card-section">blog</div>\n'
         f'                        <div class="card-text">{escape(title)}</div>\n'
@@ -499,6 +501,66 @@ def build_homepage_recent_blog():
         return
     index_path.write_text(pattern.sub(card, original))
     print(f"Updated {index_path} recent blog card ({latest.name})")
+
+
+def sort_homepage_recent_cards():
+    """Order the homepage 'recent' strip newest-first.
+
+    The cards are hand-authored (except the blog one) and were drifting out of
+    order as sections got updated at different times. Sorting here by
+    data-date means adding a card anywhere in the list self-corrects on the
+    next build instead of silently sitting in the wrong place.
+    """
+    index_path = ROOT / 'index.html'
+    if not index_path.is_file():
+        return
+    text = index_path.read_text()
+
+    open_tag = '<div class="recent-cards">'
+    start = text.find(open_tag)
+    if start == -1:
+        print("recent-cards container not found, skipping sort")
+        return
+    body_start = start + len(open_tag)
+
+    # walk to the matching close so we never depend on fixed indentation
+    depth, i = 1, body_start
+    for m in re.finditer(r'<(/?)div\b', text[body_start:]):
+        depth += -1 if m.group(1) else 1
+        if depth == 0:
+            i = body_start + m.start()
+            break
+    else:
+        print("unbalanced recent-cards container, skipping sort")
+        return
+    body = text[body_start:i]
+
+    # a unit is one card, plus the AUTOGEN comment pair when it has one
+    unit_re = re.compile(
+        r'[ \t]*(?:<!-- AUTOGEN-START recent-blog -->\s*)?'
+        r'<a class="recent-card".*?</a>'
+        r'(?:\s*<!-- AUTOGEN-END recent-blog -->)?',
+        re.DOTALL,
+    )
+    units = [m.group(0).strip('\n') for m in unit_re.finditer(body)]
+    if len(units) < 2:
+        return
+
+    undated = [u for u in units if 'data-date="' not in u]
+    if undated:
+        print(f"WARNING: {len(undated)} recent card(s) missing data-date, leaving order alone")
+        return
+
+    def key(unit):
+        return re.search(r'data-date="([\d-]+)"', unit).group(1)
+
+    ordered = sorted(units, key=key, reverse=True)
+    if ordered == units:
+        return
+
+    rebuilt = '\n' + '\n'.join(ordered) + '\n                '
+    index_path.write_text(text[:body_start] + rebuilt + text[i:])
+    print(f"Sorted {index_path} recent cards newest-first ({len(ordered)} cards)")
 
 
 def build_monthly_galleries():
@@ -805,6 +867,7 @@ def main():
     build_blog_nav()
     build_blog_list()
     build_homepage_recent_blog()
+    sort_homepage_recent_cards()  # must follow: the blog card supplies its date
     build_monthly_galleries()
     enrich_image_metadata()
     check_image_sizes()

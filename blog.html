@@ -8,16 +8,20 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        /* cards density, capped width: auto-fit drops the empty track a fixed
-           3-column rule used to leave, and the max keeps these reading as a
-           compact nav strip rather than stretching into heroes */
+        /* The one deliberate exception to the site-wide 3:2 card. There are
+           only two rolling pages, so instead of leaving most of the row empty
+           they span the full width at half the height (3:1). Everything else
+           on the site uses the standard card — see AGENTS.md. */
         .blog-rolling-cards {
             --grid-min: 220px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 300px));
-            justify-content: start;
+            grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 1fr));
             gap: 14px;
             margin: 0 0 28px;
+        }
+
+        .blog-rolling-cards .gallery-entry-preview {
+            aspect-ratio: 3 / 1;
         }
     </style>
 

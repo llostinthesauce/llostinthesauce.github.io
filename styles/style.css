@@ -441,6 +441,9 @@ footer {
 .gallery-entry-preview {
     position: relative;
     width: 100%;
+    /* border-box so the 2px .is-new ring is drawn inside the cell: a
+       highlighted card must be exactly the same size as a plain one */
+    box-sizing: border-box;
     background-color: #111;
     border: 1px solid #444;
     font-family: monospace;
@@ -656,9 +659,11 @@ hr {
     gap: 12px;
 }
 
-/* the top group is image cards, not chips */
+/* the top group is image cards, not chips — same min AND same gap as
+   .camera-preview-row so a card is the same size on every page */
 .gallery-group:first-child .gallery-grid {
     --grid-min: 220px;
+    gap: 14px;
 }
 
 /* ---- Emphasis: two states, one visual language ----
@@ -1126,6 +1131,35 @@ a.t-brand:hover .brand-tag { color: #66FFCC; }
         white-space: normal;
         transform: none;
     }
+}
+
+/* ---- Retro badge wall (about.html) ----
+   width:auto is the load-bearing part. With only max-height set, the <img>
+   box keeps its declared width and object-fit letterboxes inside it, so a
+   500x396 badge occupied a 500x80 box holding a 101x80 image — rows full of
+   dead space. Letting width follow the ratio makes each box its real size. */
+.badge-wall {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px 12px;
+    margin: 16px auto 0;
+    max-width: var(--measure);
+}
+
+.badge-wall img {
+    max-height: 72px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    filter: grayscale(20%);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.badge-wall img:hover {
+    filter: grayscale(0%);
+    transform: scale(1.06);
 }
 
 /* Spec table on builds pages. Was inlined on 10 pages in 3 slightly
