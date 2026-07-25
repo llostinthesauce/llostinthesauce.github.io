@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <style>
-        /* one full-width video per row so player titles/controls stay usable */
+        /* players density: one per row so titles/controls stay usable */
         .gallery-grid {
-            grid-template-columns: 1fr;
+            --grid-min: 100%;
         }
         .youtube-embed {
             width: 100%;
@@ -71,7 +71,7 @@
         <a href="../galleries.html" class="back-link">&larr; back to galleries</a>
 
         <h1>videos</h1>
-        <p>youtube uploads from glasgow2025</p>
+        <p class="note">youtube uploads from glasgow2025</p>
         <div class="gallery-grid">
             <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=VMn-XNob73M" data-yt-id="VMn-XNob73M" title="How Much a 21-Day Solo Car Camping Road Trip to the East Coast ACTUALLY Cost: $2,511 (Full Movie)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/VMn-XNob73M/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="lite-yt-play" aria-hidden="true"></span></a></div>
             <div class="gallery-grid-item"><a class="lite-yt" href="https://www.youtube.com/watch?v=vlZ704q2IME" data-yt-id="vlZ704q2IME" title="Outer Banks, Ocracoke, &amp; Asheville (Ep. 4 SOLO MIDW(EAST) TRAVEL)" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/vlZ704q2IME/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="lite-yt-play" aria-hidden="true"></span></a></div>

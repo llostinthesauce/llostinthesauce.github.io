@@ -1,3 +1,15 @@
+/* ---- Design tokens ----
+   --measure   the reading column. Prose, post images, spec boxes and featured
+               entries all share it, so a post has ONE left edge.
+               Deliberately a rem length, not ch: `ch` resolves against each
+               element's own font, so a monospace box would silently compute a
+               different column than the prose beside it.
+   --grid-min  grid density, set per content type (see "Grid density" below) */
+:root {
+    --measure: 52rem;
+    --grid-min: 300px;
+}
+
 /* Prevent horizontal scrolling */
 html,
 body {
@@ -114,14 +126,10 @@ button:focus-visible {
     font-size: 1.1em;
 }
 
-.blog-post-content > p,
-.blog-post-content > h2,
-.blog-post-content > h3,
-.blog-post-content > h4,
-.blog-post-content > ul,
-.blog-post-content > ol,
-.blog-post-content > blockquote {
-    max-width: 75ch;
+/* Descendant, not child: text inside <details> must share the same measure,
+   otherwise collapsible entries read wider than ordinary paragraphs. */
+.blog-post-content :is(p, h2, h3, h4, ul, ol, blockquote) {
+    max-width: var(--measure);
     margin-left: auto;
     margin-right: auto;
 }
@@ -133,17 +141,40 @@ button:focus-visible {
     font-size: 1em;
 }
 
+/* ---- Post images: three scales, no others ----
+   default  aligns with the text measure, capped so a hero never eats a screen
+   .wide    spans the full content column (panoramas, wide screenshots)
+   .tall    opts out of the height cap (vertical infographics meant to scroll) */
 .blog-post-content img {
-    max-width: 600px;
-    width: 100%;
+    max-width: min(100%, var(--measure));
+    max-height: 70vh;
+    width: auto;
     height: auto;
     display: block;
-    margin: 20px auto;
+    margin: 24px auto;
     border: 1px solid #444;
 }
 
-/* full-bleed post images: span the whole content column */
-.blog-post-content img.styled-image {
+.blog-post-content img.wide {
+    max-width: 100%;
+}
+
+.blog-post-content img.tall {
+    max-height: none;
+}
+
+/* Builds pages hang their hero outside .blog-post-content; same geometry. */
+.post-hero {
+    max-width: min(100%, var(--measure));
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 24px auto;
+    border: 1px solid #444;
+}
+
+.post-hero.wide {
     max-width: 100%;
 }
 
@@ -167,6 +198,87 @@ button:focus-visible {
     border-bottom: 1px solid #5CCCCC;
     padding-bottom: 10px;
     margin-bottom: 20px;
+}
+
+/* One muted caption for the whole site. Replaces .blog-section-label,
+   .gallery-group-note, .expand-hint and the assorted inline-styled asides. */
+.note {
+    color: #99CCCC;
+    font-size: 0.85em;
+    font-style: italic;
+    margin: 4px 0 14px;
+}
+
+/* ---- Collapsible post entries (field notes and anything like them) ----
+   Lives here, not per-page, so every post in the format gets it for free. */
+.blog-post-content details {
+    max-width: var(--measure);
+    margin: 12px auto;
+}
+
+.blog-post-content summary {
+    cursor: pointer;
+    list-style: none;
+    color: #9966CC;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 12px 0 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.blog-post-content summary::-webkit-details-marker {
+    display: none;
+}
+
+.blog-post-content summary::before {
+    content: '▸';
+    font-size: 0.7em;
+    color: #555;
+    margin-right: 10px;
+    transition: color 0.2s ease;
+    display: inline-block;
+}
+
+.blog-post-content details[open] > summary::before {
+    content: '▾';
+    color: #9966CC;
+}
+
+.blog-post-content summary:hover {
+    color: #CC99FF;
+    border-bottom: 1px solid #333;
+}
+
+.blog-post-content summary:hover::before {
+    color: #CC99FF;
+}
+
+/* Featured entry: left rule, not a box. A full outline here sits a few pixels
+   from the .content frame and reads as a second page border. */
+.blog-post-content details.featured {
+    border-left: 3px solid #33CCAA;
+    background: #0d0d0d;
+    padding: 6px 16px;
+    margin: 20px auto;
+}
+
+.blog-post-content details.featured > summary {
+    color: #66FFCC;
+}
+
+.blog-post-content details.featured > summary:hover {
+    color: #99FFDD;
+}
+
+.blog-post-content details.featured > summary::before {
+    color: #33CCAA;
+}
+
+.blog-post-content details.featured[open] > summary::before {
+    color: #66FFCC;
 }
 
 /* Headings */
@@ -218,10 +330,19 @@ a:hover {
     margin: 20px auto;
 }
 
-/* Gallery Grid - Responsive layout for mixed orientation photos */
+/* ---- Grid density ----
+   Every grid on the site is the same component at one of four densities,
+   chosen by what the cells CONTAIN, not by which page they live on:
+
+     --grid-min: 300px   photos   the image is the content
+     --grid-min: 220px   cards    the image labels a link
+     --grid-min: 140px   chips    text only
+     --grid-min: 100%    players  needs full width (video)
+
+   Set --grid-min on the grid (or an ancestor); never hand-write columns. */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr));
     align-items: start;
     gap: 16px;
     margin: 20px 0;
@@ -235,8 +356,11 @@ a:hover {
     justify-content: flex-start;
 }
 
+/* explicit: a grid nested in a post must not inherit the post-image caps */
 .gallery-grid-item img {
     width: 100%;
+    max-width: 100%;
+    max-height: none;
     height: auto;
     display: block;
     border: none;
@@ -252,9 +376,10 @@ a:hover {
     display: none;
 }
 
+/* Photo grids go single-column on phones; chip/card grids keep their own
+   minimums (a 140px chip has no reason to eat a whole row). */
 @media (max-width: 600px) {
     .gallery-grid {
-        grid-template-columns: 1fr;
         gap: 12px;
     }
 }
@@ -305,8 +430,9 @@ footer {
    .big-link-box (hand-written pages) and .gallery-entry-preview
    (gallery.js) are the same component; keep these rules merged. */
 .camera-preview-row {
+    --grid-min: 220px; /* cards */
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr));
     gap: 14px;
     margin: 24px 0 40px;
 }
@@ -359,11 +485,6 @@ footer {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
-@media (max-width: 550px) {
-    .camera-preview-row {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* Horizontal rule */
 hr {
@@ -463,12 +584,6 @@ hr {
     margin: 0 0 6px;
 }
 
-.gallery-group-note {
-    margin: 0 0 12px;
-    color: #99CCCC;
-    font-size: 0.9em;
-}
-
 .gallery-entry {
     background-color: #111;
     border: 1px solid #444;
@@ -523,10 +638,10 @@ hr {
 }
 
 .gallery-entry-children {
-    --gallery-child-min-width: 140px;
+    --grid-min: 140px; /* chips */
     display: grid;
     gap: 12px;
-    grid-template-columns: repeat(auto-fit, minmax(var(--gallery-child-min-width), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 1fr));
     margin-top: 12px;
 }
 
@@ -534,73 +649,84 @@ hr {
     display: none;
 }
 
+/* month lists are text chips. The percentage floor keeps them ~6-up on
+   desktop and still 3-up on a phone, without a breakpoint. */
 .gallery-groups .gallery-grid {
-    --gallery-min-width: 140px;
-    grid-template-columns: repeat(auto-fill, minmax(var(--gallery-min-width), 1fr));
+    --grid-min: min(140px, 30%);
     gap: 12px;
 }
 
+/* the top group is image cards, not chips */
 .gallery-group:first-child .gallery-grid {
-    --gallery-min-width: 200px;
+    --grid-min: 220px;
 }
 
-.gallery-group:first-child .gallery-grid > .gallery-entry:first-child {
-    border: 2px solid #9966CC !important;
-    box-shadow: 0 0 10px rgba(153, 102, 204, 0.4);
-}
+/* ---- Emphasis: two states, one visual language ----
+   .is-new       teal + '*new!'  — recent. Applied by js/whats-new.js to the
+                 newest [data-added] inside a [data-new-scope], and only while
+                 it is still inside the freshness window, so badges expire on
+                 their own instead of accumulating.
+   .is-featured  purple, no badge — pinned / evergreen. Set by hand or by data.
 
-.gallery-group:first-child .gallery-grid > .gallery-entry:first-child:hover {
-    border-color: #CC99FF !important;
-    box-shadow: 0 0 15px rgba(204, 153, 255, 0.6);
-}
-
-.gallery-group:first-child .gallery-grid > .gallery-entry:first-child .gallery-entry-label {
-    color: #CC99FF;
-    font-weight: bold;
-    font-size: 1.05em;
-}
-
-.gallery-entry.camera-highlight,
-.big-link-box.camera-highlight {
+   The glow box is for CARDS IN A GRID only. Inside a text column it collides
+   with the .content frame (2px #5CCCCC) and reads as a nested page border —
+   emphasis there uses the left-rule idiom (see .spec-box / .github-link). */
+.gallery-entry.is-new,
+.big-link-box.is-new {
     border: 2px solid #33CCAA !important;
     box-shadow: 0 0 10px rgba(51, 204, 170, 0.4);
     position: relative;
 }
 
-.gallery-entry.camera-highlight:hover,
-.big-link-box.camera-highlight:hover {
+.gallery-entry.is-new:hover,
+.big-link-box.is-new:hover {
     border-color: #66FFCC !important;
     box-shadow: 0 0 15px rgba(102, 255, 204, 0.6);
 }
 
-.gallery-entry.camera-highlight .gallery-entry-label,
-.big-link-box.camera-highlight span {
+.gallery-entry.is-new .gallery-entry-label,
+.big-link-box.is-new span {
     color: #66FFCC;
     font-weight: bold;
 }
 
-.gallery-entry.camera-highlight .gallery-entry-label {
-    font-size: 1.15em;
+.gallery-entry.is-featured,
+.big-link-box.is-featured {
+    border: 2px solid #9966CC !important;
+    box-shadow: 0 0 10px rgba(153, 102, 204, 0.4);
+    position: relative;
 }
 
-.gallery-entry.camera-highlight::after,
-.big-link-box.camera-highlight::after {
+.gallery-entry.is-featured:hover,
+.big-link-box.is-featured:hover {
+    border-color: #CC99FF !important;
+    box-shadow: 0 0 15px rgba(204, 153, 255, 0.6);
+}
+
+.gallery-entry.is-featured .gallery-entry-label,
+.big-link-box.is-featured span {
+    color: #CC99FF;
+    font-weight: bold;
+}
+
+.gallery-entry.is-new::after,
+.big-link-box.is-new::after {
     content: '*new!';
     position: absolute;
     top: 8px;
     right: 10px;
     color: #FF66CC;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: bold;
     text-shadow: 0 0 5px rgba(255, 102, 204, 0.8);
-    background: rgba(17, 17, 17, 0.8);
+    background: rgba(17, 17, 17, 0.85);
     padding: 2px 6px;
     border-radius: 4px;
     pointer-events: none;
     z-index: 5;
 }
 
-.blog-item.camera-highlight {
+.blog-item.is-new {
     position: relative;
     z-index: 1;
     border: 2px solid #33CCAA;
@@ -609,14 +735,14 @@ hr {
     margin: 0 -10px 12px -10px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.blog-item.camera-highlight:hover {
+.blog-item.is-new:hover {
     border-color: #66FFCC;
     box-shadow: 0 0 15px rgba(102, 255, 204, 0.6);
 }
-.blog-item.camera-highlight a {
+.blog-item.is-new a {
     font-weight: bold;
 }
-.blog-item.camera-highlight::after {
+.blog-item.is-new::after {
     content: '*new!';
     position: absolute;
     right: 14px;
@@ -626,13 +752,6 @@ hr {
     font-size: 0.75em;
     font-weight: bold;
     pointer-events: none;
-}
-
-@media (max-width: 500px) {
-    .gallery-groups .gallery-grid,
-    .gallery-entry-children {
-        grid-template-columns: 1fr;
-    }
 }
 
 /* ---- Home Tiles (index.html) ---- */
@@ -1008,6 +1127,25 @@ a.t-brand:hover .brand-tag { color: #66FFCC; }
         transform: none;
     }
 }
+
+/* Spec table on builds pages. Was inlined on 10 pages in 3 slightly
+   different variants; canonical here. */
+.spec-box {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-left: 3px solid #99CCCC;
+    padding: 16px 20px;
+    margin: 20px auto 28px;
+    max-width: var(--measure);
+    box-sizing: border-box; /* panel sits inside the column, not past it */
+    font-family: monospace;
+    font-size: 0.85em;
+}
+
+.spec-box table { width: 100%; border-collapse: collapse; }
+.spec-box td { padding: 3px 0; vertical-align: top; }
+.spec-box td:first-child { color: #99CCCC; width: 140px; }
+.spec-box td:last-child { color: #ccc; }
 
 /* GitHub repo links styling */
 .github-link {

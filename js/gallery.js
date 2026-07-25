@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.nublogGalleryGroups.forEach(group => {
             const groupClone = groupTemplate.content.cloneNode(true);
             const title = groupClone.querySelector('.gallery-group-title');
-            const note = groupClone.querySelector('.gallery-group-note');
+            const note = groupClone.querySelector('.note');
             const grid = groupClone.querySelector('.gallery-grid');
-            
+            grid.setAttribute('data-new-scope', '');
+
             if (group.title) {
                 title.textContent = group.title;
             } else {
@@ -43,15 +44,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     entryDiv.dataset.previewSource = entry.sourceImage;
                 }
 
+                if (entry.featured) {
+                    entryDiv.classList.add('is-featured');
+                }
+                if (entry.added) {
+                    entryDiv.setAttribute('data-added', entry.added);
+                }
                 if (entry.cssClass) {
                     entryDiv.classList.add(entry.cssClass);
                 }
-                
+
                 grid.appendChild(entryClone);
             });
-            
+
             container.appendChild(groupClone);
         });
+
+        // cards exist now — let whats-new.js pick the badge
+        if (typeof window.nublogApplyNewBadges === 'function') {
+            window.nublogApplyNewBadges(container);
+        }
     }
     
     // Load-more functionality for individual gallery pages. Each grid owns

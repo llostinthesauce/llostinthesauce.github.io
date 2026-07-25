@@ -352,6 +352,53 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertNotIn("american-jobs-plan/.", page)
         self.assertIn("presidency.ucsb.edu/documents/fact-sheet-the-american-jobs-plan", page)
 
+    def test_new_badge_is_derived_not_hand_written(self):
+        """A hand-written '*new!' cannot expire, so nothing may set is-new in
+        markup. js/whats-new.js assigns it from data-added, and only inside the
+        freshness window — that is the whole point of the mechanism."""
+        offenders = []
+        for page in actual_pages():
+            text = page.read_text(errors="replace")
+            if re.search(r'class="[^"]*\bis-new\b', text):
+                offenders.append(str(page.relative_to(ROOT)))
+            if "camera-highlight" in text:
+                offenders.append(f"{page.relative_to(ROOT)} (retired class)")
+        self.assertEqual(offenders, [])
+
+    def test_dated_cards_live_inside_a_new_scope(self):
+        """data-added outside a [data-new-scope] container is inert: the badge
+        would silently never appear."""
+        orphans = []
+        for page in actual_pages():
+            text = page.read_text(errors="replace")
+            if "data-added=" in text and "data-new-scope" not in text:
+                orphans.append(str(page.relative_to(ROOT)))
+        self.assertEqual(orphans, [])
+
+    def test_spec_box_is_not_re_inlined(self):
+        """.spec-box is canonical in style.css. It was previously copied into
+        10 builds pages and drifted into 3 variants; re-inlining restarts that."""
+        offenders = []
+        for page in sorted((ROOT / "blog/builds").glob("*.html")):
+            text = page.read_text(errors="replace")
+            for block in re.findall(r"<style>(.*?)</style>", text, re.DOTALL):
+                if ".spec-box" in block:
+                    offenders.append(str(page.relative_to(ROOT)))
+        self.assertEqual(offenders, [])
+        self.assertIn(".spec-box {", (ROOT / "styles/style.css").read_text())
+
+    def test_post_images_use_only_sanctioned_scales(self):
+        """Post images come in three widths and no others: the measure
+        (default), .wide, and .tall. An inline max-width reintroduces the
+        fourth, fifth and sixth."""
+        offenders = []
+        for page in sorted(ROOT.glob("blog/**/*.html")):
+            text = page.read_text(errors="replace")
+            for tag in re.findall(r"<img[^>]*>", text):
+                if re.search(r"style=\"[^\"]*(max-)?width\s*:", tag):
+                    offenders.append(f"{page.relative_to(ROOT)}: {tag[:70]}")
+        self.assertEqual(offenders, [])
+
 
 if __name__ == "__main__":
     unittest.main()

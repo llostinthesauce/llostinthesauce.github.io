@@ -56,76 +56,6 @@
                 font-size: 0.78em;
             }
         }
-        /* collapsible day entries */
-        .blog-post-content details {
-            margin: 12px 0;
-        }
-        .blog-post-content summary {
-            cursor: pointer;
-            list-style: none;
-            color: #9966CC;
-            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-size: 20px;
-            font-weight: bold;
-            margin: 12px 0 8px;
-            padding: 4px 0;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s ease, color 0.2s ease;
-        }
-        .blog-post-content summary::-webkit-details-marker {
-            display: none;
-        }
-        .blog-post-content summary::before {
-            content: '▸';
-            font-size: 0.7em;
-            color: #555;
-            margin-right: 10px;
-            transition: color 0.2s ease;
-            display: inline-block;
-        }
-        .blog-post-content details[open] > summary::before {
-            content: '▾';
-            color: #9966CC;
-        }
-        .blog-post-content summary:hover {
-            color: #CC99FF;
-            border-bottom: 1px solid #333;
-        }
-        .blog-post-content summary:hover::before {
-            color: #CC99FF;
-        }
-        /* featured / standout entries */
-        .blog-post-content details.featured {
-            position: relative;
-            border: 2px solid #33CCAA;
-            box-shadow: 0 0 10px rgba(51, 204, 170, 0.4);
-            padding: 8px 14px;
-            margin: 18px 0;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .blog-post-content details.featured:hover {
-            border-color: #66FFCC;
-            box-shadow: 0 0 15px rgba(102, 255, 204, 0.6);
-        }
-        .blog-post-content details.featured > summary {
-            color: #66FFCC;
-        }
-        .blog-post-content details.featured::after {
-            content: '*prime!';
-            position: absolute;
-            top: 10px;
-            right: 14px;
-            color: #FF66CC;
-            font-size: 0.75em;
-            font-weight: bold;
-            pointer-events: none;
-        }
-        .expand-hint {
-            color: #555;
-            font-size: 0.85em;
-            font-style: italic;
-            margin: 4px 0 8px;
-        }
     </style>
 </head>
 <body>
@@ -138,11 +68,11 @@
         <div class="blog-post-date">Originally published: June 10, 2026</div>
 
         <div class="blog-post-content">
-            <img src="../images/cameras/vivitar/roll-4/R1-08311-032A.JPG" alt="film photo from vivitar roll 4" class="styled-image" loading="lazy" width="2400" height="1621">
+            <img src="../images/cameras/vivitar/roll-4/R1-08311-032A.JPG" alt="film photo from vivitar roll 4" loading="lazy" width="2400" height="1621">
 
             <p>the following field notes were taken from my written thoughts, journal entries, and voice notes over my nineteen-day east coast road trip. i compiled them here, separated by date with some refinements in post.</p>
 
-            <p class="expand-hint">click a date to expand or collapse its entry.</p>
+            <p class="note">click a date to expand or collapse its entry.</p>
 
             <details>
             <summary>may 12: my three-day wall solo travel curse</summary>
@@ -308,8 +238,8 @@
                 <tr><td class="log-date">5/29</td><td>gunned it home, thru ky then illinois, cape girardeau, up the mississippi, skirt stl, stop in como for radio stuff, then home by 4:30</td></tr>
             </table>
 
-            <img src="../images/blog/field-notes-2-1-map.png" alt="american circuit trip dashboard: route summary and ledger" class="styled-image" loading="lazy" width="1193" height="820">
-            <img src="../images/blog/field-notes-2-1-coffee.png" alt="trip spending by category and by trip phase" class="styled-image" loading="lazy" width="1221" height="1721">
+            <img src="../images/blog/field-notes-2-1-map.png" alt="american circuit trip dashboard: route summary and ledger" loading="lazy" width="1193" height="820">
+            <img src="../images/blog/field-notes-2-1-coffee.png" alt="trip spending by category and by trip phase" loading="lazy" width="1221" height="1721">
         </div>
 
         </main>

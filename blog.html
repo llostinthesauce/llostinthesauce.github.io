@@ -8,25 +8,16 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        .blog-section-label {
-            font-family: monospace;
-            font-size: 0.8em;
-            color: #777;
-            margin: 0 0 10px;
-        }
+        /* cards density, capped width: auto-fit drops the empty track a fixed
+           3-column rule used to leave, and the max keeps these reading as a
+           compact nav strip rather than stretching into heroes */
         .blog-rolling-cards {
+            --grid-min: 220px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 300px));
+            justify-content: start;
             gap: 14px;
             margin: 0 0 28px;
-        }
-        .blog-rolling-cards .gallery-entry-preview {
-            aspect-ratio: 3 / 1;
-        }
-        @media (max-width: 500px) {
-            .blog-rolling-cards {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 
@@ -36,7 +27,7 @@
         <div id="site-header"></div>
         <main id="main-content" tabindex="-1">
         <h1>blog</h1>
-        <p class="blog-section-label">rolling pages: updated intermittently</p>
+        <p class="note">rolling pages: updated intermittently</p>
         <div class="blog-rolling-cards">
             <div class="gallery-entry-preview" data-preview-source="images/builds/macbook-pro-2026.jpg" style="background-image: url('images/.thumbs/builds/macbook-pro-2026.jpg')">
                 <a href="blog/builds/index.html" class="gallery-entry-label">builds+</a>
@@ -47,33 +38,34 @@
         </div>
 
 
-  <div id="blog-list">
+  <div id="blog-list" data-new-scope>
     <!-- AUTOGEN-START blog-list — populated by scripts/build-sitemap.py -->
-            <div class="blog-item camera-highlight"><a href="blog/2026-07-22-field-notes-iv-july-7-22.html">field notes iv: july 7-22</a> <span class="blog-item-date">July 22, 2026</span></div>
-            <div class="blog-item"><a href="blog/2026-06-10-field-notes-2-1.html">field notes iii: may 11 - may 29</a> <span class="blog-item-date">June 10, 2026</span></div>
-            <div class="blog-item"><a href="blog/2026-04-23-field-notes-march-30-april-8.html">field notes ii: march 30 - april 8</a> <span class="blog-item-date">April 23, 2026</span></div>
-            <div class="blog-item"><a href="blog/2026-03-29-untitled.html">field notes i: march 18 - march 29</a> <span class="blog-item-date">March 29, 2026</span></div>
-            <div class="blog-item"><a href="blog/2025-12-01-aoip.html">AoIP</a> <span class="blog-item-date">December 1, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-11-09-please-for-the-love-of-god-slow-down-and-run-them-offline.html">Please, For the Love of God, Slow Down and Run Them Offline…</a> <span class="blog-item-date">November 9, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-10-17-some-rambling-thoughts-on-ai.html">some rambling thoughts on ai</a> <span class="blog-item-date">October 17, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-09-30-gap.html">gap</a> <span class="blog-item-date">September 30, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-09-12-what-the-labubu.html">what the Labubu</a> <span class="blog-item-date">September 12, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-09-07-300.html">300%</a> <span class="blog-item-date">September 7, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-09-05-perpetuity.html">perpetuity</a> <span class="blog-item-date">September 5, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-08-28-a-scruple-scruples.html">a scruple scruples</a> <span class="blog-item-date">August 28, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-06-04-regeneration.html">regeneration</a> <span class="blog-item-date">June 4, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-05-15-review-nausea-plus-other.html">review: nausea (plus other..)</a> <span class="blog-item-date">May 15, 2025</span></div>
-            <div class="blog-item"><a href="blog/2025-03-27-nature-being-paradoxical.html">nature being paradoxical</a> <span class="blog-item-date">March 27, 2025</span></div>
-            <div class="blog-item"><a href="blog/2024-12-31-m-c-t.html">m.c.t.</a> <span class="blog-item-date">December 31, 2024</span></div>
-            <div class="blog-item"><a href="blog/2023-08-04-fiction-airplane.html">fiction: airplane</a> <span class="blog-item-date">August 4, 2023</span></div>
-            <div class="blog-item"><a href="blog/2021-09-02-five-essays-from-phil1000.html">five essays from PHIL1000</a> <span class="blog-item-date">September 2, 2021</span></div>
-            <div class="blog-item"><a href="blog/2021-04-28-final-project-for-fintech-2021.html">final project for FinTech 2021</a> <span class="blog-item-date">April 28, 2021</span></div>
-            <div class="blog-item"><a href="blog/2015-06-16-e-mail-to-myself-2015.html">e-mail to myself 2015</a> <span class="blog-item-date">June 16, 2015</span></div>
+            <div class="blog-item" data-added="2026-07-22"><a href="blog/2026-07-22-field-notes-iv-july-7-22.html">field notes iv: july 7-22</a> <span class="blog-item-date">July 22, 2026</span></div>
+            <div class="blog-item" data-added="2026-06-10"><a href="blog/2026-06-10-field-notes-2-1.html">field notes iii: may 11 - may 29</a> <span class="blog-item-date">June 10, 2026</span></div>
+            <div class="blog-item" data-added="2026-04-23"><a href="blog/2026-04-23-field-notes-march-30-april-8.html">field notes ii: march 30 - april 8</a> <span class="blog-item-date">April 23, 2026</span></div>
+            <div class="blog-item" data-added="2026-03-29"><a href="blog/2026-03-29-untitled.html">field notes i: march 18 - march 29</a> <span class="blog-item-date">March 29, 2026</span></div>
+            <div class="blog-item" data-added="2025-12-01"><a href="blog/2025-12-01-aoip.html">AoIP</a> <span class="blog-item-date">December 1, 2025</span></div>
+            <div class="blog-item" data-added="2025-11-09"><a href="blog/2025-11-09-please-for-the-love-of-god-slow-down-and-run-them-offline.html">Please, For the Love of God, Slow Down and Run Them Offline…</a> <span class="blog-item-date">November 9, 2025</span></div>
+            <div class="blog-item" data-added="2025-10-17"><a href="blog/2025-10-17-some-rambling-thoughts-on-ai.html">some rambling thoughts on ai</a> <span class="blog-item-date">October 17, 2025</span></div>
+            <div class="blog-item" data-added="2025-09-30"><a href="blog/2025-09-30-gap.html">gap</a> <span class="blog-item-date">September 30, 2025</span></div>
+            <div class="blog-item" data-added="2025-09-12"><a href="blog/2025-09-12-what-the-labubu.html">what the Labubu</a> <span class="blog-item-date">September 12, 2025</span></div>
+            <div class="blog-item" data-added="2025-09-07"><a href="blog/2025-09-07-300.html">300%</a> <span class="blog-item-date">September 7, 2025</span></div>
+            <div class="blog-item" data-added="2025-09-05"><a href="blog/2025-09-05-perpetuity.html">perpetuity</a> <span class="blog-item-date">September 5, 2025</span></div>
+            <div class="blog-item" data-added="2025-08-28"><a href="blog/2025-08-28-a-scruple-scruples.html">a scruple scruples</a> <span class="blog-item-date">August 28, 2025</span></div>
+            <div class="blog-item" data-added="2025-06-04"><a href="blog/2025-06-04-regeneration.html">regeneration</a> <span class="blog-item-date">June 4, 2025</span></div>
+            <div class="blog-item" data-added="2025-05-15"><a href="blog/2025-05-15-review-nausea-plus-other.html">review: nausea (plus other..)</a> <span class="blog-item-date">May 15, 2025</span></div>
+            <div class="blog-item" data-added="2025-03-27"><a href="blog/2025-03-27-nature-being-paradoxical.html">nature being paradoxical</a> <span class="blog-item-date">March 27, 2025</span></div>
+            <div class="blog-item" data-added="2024-12-31"><a href="blog/2024-12-31-m-c-t.html">m.c.t.</a> <span class="blog-item-date">December 31, 2024</span></div>
+            <div class="blog-item" data-added="2023-08-04"><a href="blog/2023-08-04-fiction-airplane.html">fiction: airplane</a> <span class="blog-item-date">August 4, 2023</span></div>
+            <div class="blog-item" data-added="2021-09-02"><a href="blog/2021-09-02-five-essays-from-phil1000.html">five essays from PHIL1000</a> <span class="blog-item-date">September 2, 2021</span></div>
+            <div class="blog-item" data-added="2021-04-28"><a href="blog/2021-04-28-final-project-for-fintech-2021.html">final project for FinTech 2021</a> <span class="blog-item-date">April 28, 2021</span></div>
+            <div class="blog-item" data-added="2015-06-16"><a href="blog/2015-06-16-e-mail-to-myself-2015.html">e-mail to myself 2015</a> <span class="blog-item-date">June 16, 2015</span></div>
     <!-- AUTOGEN-END blog-list -->
   </div>
         </main>
         <div id="site-footer"></div>
     </div>
     <script src="js/include.js" data-base="."></script>
+    <script src="js/whats-new.js"></script>
 </body>
 </html>

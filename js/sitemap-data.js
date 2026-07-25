@@ -154,7 +154,8 @@ window.__SITEMAP__ = {
         "include.js",
         "lite-yt.js",
         "oneko.js",
-        "sitemap-data.js"
+        "sitemap-data.js",
+        "whats-new.js"
       ],
       "folders": {}
     },

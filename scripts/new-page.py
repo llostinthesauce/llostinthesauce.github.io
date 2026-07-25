@@ -164,7 +164,7 @@ TEMPLATES = {
         <main id="main-content" tabindex="-1">
         <a href="../../galleries.html" class="back-link">&larr; back to galleries</a>
         <h1>{title}</h1>
-        <p>sorted chronologically — horizontal photos first, then vertical photos</p>
+        <p class="note">sorted chronologically — horizontal photos first, then vertical photos</p>
 
         <!-- AUTOGEN-START gallery-grid -->
         <div class="gallery-grid">

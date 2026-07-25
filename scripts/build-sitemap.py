@@ -403,10 +403,13 @@ def build_blog_list():
 
     posts.sort(key=lambda x: (x[3], x[0]), reverse=True)
 
+    # data-added drives the '*new!' badge; js/whats-new.js picks the newest and
+    # drops it once it ages out, so the flag is never stale.
     items = '\n'.join(
-        f'            <div class="blog-item{" camera-highlight" if i == 0 else ""}"><a href="blog/{filename}">{title}</a>'
+        f'            <div class="blog-item" data-added="{dt.strftime("%Y-%m-%d")}">'
+        f'<a href="blog/{filename}">{title}</a>'
         f' <span class="blog-item-date">{date_formatted}</span></div>'
-        for i, (filename, title, date_formatted, _) in enumerate(posts)
+        for filename, title, date_formatted, dt in posts
     )
 
     replacement = (
