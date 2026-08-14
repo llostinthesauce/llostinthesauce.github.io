@@ -38,7 +38,7 @@ window.__SITEMAP__ = {
         "2026-03-29-untitled.html",
         "2026-04-23-field-notes-march-30-april-8.html",
         "2026-06-10-field-notes-2-1.html",
-        "2026-07-22-field-notes-iv-july-7-22.html"
+        "2026-08-14-field-notes-iv-july-7-22.html"
       ],
       "folders": {
         "builds": {
