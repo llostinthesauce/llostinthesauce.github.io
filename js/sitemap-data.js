@@ -117,7 +117,8 @@ window.__SITEMAP__ = {
             "2026-05-pre-trip.html",
             "2026-05-return.html",
             "2026-06-june.html",
-            "2026-07-jul.html"
+            "2026-07-jul.html",
+            "2026-08-aug.html"
           ],
           "folders": {}
         }

@@ -15,10 +15,10 @@ window.nublogGalleryGroups = [
         title: '',
         entries: [
             {
-                label: 'july 2026 ~ current',
-                href: 'galleries/monthly/2026-07-jul.html',
-                sourceImage: 'images/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.jpg',
-                previewImage: 'images/.cards/monthly/2026/07-jul/IDG_20260712_160939_IMG_5436.webp',
+                label: 'august 2026 ~ current',
+                href: 'galleries/monthly/2026-08-aug.html',
+                sourceImage: 'images/monthly/2026/08-aug/IMG_6542.jpeg',
+                previewImage: 'images/.cards/monthly/2026/08-aug/IMG_6542.webp',
                 featured: true
             },
             {
@@ -33,7 +33,7 @@ window.nublogGalleryGroups = [
                 href: 'galleries/cameras/vivitar-pz3090.html',
                 sourceImage: 'images/cameras/vivitar/roll-4/R1-08311-009A.JPG',
                 previewImage: 'images/.cards/cameras/vivitar/roll-4/R1-08311-009A.webp',
-                added: '2026-04'
+                added: '2026-06'
             },
             {
                 label: 'disposable 35mm',
@@ -76,6 +76,11 @@ window.nublogGalleryGroups = [
     {
         title: '2026',
         entries: [
+            {
+                label: 'aug 2026',
+                href: 'galleries/monthly/2026-08-aug.html',
+                caption: ''
+            },
             {
                 label: 'jul 2026',
                 href: 'galleries/monthly/2026-07-jul.html',

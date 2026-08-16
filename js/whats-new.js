@@ -36,22 +36,28 @@
 
         Array.prototype.forEach.call(containers, function (container) {
             var candidates = container.querySelectorAll('[data-added]');
-            var newest = null;
-            var newestDate = null;
+            var maxDate = null;
+            var newestList = [];
 
             Array.prototype.forEach.call(candidates, function (el) {
                 el.classList.remove('is-new');
                 var date = parseAdded(el.getAttribute('data-added'));
                 if (!date) return;
-                if (!newestDate || date > newestDate) {
-                    newestDate = date;
-                    newest = el;
+                if (!maxDate || date > maxDate) {
+                    maxDate = date;
+                    newestList = [el];
+                } else if (date.getTime() === maxDate.getTime()) {
+                    newestList.push(el);
                 }
             });
 
-            if (!newest) return;
-            var ageDays = (Date.now() - newestDate.getTime()) / DAY_MS;
-            if (ageDays <= FRESH_DAYS) newest.classList.add('is-new');
+            if (!maxDate) return;
+            var ageDays = (Date.now() - maxDate.getTime()) / DAY_MS;
+            if (ageDays <= FRESH_DAYS) {
+                newestList.forEach(function (el) {
+                    el.classList.add('is-new');
+                });
+            }
         });
     }
 
