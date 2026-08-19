@@ -331,13 +331,15 @@ a:hover {
 }
 
 /* ---- Grid density ----
-   Every grid on the site is the same component at one of four densities,
+   Every grid on the site is the same component at one of three densities,
    chosen by what the cells CONTAIN, not by which page they live on:
 
      --grid-min: 300px   photos   the image is the content
      --grid-min: 220px   cards    the image labels a link
      --grid-min: 140px   chips    text only
-     --grid-min: 100%    players  needs full width (video)
+
+   Video players browse at the photo density too — galleries/videos.html spans
+   only the cell that is actually playing (see .is-playing there).
 
    Set --grid-min on the grid (or an ancestor); never hand-write columns. */
 .gallery-grid {
