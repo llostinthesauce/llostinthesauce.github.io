@@ -2,6 +2,7 @@
     // Bump when partials/header.html or partials/footer.html change,
     // so cached copies are invalidated without defeating HTTP caching.
     const PARTIALS_VERSION = '2026-07-23';
+    const COUNTER_VERSION = '2026-08-31';
 
     const script = document.currentScript;
     const rawBase = (script && script.dataset.base) ? script.dataset.base : '.';
@@ -81,7 +82,7 @@
     ]).then(() => {
         // Load hit counter
         const counterScript = document.createElement('script');
-        counterScript.src = `${base}/js/counter.js`;
+        counterScript.src = `${base}/js/counter.js?v=${COUNTER_VERSION}`;
         document.body.appendChild(counterScript);
     });
 

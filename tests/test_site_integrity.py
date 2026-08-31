@@ -3,6 +3,7 @@ import importlib.util
 import io
 import json
 import re
+import subprocess
 import unittest
 from contextlib import redirect_stdout
 from html.parser import HTMLParser
@@ -101,6 +102,18 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertIsNotNone(recent)
         self.assertEqual(recent.group(1), latest)
 
+    def test_homepage_section_build_keeps_recent_blog_regeneratable(self):
+        spec = importlib.util.spec_from_file_location(
+            "build_sitemap", ROOT / "scripts/build-sitemap.py"
+        )
+        build_sitemap = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(build_sitemap)
+        output = io.StringIO()
+        with redirect_stdout(output):
+            build_sitemap.build_homepage_recent_sections()
+            build_sitemap.build_homepage_recent_blog()
+        self.assertNotIn("markers not found", output.getvalue())
+
     def test_navigation_order_is_consistent(self):
         header = (ROOT / "partials/header.html").read_text()
         sitemap = (ROOT / "sitemap.html").read_text()
@@ -193,6 +206,21 @@ class SiteIntegrityTests(unittest.TestCase):
         script = (ROOT / "js/bot-blocker.js").read_text()
         self.assertIn("isLocalPreview", script)
         self.assertRegex(script, r"if\s*\(isBot\s*&&\s*!isLocalPreview\)")
+
+    def test_visitor_counter_uses_goatcounter_without_exposing_a_secret(self):
+        script = (ROOT / "js/counter.js").read_text()
+        loader = (ROOT / "js/include.js").read_text()
+        self.assertIn("https://badcovers.goatcounter.com/count", script)
+        self.assertIn("https://badcovers.goatcounter.com/counter/TOTAL.json", script)
+        self.assertIn("https://gc.zgo.at/count.js", script)
+        self.assertIn("data-goatcounter", script)
+        self.assertRegex(script, r"legacyOffset\s*=\s*11028")
+        self.assertNotIn("api.counterapi.dev", script)
+        self.assertRegex(loader, r"COUNTER_VERSION\s*=\s*['\"]2026-08-31['\"]")
+        self.assertIn(
+            "counterScript.src = `${base}/js/counter.js?v=${COUNTER_VERSION}`;",
+            loader,
+        )
 
     def test_every_page_has_main_landmark(self):
         missing = []
@@ -365,6 +393,35 @@ class SiteIntegrityTests(unittest.TestCase):
                 offenders.append(f"{page.relative_to(ROOT)} (retired class)")
         self.assertEqual(offenders, [])
 
+    def test_current_month_gallery_card_uses_freshness_badge_not_featured_pin(self):
+        script = (
+            "global.window = {}; "
+            "require('./js/gallery-data.js'); "
+            "process.stdout.write(JSON.stringify(window.nublogGalleryGroups));"
+        )
+        rendered = subprocess.run(
+            ["node", "-e", script],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        groups = json.loads(rendered.stdout)
+        current = next(
+            entry
+            for entry in groups[0]["entries"]
+            if entry["href"] == "galleries/monthly/2026-08-aug.html"
+        )
+        self.assertEqual(current.get("added"), "2026-08")
+        self.assertFalse(current.get("featured", False))
+
+        parser = ReferenceParser()
+        parser.feed((ROOT / "galleries.html").read_text())
+        self.assertIn(
+            ("script", "js/gallery-data.js?v=2026-08-31"),
+            parser.references,
+        )
+
     def test_dated_cards_live_inside_a_new_scope(self):
         """data-added outside a [data-new-scope] container is inert: the badge
         would silently never appear."""
@@ -387,20 +444,49 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertEqual(offenders, [])
         self.assertIn(".spec-box {", (ROOT / "styles/style.css").read_text())
 
-    def test_homepage_recent_cards_are_newest_first(self):
-        """The strip is called 'recent'; a card out of date order makes it lie.
-        Every card needs data-date or build-sitemap.py cannot sort it."""
+    def test_homepage_recent_cards_follow_section_slots(self):
+        """Recents represent sections; dates must never reshuffle the slots."""
         text = (ROOT / "index.html").read_text()
         block = re.search(
             r'<div class="recent-cards">(.*?)\n\s*</div>\s*</div>', text, re.DOTALL
         )
         self.assertIsNotNone(block, "recent-cards container not found")
-        cards = re.findall(r'<a class="recent-card"[^>]*>', block.group(1))
-        self.assertGreater(len(cards), 1)
-        undated = [c for c in cards if "data-date=" not in c]
-        self.assertEqual(undated, [])
-        dates = [re.search(r'data-date="([\d-]+)"', c).group(1) for c in cards]
-        self.assertEqual(dates, sorted(dates, reverse=True))
+        hrefs = re.findall(
+            r'<a class="recent-card" href="([^"]+)"', block.group(1)
+        )
+
+        latest_blog = re.search(
+            r'AUTOGEN-START blog-list.*?<a href="(blog/[^"]+\.html)">',
+            (ROOT / "blog.html").read_text(),
+            re.DOTALL,
+        ).group(1)
+        plant_pages = sorted((ROOT / "plants/progress").glob("????-??.html"))
+        monthly_pages = sorted((ROOT / "galleries/monthly").glob("????-??-???.html"))
+        latest_plant = str(plant_pages[-1].relative_to(ROOT))
+        previous_month = str(monthly_pages[-2].relative_to(ROOT))
+
+        self.assertEqual(
+            hrefs,
+            [
+                latest_blog,
+                latest_plant,
+                previous_month,
+                "galleries/cameras/vivitar-pz3090.html",
+                "galleries/cameras/canon-elan-ii.html",
+                "galleries/cameras/canon-sd400.html",
+            ],
+        )
+
+    def test_homepage_photo_tile_matches_current_month(self):
+        text = (ROOT / "index.html").read_text()
+        current_month = sorted(
+            (ROOT / "galleries/monthly").glob("????-??-???.html")
+        )[-1]
+        photo_tile = re.search(
+            r'<a class="tile tile-img t-photos" href="([^"]+)"', text
+        )
+        self.assertIsNotNone(photo_tile, "homepage photo tile not found")
+        self.assertEqual(photo_tile.group(1), str(current_month.relative_to(ROOT)))
 
     def test_cards_are_one_size_outside_the_blog_strip(self):
         """One card size sitewide. The 3:1 rolling strip on blog.html is the

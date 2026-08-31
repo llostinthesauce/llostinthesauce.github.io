@@ -593,14 +593,68 @@ def build_homepage_recent_blog():
     print(f"Updated {index_path} recent blog card ({latest.name})")
 
 
-def sort_homepage_recent_cards():
-    """Order the homepage 'recent' strip newest-first.
+def homepage_content_pages(directory: Path, pattern: str):
+    """Return dated content pages in filename order."""
+    if not directory.is_dir():
+        return []
+    return sorted(directory.glob(pattern), key=lambda path: path.name)
 
-    The cards are hand-authored (except the blog one) and were drifting out of
-    order as sections got updated at different times. Sorting here by
-    data-date means adding a card anywhere in the list self-corrects on the
-    next build instead of silently sitting in the wrong place.
-    """
+
+def homepage_page_image(page: Path):
+    """Return the first local image on a content page as a repo-relative path."""
+    match = re.search(r'<img\b[^>]*\bsrc="([^"]+)"', page.read_text(), re.IGNORECASE)
+    if not match:
+        return None
+    source = (page.parent / match.group(1)).resolve()
+    try:
+        relative = source.relative_to(ROOT)
+    except ValueError:
+        return None
+    if not source.is_file() or not relative.parts or relative.parts[0] != 'images':
+        return None
+    return str(relative).replace('\\', '/')
+
+
+def homepage_existing_preview(text: str, href: str):
+    """Reuse a curated homepage preview when its target is still in a slot."""
+    match = re.search(
+        rf'<a\b[^>]*\bhref="{re.escape(href)}".*?</a>',
+        text,
+        re.DOTALL,
+    )
+    if not match:
+        return None
+    preview = re.search(r'data-preview-source="([^"]+)"', match.group(0))
+    return unescape(preview.group(1)) if preview else None
+
+
+def homepage_card_preview(source_path: str):
+    """Build and return the card-tier path for one homepage source image."""
+    source = ROOT / source_path
+    if not source.is_file() or not source_path.startswith('images/'):
+        raise RuntimeError(f'Homepage preview source missing: {source_path}')
+    rendered = ensure_card(source)
+    if not rendered:
+        raise RuntimeError(f'Homepage preview render failed: {source_path}')
+    return rendered
+
+
+def homepage_recent_card(href: str, source_path: str, section: str, title: str,
+                         when: str, date: str):
+    preview_path = homepage_card_preview(source_path)
+    return (
+        f'                    <a class="recent-card" href="{escape(href, quote=True)}"'
+        f' data-date="{date}" data-preview-source="{escape(source_path, quote=True)}">\n'
+        f'                        <div class="card-thumb" style="background-image: url(\'{preview_path}\');"></div>\n'
+        f'                        <div class="card-section">{escape(section)}</div>\n'
+        f'                        <div class="card-text">{escape(title)}</div>\n'
+        f'                        <div class="card-when">{escape(when)}</div>\n'
+        '                    </a>'
+    )
+
+
+def build_homepage_recent_sections():
+    """Build the homepage's fixed, section-based recent-card lineup."""
     index_path = ROOT / 'index.html'
     if not index_path.is_file():
         return
@@ -623,34 +677,126 @@ def sort_homepage_recent_cards():
     else:
         print("unbalanced recent-cards container, skipping sort")
         return
-    body = text[body_start:i]
-
-    # a unit is one card, plus the AUTOGEN comment pair when it has one
-    unit_re = re.compile(
-        r'[ \t]*(?:<!-- AUTOGEN-START recent-blog -->\s*)?'
-        r'<a class="recent-card".*?</a>'
-        r'(?:\s*<!-- AUTOGEN-END recent-blog -->)?',
+    blog_match = re.search(
+        r'[ \t]*<!-- AUTOGEN-START recent-blog -->.*?'
+        r'<!-- AUTOGEN-END recent-blog -->',
+        text[body_start:i],
         re.DOTALL,
     )
-    units = [m.group(0).strip('\n') for m in unit_re.finditer(body)]
-    if len(units) < 2:
+    if not blog_match:
+        print("recent blog card not found, skipping homepage section build")
         return
 
-    undated = [u for u in units if 'data-date="' not in u]
-    if undated:
-        print(f"WARNING: {len(undated)} recent card(s) missing data-date, leaving order alone")
+    plant_pages = homepage_content_pages(ROOT / 'plants' / 'progress', '????-??.html')
+    monthly_pages = homepage_content_pages(ROOT / 'galleries' / 'monthly', '????-??-???.html')
+    if not plant_pages or len(monthly_pages) < 2:
+        print("Homepage section sources missing, skipping recent section build")
         return
 
-    def key(unit):
-        return re.search(r'data-date="([\d-]+)"', unit).group(1)
-
-    ordered = sorted(units, key=key, reverse=True)
-    if ordered == units:
+    latest_plant = plant_pages[-1]
+    previous_month = monthly_pages[-2]
+    plant_href = str(latest_plant.relative_to(ROOT)).replace('\\', '/')
+    month_href = str(previous_month.relative_to(ROOT)).replace('\\', '/')
+    plant_source = (
+        homepage_existing_preview(text, plant_href)
+        or homepage_page_image(latest_plant)
+    )
+    month_source = (
+        homepage_existing_preview(text, month_href)
+        or homepage_page_image(previous_month)
+    )
+    if not plant_source or not month_source:
+        print("Homepage section preview missing, skipping recent section build")
         return
 
-    rebuilt = '\n' + '\n'.join(ordered) + '\n                '
+    plant_date = datetime.strptime(latest_plant.stem, '%Y-%m')
+    month_date = datetime.strptime(previous_month.stem[:7], '%Y-%m')
+    blog_card = '                    ' + blog_match.group(0).strip()
+    cards = [
+        blog_card,
+        homepage_recent_card(
+            plant_href,
+            plant_source,
+            'plants',
+            f'{plant_date.strftime("%b").lower()} {plant_date.year} update',
+            f'{plant_date.month}/01',
+            plant_date.strftime('%Y-%m-01'),
+        ),
+        homepage_recent_card(
+            month_href,
+            month_source,
+            'photos',
+            f'{month_date.strftime("%B").lower()} {month_date.year} photos',
+            f'{month_date.month}/{str(month_date.year)[2:]}',
+            month_date.strftime('%Y-%m-01'),
+        ),
+        homepage_recent_card(
+            'galleries/cameras/vivitar-pz3090.html',
+            'images/cameras/vivitar/roll-4/R1-08311-017A.JPG',
+            'photos',
+            'vivitar pz3090',
+            'root',
+            '2026-06-09',
+        ),
+        homepage_recent_card(
+            'galleries/cameras/canon-elan-ii.html',
+            'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
+            'photos',
+            'canon elan ii',
+            'root',
+            '2026-06-09',
+        ),
+        homepage_recent_card(
+            'galleries/cameras/canon-sd400.html',
+            'images/cameras/canon/2026/IMG_4010.jpeg',
+            'photos',
+            'powershot sd400',
+            'root',
+            '2026-04-01',
+        ),
+    ]
+
+    rebuilt = '\n' + '\n'.join(cards) + '\n                '
     index_path.write_text(text[:body_start] + rebuilt + text[i:])
-    print(f"Sorted {index_path} recent cards newest-first ({len(ordered)} cards)")
+    print(f"Updated {index_path} recent section slots ({len(cards)} cards)")
+
+
+def build_homepage_current_photos():
+    """Keep the large homepage photo tile on the newest monthly gallery."""
+    index_path = ROOT / 'index.html'
+    monthly_pages = homepage_content_pages(
+        ROOT / 'galleries' / 'monthly', '????-??-???.html'
+    )
+    if not index_path.is_file() or not monthly_pages:
+        return
+
+    text = index_path.read_text()
+    current = monthly_pages[-1]
+    href = str(current.relative_to(ROOT)).replace('\\', '/')
+    source = homepage_existing_preview(text, href) or homepage_page_image(current)
+    if not source:
+        print("Homepage current photo preview missing, leaving tile alone")
+        return
+    preview = homepage_card_preview(source)
+    date = datetime.strptime(current.stem[:7], '%Y-%m')
+    card = (
+        f'            <a class="tile tile-img t-photos" href="{href}"\n'
+        f'               data-preview-source="{escape(source, quote=True)}"'
+        f' style="background-image: url(\'{preview}\');">\n'
+        f'                <span class="tile-label">photos &middot;'
+        f' {date.strftime("%B").lower()} {date.year} &nbsp;→</span>\n'
+        '            </a>'
+    )
+    pattern = re.compile(
+        r'            <a class="tile tile-img t-photos".*?</a>',
+        re.DOTALL,
+    )
+    if not pattern.search(text):
+        print("Homepage current photo tile not found, skipping")
+        return
+
+    index_path.write_text(pattern.sub(card, text, count=1))
+    print(f"Updated {index_path} current photo tile ({current.name})")
 
 
 def build_monthly_galleries():
@@ -957,7 +1103,8 @@ def main():
     build_blog_nav()
     build_blog_list()
     build_homepage_recent_blog()
-    sort_homepage_recent_cards()  # must follow: the blog card supplies its date
+    build_homepage_recent_sections()  # must follow: the blog card is the first slot
+    build_homepage_current_photos()  # follows recents so the prior month can reuse its preview
     build_card_thumbs()  # must follow: the recent-blog card can add a new ref
     build_monthly_galleries()
     enrich_image_metadata()

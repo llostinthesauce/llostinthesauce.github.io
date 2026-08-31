@@ -4,7 +4,7 @@
 // for `previewImage`, both relative to the site root.
 //
 // Emphasis is data, not position:
-//   featured: true   purple pin, no badge. Evergreen — the current month.
+//   featured: true   purple pin, no badge. Evergreen / intentionally pinned.
 //                    Pinned cards don't carry `added`; they never compete for
 //                    the '*new!' badge.
 //   added: 'YYYY-MM' when the entry appeared. js/whats-new.js badges the
@@ -19,7 +19,7 @@ window.nublogGalleryGroups = [
                 href: 'galleries/monthly/2026-08-aug.html',
                 sourceImage: 'images/monthly/2026/08-aug/IMG_6542.jpeg',
                 previewImage: 'images/.cards/monthly/2026/08-aug/IMG_6542.webp',
-                featured: true
+                added: '2026-08'
             },
             {
                 label: 'canon eos elan ii 35mm',

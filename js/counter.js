@@ -1,12 +1,9 @@
 (function () {
-    var namespace = 'ut_h42O8JiN5ZFc7BJrafpu2s9fzfR8bY8D1uQg3JNN';
-    var counterName = 'first-counter-2997';
-    var offset = 9000;
-    var base = 'https://api.counterapi.dev/v1/' + namespace + '/' + counterName;
+    var goatCounterEndpoint = 'https://badcovers.goatcounter.com/count';
+    var totalEndpoint = 'https://badcovers.goatcounter.com/counter/TOTAL.json';
+    var legacyOffset = 11028;
+    var trackerSource = 'https://gc.zgo.at/count.js';
     var CACHE_KEY = 'nuBlogCounterCache';
-    // Increment once per browser session ("/up"), then read-only fetches,
-    // so the number approximates visitors instead of raw page views.
-    var SESSION_KEY = 'nuBlogCounted';
 
     function readCachedTotal() {
         try {
@@ -32,31 +29,36 @@
         span.appendChild(inner);
     }
 
+    function loadTracker() {
+        if (document.querySelector('script[data-goatcounter]')) return;
+
+        var tracker = document.createElement('script');
+        tracker.setAttribute('data-goatcounter', goatCounterEndpoint);
+        tracker.async = true;
+        tracker.src = trackerSource;
+        document.head.appendChild(tracker);
+    }
+
+    function parseCount(value) {
+        return Number(String(value).replace(/,/g, ''));
+    }
+
     function initCounter() {
         var span = document.getElementById('hit-counter');
         if (!span) return;
 
-        // Optimistic paint from cache so return visitors never see "loading..." or "unavailable" during transient failures.
         var cached = readCachedTotal();
         if (cached !== null) paint(span, cached + '+');
 
-        var endpoint = base + '/';
-        try {
-            if (!sessionStorage.getItem(SESSION_KEY)) {
-                // Flag before the request so parallel tabs don't double-count;
-                // worst case a failed request costs one missed increment.
-                sessionStorage.setItem(SESSION_KEY, 'true');
-                endpoint = base + '/up';
-            }
-        } catch (_) { /* private mode: stay read-only */ }
+        loadTracker();
 
-        fetch(endpoint, { cache: 'no-store' })
+        fetch(totalEndpoint, { cache: 'no-store' })
             .then(function (resp) {
                 if (!resp.ok) throw new Error('Counter request failed: ' + resp.status);
                 return resp.json();
             })
             .then(function (result) {
-                var total = Number(result.count) + offset;
+                var total = parseCount(result.count) + legacyOffset;
                 if (!Number.isFinite(total)) throw new Error('Counter returned a non-numeric value');
                 paint(span, total + '+');
                 writeCachedTotal(total);
