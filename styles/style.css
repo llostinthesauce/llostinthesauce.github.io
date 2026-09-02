@@ -155,6 +155,107 @@ button:focus-visible {
     border: 1px solid #444;
 }
 
+/* Goodreads covers and rating stars are widget UI, not full-width post photos. */
+.goodreads-widgets {
+    max-width: var(--measure);
+    margin: 40px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    font-size: 0.9em;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.goodreads-widgets > div + div {
+    margin-top: 36px;
+}
+
+.goodreads-widgets img {
+    display: block;
+    margin: 0;
+    border: 0;
+    max-height: none;
+    object-fit: contain;
+}
+
+.goodreads-widgets h2 {
+    font-size: 1.15em;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.gr_custom_each_container_1788310479 {
+    display: flow-root;
+    padding: 14px 0;
+    border-bottom: 1px solid #333;
+}
+
+.gr_custom_book_container_1788310479 {
+    float: left;
+    width: 50px;
+    margin: 0 14px 8px 0;
+}
+
+.goodreads-widgets .gr_custom_book_container_1788310479 img {
+    width: 50px;
+    height: 75px;
+}
+
+.gr_custom_author_1788310479,
+.gr_custom_tags_1788310479 {
+    font-size: 0.85em;
+    color: #99CCCC;
+}
+
+.gr_custom_review_1788310479 {
+    margin-top: 8px;
+}
+
+.gr_custom_rating_1788310479 {
+    float: right;
+    margin-left: 8px;
+}
+
+.goodreads-widgets .staticStars {
+    display: inline-flex;
+}
+
+.goodreads-widgets .staticStars img {
+    width: 15px;
+    height: 15px;
+}
+
+.goodreads-widgets center img {
+    display: inline-block;
+}
+
+.goodreads-widgets .gr_grid_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.goodreads-widgets .gr_grid_book_container {
+    width: 98px;
+    height: 160px;
+}
+
+.goodreads-widgets .gr_grid_book_container img {
+    width: 98px;
+    height: 160px;
+}
+
+.goodreads-widgets .gr_grid_container > br {
+    display: none;
+}
+
+.goodreads-widgets .gr_grid_branding {
+    flex-basis: 100%;
+    text-align: right;
+    color: #99CCCC !important; /* Override Goodreads' inline brown on the dark page. */
+    float: none !important;
+}
+
 .blog-post-content img.wide {
     max-width: 100%;
 }

@@ -1,10 +1,11 @@
 (function () {
     // Bump when partials/header.html or partials/footer.html change,
     // so cached copies are invalidated without defeating HTTP caching.
-    const PARTIALS_VERSION = '2026-07-23';
-    const COUNTER_VERSION = '2026-08-31';
+    const PARTIALS_VERSION = '2026-09-01';
 
     const script = document.currentScript;
+    // The build hashes this loader and counter.js together, then versions every page.
+    const COUNTER_VERSION = (script && new URL(script.src, window.location.href).searchParams.get('v')) || '2026-09-01';
     const rawBase = (script && script.dataset.base) ? script.dataset.base : '.';
     // data-base="/" means site root (used by 404.html, which GitHub Pages
     // serves at any URL depth, so relative paths can never work there).
@@ -76,10 +77,8 @@
             });
     };
 
-    Promise.all([
-        loadPartial('header.html', document.getElementById('site-header')),
-        loadPartial('footer.html', document.getElementById('site-footer'))
-    ]).then(() => {
+    loadPartial('header.html', document.getElementById('site-header'));
+    loadPartial('footer.html', document.getElementById('site-footer')).then(() => {
         // Load hit counter
         const counterScript = document.createElement('script');
         counterScript.src = `${base}/js/counter.js?v=${COUNTER_VERSION}`;

@@ -3,6 +3,7 @@
 
 Run from repo root:  python3 scripts/build-sitemap.py
 """
+import hashlib
 import json
 import re
 from datetime import datetime, timedelta
@@ -1006,6 +1007,16 @@ def enrich_image_metadata():
             image_number += 1
             if src.startswith(('https://i.ytimg.com/', 'http://i.ytimg.com/')):
                 width, height = 480, 360
+            elif urlparse(src).hostname in {'i.gr-assets.com', 's.gr-assets.com'}:
+                # Goodreads embeds supply external cover art; keep their declared
+                # geometry so the offline build never needs a third-party request.
+                try:
+                    width, height = int(attr_value(tag, 'width')), int(attr_value(tag, 'height'))
+                    if width <= 0 or height <= 0:
+                        raise ValueError('invalid Goodreads image dimensions')
+                except (TypeError, ValueError):
+                    failures.append((str(page.relative_to(ROOT)), src))
+                    return tag
             elif src.startswith(('http://', 'https://', '//', 'data:')):
                 failures.append((str(page.relative_to(ROOT)), src))
                 return tag
@@ -1065,6 +1076,29 @@ def enrich_image_metadata():
     print(f"Enriched image metadata ({updated_images} images across {updated_pages} pages)")
 
 
+def version_shared_loader():
+    """Invalidate old loaders whenever the loader or its counter changes."""
+    source = b'\0'.join((ROOT / 'js' / name).read_bytes() for name in ('include.js', 'counter.js'))
+    version = hashlib.sha256(source).hexdigest()[:12]
+    pattern = re.compile(r'(<script\b[^>]*\bsrc=["\'])([^"\']*?js/include\.js)(?:\?[^"\']*)?(["\'])')
+
+    def replace(match):
+        if urlparse(match.group(2)).scheme or urlparse(match.group(2)).netloc:
+            return match.group(0)
+        return f'{match.group(1)}{match.group(2)}?v={version}{match.group(3)}'
+
+    updated = 0
+    for page in sorted(ROOT.rglob('*.html')):
+        if any(part in EXCLUDE_DIRS for part in page.relative_to(ROOT).parts):
+            continue
+        original = page.read_text()
+        rendered = pattern.sub(replace, original)
+        if rendered != original:
+            page.write_text(rendered)
+            updated += 1
+    print(f'Versioned shared loader ({updated} pages, {version})')
+
+
 def check_image_sizes():
     """Warn about images exceeding 1 MB."""
     images_dir = ROOT / 'images'
@@ -1108,6 +1142,7 @@ def main():
     build_card_thumbs()  # must follow: the recent-blog card can add a new ref
     build_monthly_galleries()
     enrich_image_metadata()
+    version_shared_loader()
     check_image_sizes()
 
 

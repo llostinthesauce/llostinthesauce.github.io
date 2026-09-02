@@ -150,6 +150,7 @@ window.__SITEMAP__ = {
         "counter.js",
         "gallery-data.js",
         "gallery.js",
+        "goodreads-widgets.js",
         "image-canvas.js",
         "include.js",
         "lite-yt.js",
@@ -171,7 +172,8 @@ window.__SITEMAP__ = {
             "2026-05.html",
             "2026-06.html",
             "2026-07.html",
-            "2026-08.html"
+            "2026-08.html",
+            "2026-09.html"
           ],
           "folders": {}
         }

@@ -4,6 +4,7 @@
     var legacyOffset = 11028;
     var trackerSource = 'https://gc.zgo.at/count.js';
     var CACHE_KEY = 'nuBlogCounterCache';
+    var REQUEST_TIMEOUT = 8000;
 
     function readCachedTotal() {
         try {
@@ -40,7 +41,10 @@
     }
 
     function parseCount(value) {
-        return Number(String(value).replace(/,/g, ''));
+        var digits = String(value).trim();
+        if (!/^\d+(?:,\d{3})*$/.test(digits)) return NaN;
+        var count = Number(digits.replace(/,/g, ''));
+        return Number.isSafeInteger(count) ? count : NaN;
     }
 
     function initCounter() {
@@ -48,15 +52,25 @@
         if (!span) return;
 
         var cached = readCachedTotal();
-        if (cached !== null) paint(span, cached + '+');
+        paint(span, cached !== null ? cached + '+' : 'loading...');
 
         loadTracker();
 
-        fetch(totalEndpoint, { cache: 'no-store' })
+        var controller = new AbortController();
+        var timer;
+        var deadline = new Promise(function (_, reject) {
+            timer = setTimeout(function () {
+                controller.abort();
+                reject(new Error('Counter request timed out'));
+            }, REQUEST_TIMEOUT);
+        });
+        var request = fetch(totalEndpoint, { cache: 'no-store', signal: controller.signal })
             .then(function (resp) {
                 if (!resp.ok) throw new Error('Counter request failed: ' + resp.status);
                 return resp.json();
-            })
+            });
+
+        Promise.race([request, deadline])
             .then(function (result) {
                 var total = parseCount(result.count) + legacyOffset;
                 if (!Number.isFinite(total)) throw new Error('Counter returned a non-numeric value');
@@ -66,6 +80,9 @@
             .catch(function (err) {
                 console.error('Counter Error:', err);
                 if (cached === null) paint(span, 'unavailable');
+            })
+            .finally(function () {
+                clearTimeout(timer);
             });
     }
 

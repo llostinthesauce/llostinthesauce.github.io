@@ -216,7 +216,6 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertIn("data-goatcounter", script)
         self.assertRegex(script, r"legacyOffset\s*=\s*11028")
         self.assertNotIn("api.counterapi.dev", script)
-        self.assertRegex(loader, r"COUNTER_VERSION\s*=\s*['\"]2026-08-31['\"]")
         self.assertIn(
             "counterScript.src = `${base}/js/counter.js?v=${COUNTER_VERSION}`;",
             loader,
