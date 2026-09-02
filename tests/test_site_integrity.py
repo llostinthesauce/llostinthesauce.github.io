@@ -127,6 +127,14 @@ class SiteIntegrityTests(unittest.TestCase):
         ]
         self.assertEqual(header_labels, expected)
         self.assertEqual(sitemap_labels, expected)
+        # sitemap.html is a standalone page that hardcodes its own copy of the
+        # nav, so its targets must track partials/header.html, not just its labels.
+        header_hrefs = [
+            h.replace("%BASE%/", "")
+            for h in re.findall(r'<a href="([^"]+)"', header)
+        ]
+        sitemap_hrefs = re.findall(r'<a href="([^"]+)"', sitemap_nav)
+        self.assertEqual(sitemap_hrefs, header_hrefs)
         self.assertRegex(
             sitemap_nav,
             r'<a href="about\.html" aria-current="page">about</a>',
@@ -206,6 +214,23 @@ class SiteIntegrityTests(unittest.TestCase):
         script = (ROOT / "js/bot-blocker.js").read_text()
         self.assertIn("isLocalPreview", script)
         self.assertRegex(script, r"if\s*\(isBot\s*&&\s*!isLocalPreview\)")
+
+    def test_bot_blocker_blocklist_holds_no_generic_catch_all_terms(self):
+        """A bare generic word under /i matches any UA containing it, which blanks
+        legitimate JS-rendering fetchers — the failure the file's own note says
+        was removed. Named agents like TikTokSpider stay; bare "Spider" must not."""
+        script = (ROOT / "js/bot-blocker.js").read_text()
+        pattern = re.search(r"/\(?(AddSearchBot.*?)/i\.test", script, re.DOTALL)
+        self.assertIsNotNone(pattern, "bot-blocker UA alternation not found")
+        alternatives = pattern.group(1).split("|")
+        generic = {
+            "bot", "spider", "crawl", "crawler", "agent", "scraper",
+            "http", "python", "java", "curl", "wget", "headless",
+        }
+        offenders = sorted({a for a in alternatives if a.lower() in generic})
+        self.assertEqual(
+            offenders, [], f"generic catch-all terms in UA blocklist: {offenders}"
+        )
 
     def test_visitor_counter_uses_goatcounter_without_exposing_a_secret(self):
         script = (ROOT / "js/counter.js").read_text()
