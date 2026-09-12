@@ -1136,11 +1136,11 @@ def main():
     build_all_images_data()
     build_blog_nav()
     build_blog_list()
+    build_monthly_galleries()
     build_homepage_recent_blog()
     build_homepage_recent_sections()  # must follow: the blog card is the first slot
     build_homepage_current_photos()  # follows recents so the prior month can reuse its preview
-    build_card_thumbs()  # must follow: the recent-blog card can add a new ref
-    build_monthly_galleries()
+    build_card_thumbs()  # must follow: homepage/cards can add new refs
     enrich_image_metadata()
     version_shared_loader()
     check_image_sizes()

@@ -434,15 +434,15 @@ class SiteIntegrityTests(unittest.TestCase):
         current = next(
             entry
             for entry in groups[0]["entries"]
-            if entry["href"] == "galleries/monthly/2026-08-aug.html"
+            if entry["href"] == "galleries/monthly/2026-09-sep.html"
         )
-        self.assertEqual(current.get("added"), "2026-08")
+        self.assertEqual(current.get("added"), "2026-09")
         self.assertFalse(current.get("featured", False))
 
         parser = ReferenceParser()
         parser.feed((ROOT / "galleries.html").read_text())
         self.assertIn(
-            ("script", "js/gallery-data.js?v=2026-08-31"),
+            ("script", "js/gallery-data.js?v=2026-09-12"),
             parser.references,
         )
 
