@@ -525,10 +525,10 @@ def build_blog_list():
 # The clean theme's index (writing.html) groups posts by the category each post
 # declares in <meta name="nublog:category">. Order here is section order.
 WRITING_CATEGORIES = {
+    'creative': ('creative-writing', 'Creative Writing'),
+    'field-notes': ('field-notes', 'Field Notes'),
     'essay': ('essays', 'Essays'),
     'university': ('university-essays', 'University Essays'),
-    'field-notes': ('field-notes', 'Field Notes'),
-    'creative': ('creative-writing', 'Creative Writing'),
     'other': ('other', 'Other'),
 }
 WRITING_CATEGORY_RE = re.compile(r'<meta name="nublog:category" content="([^"]+)">')
