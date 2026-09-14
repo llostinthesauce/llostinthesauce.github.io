@@ -318,6 +318,21 @@ p {
     white-space: nowrap;
 }
 
+/* wide screens: the index widens into two columns (see WRITING_LEFT_COLUMN
+   in the build); posts keep the single reading measure */
+@media (min-width: 960px) {
+    .clean-index .content {
+        width: min(64rem, 100% - 4rem);
+    }
+
+    .clean-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 4rem;
+        align-items: start;
+    }
+}
+
 /* ---- posts --------------------------------------------------------------- */
 
 /* the top back link becomes the post footer nav (js/blog-nav.js moves it) */

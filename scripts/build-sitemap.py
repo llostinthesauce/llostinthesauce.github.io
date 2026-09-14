@@ -523,14 +523,17 @@ def build_blog_list():
 
 
 # The clean theme's index (writing.html) groups posts by the category each post
-# declares in <meta name="nublog:category">. Order here is section order.
+# declares in <meta name="nublog:category">. Order here is section order: on
+# a phone one list top to bottom; on a wide screen WRITING_LEFT_COLUMN fills the
+# left column and the rest the right, each in this order.
 WRITING_CATEGORIES = {
-    'creative': ('creative-writing', 'Creative Writing'),
-    'field-notes': ('field-notes', 'Field Notes'),
     'essay': ('essays', 'Essays'),
     'university': ('university-essays', 'University Essays'),
+    'field-notes': ('field-notes', 'Field Notes'),
+    'creative': ('creative-writing', 'Creative Writing'),
     'other': ('other', 'Other'),
 }
+WRITING_LEFT_COLUMN = {'essay', 'university'}
 WRITING_CATEGORY_RE = re.compile(r'<meta name="nublog:category" content="([^"]+)">')
 # Non-post pages listed at the end of a section: (href, title, note).
 WRITING_EXTRA_LINKS = {
@@ -628,17 +631,17 @@ def build_writing_index():
             for _, dt, name, title in posts
         ]
         lines += [
-            f'                <li><a href="{href}">{title}</a>'
+            f'                    <li><a href="{href}">{title}</a>'
             f' <span class="clean-when">{note}</span></li>'
             for href, title, note in WRITING_EXTRA_LINKS.get(key, [])
         ]
         items = '\n'.join(lines)
-        sections.append(
-            f'        <section class="clean-section" id="{anchor_id}">\n'
-            f'            <h2>{label}</h2>\n'
-            f'            <ul class="clean-list">\n{items}\n            </ul>\n'
-            f'        </section>'
-        )
+        sections.append((key,
+            f'            <section class="clean-section" id="{anchor_id}">\n'
+            f'                <h2>{label}</h2>\n'
+            f'                <ul class="clean-list">\n{items}\n                </ul>\n'
+            f'            </section>'
+        ))
     jump = '\n'.join(
         f'            <li><a href="#{anchor_id}">{label}</a></li>'
         for key, (anchor_id, label) in WRITING_CATEGORIES.items() if groups[key]
@@ -646,7 +649,14 @@ def build_writing_index():
     replacement = (
         "        <!-- AUTOGEN-START writing-index — populated by scripts/build-sitemap.py -->\n"
         f'        <ul class="clean-jump" aria-label="sections">\n{jump}\n        </ul>\n'
-        + '\n'.join(sections) + "\n"
+        '        <div class="clean-columns">\n'
+        '            <div class="clean-col">\n'
+        + '\n'.join(html for key, html in sections if key in WRITING_LEFT_COLUMN) + '\n'
+        '            </div>\n'
+        '            <div class="clean-col">\n'
+        + '\n'.join(html for key, html in sections if key not in WRITING_LEFT_COLUMN) + '\n'
+        '            </div>\n'
+        '        </div>\n'
         "        <!-- AUTOGEN-END writing-index -->"
     )
     pattern = re.compile(
