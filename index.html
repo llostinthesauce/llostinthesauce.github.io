@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noai, noimageai">
     <title>nuBlog</title>
+    <!-- clean-theme visitors are sent to writing.html before anything renders -->
+    <script src="js/theme.js" data-page="home"></script>
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
@@ -256,8 +258,10 @@
 </head>
 
 <body>
-    <!-- Boot Screen Overlay (one-time, 3.5s auto-dismiss) -->
-    <div id="boot-overlay" role="dialog" aria-modal="true" aria-labelledby="mac-os-header" aria-describedby="mac-os-subheader">
+    <!-- Boot Screen Overlay (one-time, 3.5s auto-dismiss).
+         Paused while the clean theme is the front door: it ships hidden and
+         BOOT_SCREEN_ENABLED below gates it. Flip that to true to bring it back. -->
+    <div id="boot-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="mac-os-header" aria-describedby="mac-os-subheader">
         <div id="mac-os-window">
             <div id="mac-os-title-bar">
                 <div class="mac-os-buttons" aria-hidden="true">
@@ -396,19 +400,21 @@
         <div id="site-footer"></div>
     </div>
 
-    <script src="js/include.js?v=1aafdebda101" data-base="."></script>
+    <script src="js/include.js?v=3627a0c3a2d1" data-base="."></script>
     <script>
         const bootOverlay = document.getElementById('boot-overlay');
         const bootButton = document.getElementById('mac-os-boot-button');
         const pageShell = document.querySelector('.content');
         const mainContent = document.getElementById('main-content');
-        const bootFinished = sessionStorage.getItem('nuBlogBootFinished') === 'true';
+        const BOOT_SCREEN_ENABLED = false;
+        const bootFinished = !BOOT_SCREEN_ENABLED || sessionStorage.getItem('nuBlogBootFinished') === 'true';
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (bootFinished) {
             bootOverlay.hidden = true;
             bootOverlay.setAttribute('aria-hidden', 'true');
         } else {
+            bootOverlay.hidden = false;
             let autoBootTimeout;
             pageShell.inert = true;
             pageShell.setAttribute('inert', '');

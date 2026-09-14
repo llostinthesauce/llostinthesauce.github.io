@@ -522,6 +522,146 @@ def build_blog_list():
     print(f"Updated {blog_html_path} ({len(posts)} blog posts)")
 
 
+# The clean theme's index (writing.html) groups posts by the category each post
+# declares in <meta name="nublog:category">. Order here is section order.
+WRITING_CATEGORIES = {
+    'essay': ('essays', 'Essays'),
+    'university': ('university-essays', 'University Essays'),
+    'field-notes': ('field-notes', 'Field Notes'),
+    'creative': ('creative-writing', 'Creative Writing'),
+    'other': ('other', 'Other'),
+}
+WRITING_CATEGORY_RE = re.compile(r'<meta name="nublog:category" content="([^"]+)">')
+# Non-post pages listed at the end of a section: (href, title, note).
+WRITING_EXTRA_LINKS = {
+    'other': [('blog/builds/index.html', 'Builds+', 'Full Site')],
+}
+
+# Title case for the clean theme. js/theme.js carries the same rules for post
+# headings; tests/title-case-cases.json holds both to one answer.
+TITLE_SMALL_WORDS = {
+    'a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'if', 'in', 'into',
+    'nor', 'of', 'on', 'or', 'per', 'than', 'the', 'to', 'via', 'vs', 'with',
+}
+TITLE_ACRONYMS = {'ai': 'AI'}
+TITLE_ROMAN_RE = re.compile(r'^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$')
+TITLE_INITIALS_RE = re.compile(r'^(?:[a-z]\.)+[a-z]?$')
+
+
+def title_case(text: str) -> str:
+    """Raise case only: words already carrying a capital (FinTech, PHIL1000) stay."""
+    words = text.split(' ')
+    out = []
+    for index, word in enumerate(words):
+        lead = re.match(r'^[^A-Za-z0-9]*', word).group(0)
+        core = word[len(lead):]
+        tail = re.search(r'[^A-Za-z0-9.]*$', core).group(0) if core else ''
+        core = core[:len(core) - len(tail)] if tail else core
+        after_colon = index > 0 and words[index - 1].endswith(':')
+        edge = index == 0 or index == len(words) - 1 or after_colon
+        parts = []
+        for part_index, part in enumerate(core.split('-')):
+            bare = part.rstrip('.')
+            if not part or any(ch.isupper() for ch in part):
+                parts.append(part)
+            elif bare in TITLE_ACRONYMS:
+                parts.append(TITLE_ACRONYMS[bare] + part[len(bare):])
+            elif TITLE_ROMAN_RE.match(bare) or TITLE_INITIALS_RE.match(part):
+                parts.append(part.upper())
+            elif part_index == 0 and not edge and part in TITLE_SMALL_WORDS:
+                parts.append(part)
+            else:
+                parts.append(re.sub(r'[a-z]', lambda m: m.group(0).upper(), part, count=1))
+        out.append(lead + '-'.join(parts) + tail)
+    return ' '.join(out)
+
+
+def build_writing_index():
+    """Rewrite the grouped post list in writing.html between AUTOGEN markers.
+
+    Unlike blog.html this includes rolling pages (listed first in their
+    section): the reader has no other way to reach them. A dated post with a
+    missing or unknown category fails the build, so a new post cannot silently
+    vanish from the clean theme.
+    """
+    blog_dir = ROOT / 'blog'
+    writing_path = ROOT / 'writing.html'
+    if not blog_dir.is_dir() or not writing_path.is_file():
+        print("blog/ or writing.html missing, skipping writing index update")
+        return
+
+    title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
+    groups = {key: [] for key in WRITING_CATEGORIES}
+    problems = []
+    for p in sorted(blog_dir.glob('*.html')):
+        try:
+            dt = datetime.strptime(p.name[:10], '%Y-%m-%d')
+        except ValueError:
+            continue
+        content = p.read_text()
+        category = WRITING_CATEGORY_RE.search(content)
+        if not category or category.group(1) not in WRITING_CATEGORIES:
+            problems.append(p.name)
+            continue
+        if 'js/theme.js' not in content:
+            problems.append(f"{p.name} (no theme.js)")
+            continue
+        match = title_pattern.search(content)
+        title = escape(title_case(unescape(match.group(1) if match else p.stem)), quote=False)
+        rolling = p.name in BLOG_FEED_EXCLUDE
+        groups[category.group(1)].append((rolling, dt, p.name, title))
+
+    if problems:
+        raise SystemExit(
+            "writing.html: these posts need <meta name=\"nublog:category\"> "
+            f"({', '.join(WRITING_CATEGORIES)}) and ../js/theme.js: {', '.join(problems)}"
+        )
+
+    sections = []
+    for key, (anchor_id, label) in WRITING_CATEGORIES.items():
+        posts = sorted(groups[key], reverse=True)
+        if not posts:
+            continue
+        lines = [
+            f'                <li><a href="blog/{name}">{title}</a>'
+            f' <span class="clean-when">{dt.strftime("%b %Y")}</span></li>'
+            for _, dt, name, title in posts
+        ]
+        lines += [
+            f'                <li><a href="{href}">{title}</a>'
+            f' <span class="clean-when">{note}</span></li>'
+            for href, title, note in WRITING_EXTRA_LINKS.get(key, [])
+        ]
+        items = '\n'.join(lines)
+        sections.append(
+            f'        <section class="clean-section" id="{anchor_id}">\n'
+            f'            <h2>{label}</h2>\n'
+            f'            <ul class="clean-list">\n{items}\n            </ul>\n'
+            f'        </section>'
+        )
+    jump = '\n'.join(
+        f'            <li><a href="#{anchor_id}">{label}</a></li>'
+        for key, (anchor_id, label) in WRITING_CATEGORIES.items() if groups[key]
+    )
+    replacement = (
+        "        <!-- AUTOGEN-START writing-index — populated by scripts/build-sitemap.py -->\n"
+        f'        <ul class="clean-jump" aria-label="sections">\n{jump}\n        </ul>\n'
+        + '\n'.join(sections) + "\n"
+        "        <!-- AUTOGEN-END writing-index -->"
+    )
+    pattern = re.compile(
+        r"        <!-- AUTOGEN-START writing-index.*?        <!-- AUTOGEN-END writing-index -->",
+        re.DOTALL,
+    )
+    original = writing_path.read_text()
+    if not pattern.search(original):
+        print(f"AUTOGEN markers not found in {writing_path}, skipping")
+        return
+    writing_path.write_text(pattern.sub(lambda _: replacement, original))
+    total = sum(len(v) for v in groups.values())
+    print(f"Updated {writing_path} ({total} posts in {len(sections)} sections)")
+
+
 def build_homepage_recent_blog():
     """Keep the homepage's recent blog card synced to the newest dated post."""
     index_path = ROOT / 'index.html'
@@ -1136,6 +1276,7 @@ def main():
     build_all_images_data()
     build_blog_nav()
     build_blog_list()
+    build_writing_index()
     build_monthly_galleries()
     build_homepage_recent_blog()
     build_homepage_recent_sections()  # must follow: the blog card is the first slot

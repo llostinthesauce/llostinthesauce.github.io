@@ -37,8 +37,10 @@
 
     var base = (window.nublogBase != null) ? window.nublogBase : '..';
 
-    backLink.innerHTML = '\u2190 back to blog';
-    backLink.href = base + '/blog.html';
+    var clean = window.nublogTheme && window.nublogTheme.isClean;
+
+    backLink.innerHTML = clean ? '\u2190 all writing' : '\u2190 back to blog';
+    backLink.href = base + (clean ? '/writing.html' : '/blog.html');
 
     var navNodes = [];
 
@@ -59,6 +61,20 @@
         olderLink.className = 'post-nav-link';
         olderLink.textContent = 'older \u2192';
         navNodes.push(document.createTextNode('\u00a0\u00a0\u00a0\u00a0'), olderLink);
+    }
+
+    // Clean theme: back / newer / older sit together under the post, not above it.
+    if (clean) {
+        var postNav = document.createElement('nav');
+        postNav.className = 'clean-post-nav';
+        postNav.setAttribute('aria-label', 'more writing');
+        postNav.appendChild(backLink);
+        navNodes.forEach(function (node) {
+            if (node.nodeType === 1) postNav.appendChild(node);
+        });
+        var article = document.querySelector('.blog-post-content');
+        (article || document.querySelector('main')).after(postNav);
+        return;
     }
 
     if (navNodes.length) {

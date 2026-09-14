@@ -24,6 +24,9 @@ TEMPLATES = {
     <meta name="robots" content="noai, noimageai">
     <title>{title} - nuBlog</title>
     <link rel="stylesheet" href="{css}">
+    <!-- essay | university | field-notes | creative | other (groups writing.html) -->
+    <meta name="nublog:category" content="essay">
+    <script src="../js/theme.js" data-page="post"></script>
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
 </head>
 <body>

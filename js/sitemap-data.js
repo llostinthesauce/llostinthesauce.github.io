@@ -13,7 +13,8 @@ window.__SITEMAP__ = {
     "plants.html",
     "README.md",
     "robots.txt",
-    "sitemap.html"
+    "sitemap.html",
+    "writing.html"
   ],
   "folders": {
     "blog": {
@@ -158,6 +159,7 @@ window.__SITEMAP__ = {
         "lite-yt.js",
         "oneko.js",
         "sitemap-data.js",
+        "theme.js",
         "whats-new.js"
       ],
       "folders": {}
@@ -183,9 +185,18 @@ window.__SITEMAP__ = {
     },
     "styles": {
       "files": [
+        "clean.css",
         "style.css"
       ],
-      "folders": {}
+      "folders": {
+        "fonts": {
+          "files": [
+            "newsreader-latin-italic.woff2",
+            "newsreader-latin.woff2"
+          ],
+          "folders": {}
+        }
+      }
     }
   }
 };

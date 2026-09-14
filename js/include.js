@@ -1,7 +1,7 @@
 (function () {
     // Bump when partials/header.html or partials/footer.html change,
     // so cached copies are invalidated without defeating HTTP caching.
-    const PARTIALS_VERSION = '2026-09-01';
+    const PARTIALS_VERSION = '2026-09-14';
 
     const script = document.currentScript;
     // The build hashes this loader and counter.js together, then versions every page.
@@ -77,16 +77,26 @@
             });
     };
 
-    loadPartial('header.html', document.getElementById('site-header'));
-    loadPartial('footer.html', document.getElementById('site-footer')).then(() => {
-        // Load hit counter
+    const loadCounter = () => {
         const counterScript = document.createElement('script');
         counterScript.src = `${base}/js/counter.js?v=${COUNTER_VERSION}`;
         document.body.appendChild(counterScript);
-    });
+    };
+
+    // Clean theme (js/theme.js, loaded in <head>) brings its own header and
+    // footer and leaves the cat at home; see js/theme.js.
+    const cleanTheme = window.nublogTheme && window.nublogTheme.isClean;
+
+    if (cleanTheme) {
+        window.nublogTheme.renderChrome();
+        loadCounter();
+    } else {
+        loadPartial('header.html', document.getElementById('site-header'));
+        loadPartial('footer.html', document.getElementById('site-footer')).then(loadCounter);
+    }
 
     // Load oneko only when the visitor has not requested reduced motion.
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!cleanTheme && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const onekoScript = document.createElement('script');
         onekoScript.src = `${base}/js/oneko.js`;
         document.body.appendChild(onekoScript);

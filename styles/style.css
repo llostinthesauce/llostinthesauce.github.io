@@ -104,6 +104,32 @@ button:focus-visible {
     text-underline-offset: 4px;
 }
 
+/* The door back to the clean theme (writing.html). Set in the reader's own
+   serif and ivory so it previews where it goes; pushed to the end of the row. */
+.nav a.theme-switch {
+    margin-left: auto;
+    padding: 3px 11px 2px;
+    border: 1px solid #f0eee6;
+    border-radius: 2rem;
+    background: #f0eee6;
+    color: #1f1e1d;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+    font-size: 0.85em;
+    font-style: italic;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav a.theme-switch::before {
+    content: '\2190\00a0';
+    font-style: normal;
+}
+
+.nav a.theme-switch:hover {
+    background: transparent;
+    color: #f0eee6;
+}
+
 .nav::-webkit-scrollbar {
     display: none;
 }
@@ -1158,6 +1184,12 @@ a.t-brand:hover .brand-tag { color: #66FFCC; }
         padding: 10px 12px 6px 0;
         white-space: normal;
         overflow-x: visible;
+    }
+
+    .nav a.theme-switch {
+        grid-column: 1 / -1;
+        justify-self: start;
+        margin: 4px 0 0;
     }
 
     .content {

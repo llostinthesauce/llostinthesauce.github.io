@@ -6,6 +6,7 @@ import re
 import subprocess
 import unittest
 from contextlib import redirect_stdout
+from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -115,7 +116,12 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertNotIn("markers not found", output.getvalue())
 
     def test_navigation_order_is_consistent(self):
-        header = (ROOT / "partials/header.html").read_text()
+        # The clean-theme switch rides in the nav but is not a section, so it
+        # is not mirrored on sitemap.html.
+        header = re.sub(
+            r'<a [^>]*data-theme-switch[^>]*>.*?</a>', "",
+            (ROOT / "partials/header.html").read_text(),
+        )
         sitemap = (ROOT / "sitemap.html").read_text()
         expected = ["home", "photos", "blog", "builds", "plants", "about"]
         header_labels = re.findall(r'title="([^"]+)"', header)
@@ -139,6 +145,37 @@ class SiteIntegrityTests(unittest.TestCase):
             sitemap_nav,
             r'<a href="about\.html" aria-current="page">about</a>',
         )
+
+    def test_every_dated_post_is_filed_in_the_clean_theme(self):
+        categories = {"essay", "university", "field-notes", "creative", "other"}
+        writing = (ROOT / "writing.html").read_text()
+        failures = []
+        for post in sorted((ROOT / "blog").glob("????-??-??-*.html")):
+            text = post.read_text()
+            match = re.search(r'<meta name="nublog:category" content="([^"]+)">', text)
+            if not match or match.group(1) not in categories:
+                failures.append((post.name, "category"))
+            # theme.js must precede first paint, so it belongs in <head>
+            head = text.split("</head>", 1)[0]
+            if '<script src="../js/theme.js" data-page="post"></script>' not in head:
+                failures.append((post.name, "theme.js in head"))
+            if f'href="blog/{post.name}"' not in writing:
+                failures.append((post.name, "listed on writing.html"))
+        self.assertEqual(failures, [])
+
+    def test_writing_index_titles_follow_the_shared_title_case_cases(self):
+        cases = json.loads((ROOT / "tests/title-case-cases.json").read_text())
+        writing = (ROOT / "writing.html").read_text()
+        listed = [unescape(t) for t in re.findall(r'<li><a href="blog/\d{4}-[^"]+">([^<]+)</a>', writing)]
+        self.assertTrue(listed)
+        self.assertEqual([t for t in listed if t not in cases.values()], [])
+
+    def test_clean_theme_front_doors_load_the_switch_before_styles(self):
+        for page, kind in (("index.html", "home"), ("blog.html", "blog-index")):
+            head = (ROOT / page).read_text().split("</head>", 1)[0]
+            switch = head.find(f'<script src="js/theme.js" data-page="{kind}"></script>')
+            self.assertGreater(switch, -1, page)
+            self.assertLess(switch, head.find("styles/style.css"), page)
 
     def test_blog_navigation_supports_newer_and_older(self):
         script = (ROOT / "js/blog-nav.js").read_text()
