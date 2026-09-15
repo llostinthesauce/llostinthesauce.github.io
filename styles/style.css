@@ -408,6 +408,25 @@ button:focus-visible {
     color: #66FFCC;
 }
 
+/* Blockquotes: link-and-notes callouts in essays. Same left rule as a
+   featured field-notes entry. */
+.blog-post-content blockquote {
+    border-left: 3px solid #33CCAA;
+    background: #0d0d0d;
+    padding: 6px 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.blog-post-content blockquote p {
+    margin: 8px 0;
+}
+
+.blog-post-content blockquote ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
 /* Headings */
 h1,
 h2,

@@ -549,6 +549,7 @@ TITLE_SMALL_WORDS = {
 TITLE_ACRONYMS = {'ai': 'AI'}
 TITLE_ROMAN_RE = re.compile(r'^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$')
 TITLE_INITIALS_RE = re.compile(r'^(?:[a-z]\.)+[a-z]?$')
+TITLE_VERSION_RE = re.compile(r'^v\d+(?:\.\d+)*$')  # v4, v2.1 stay lowercase
 
 
 def title_case(text: str) -> str:
@@ -565,7 +566,7 @@ def title_case(text: str) -> str:
         parts = []
         for part_index, part in enumerate(core.split('-')):
             bare = part.rstrip('.')
-            if not part or any(ch.isupper() for ch in part):
+            if not part or any(ch.isupper() for ch in part) or TITLE_VERSION_RE.match(part):
                 parts.append(part)
             elif bare in TITLE_ACRONYMS:
                 parts.append(TITLE_ACRONYMS[bare] + part[len(bare):])

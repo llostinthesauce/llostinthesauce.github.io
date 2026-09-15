@@ -40,7 +40,8 @@ window.__SITEMAP__ = {
         "2026-04-23-field-notes-march-30-april-8.html",
         "2026-06-10-field-notes-2-1.html",
         "2026-08-14-field-notes-iv-july-7-22.html",
-        "2026-09-04-untitled.html"
+        "2026-09-04-untitled.html",
+        "2026-09-14-on-glados-hal-and-the-matrix.html"
       ],
       "folders": {
         "builds": {

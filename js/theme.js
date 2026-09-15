@@ -28,6 +28,7 @@
     var ACRONYMS = { ai: 'AI' };
     var ROMAN_RE = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/;
     var INITIALS_RE = /^(?:[a-z]\.)+[a-z]?$/;
+    var VERSION_RE = /^v\d+(?:\.\d+)*$/; // v4, v2.1 stay lowercase
 
     function titleCase(text) {
         var words = text.split(' ');
@@ -40,7 +41,7 @@
             var edge = index === 0 || index === words.length - 1 || afterColon;
             var parts = core.split('-').map(function (part, partIndex) {
                 var bare = part.replace(/\.+$/, '');
-                if (!part || /[A-Z]/.test(part)) return part;
+                if (!part || /[A-Z]/.test(part) || VERSION_RE.test(part)) return part;
                 if (Object.prototype.hasOwnProperty.call(ACRONYMS, bare)) return ACRONYMS[bare] + part.slice(bare.length);
                 if (ROMAN_RE.test(bare) || INITIALS_RE.test(part)) return part.toUpperCase();
                 if (partIndex === 0 && !edge && SMALL_WORDS.indexOf(part) !== -1) return part;
