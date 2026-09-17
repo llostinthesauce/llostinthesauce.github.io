@@ -171,13 +171,7 @@ window.__SITEMAP__ = {
         "progress": {
           "files": [
             "2026-01.html",
-            "2026-02.html",
-            "2026-03.html",
-            "2026-04.html",
-            "2026-05.html",
-            "2026-06.html",
             "2026-07.html",
-            "2026-08.html",
             "2026-09.html"
           ],
           "folders": {}
