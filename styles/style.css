@@ -676,52 +676,45 @@ hr {
 
 /* ---- Gallery Index Page (galleries.html) ---- */
 
-.gallery-featured-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin: 18px 0 10px;
-}
-
-.gallery-featured-card {
-    display: block;
-    background-color: #111;
-    border: 2px solid #9966CC;
-    padding: 20px 16px;
-    text-align: center;
-    text-decoration: none;
-    font-family: monospace;
-    color: #9966CC;
-    font-size: 1.05em;
-    font-weight: bold;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.gallery-featured-card:hover {
-    background-color: #1a0030;
-    border-color: #CC99FF;
-    color: #CC99FF;
-}
-
-.gallery-featured-card .gallery-featured-sub {
-    display: block;
-    margin-top: 6px;
+/* ---- Section labels on index pages ----
+   builds+, blog and the gallery index all group cards under a label. As an h2
+   it read as a second page title stacked under the h1; as a small monospace tag
+   with a hairline rule running out to the edge it reads as a divider, which is
+   what it is. One rule, so the three pages cannot drift. */
+.section-title,
+.gallery-group-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
     color: #99CCCC;
-    font-size: 0.8em;
+    font-family: monospace;
+    font-size: 0.78rem;
     font-weight: normal;
-    font-style: italic;
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
 }
 
-.gallery-featured-card .gallery-featured-badge {
-    display: inline-block;
-    background: #9966CC;
-    color: #000;
-    font-size: 0.65em;
-    padding: 1px 6px;
-    border-radius: 2px;
-    margin-bottom: 6px;
-    font-weight: bold;
-    letter-spacing: 0;
+.section-title::after,
+.gallery-group-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, #333344, rgba(51, 51, 68, 0));
+}
+
+/* blog.html and builds+ stack label → content directly, with no flex gap
+   around them the way .gallery-groups has */
+.section-title {
+    margin: 30px 0 14px;
+}
+
+h1 + .section-title {
+    margin-top: 20px;
+}
+
+.section-title + .camera-preview-row {
+    margin-top: 0;
 }
 
 .gallery-groups {
@@ -807,9 +800,11 @@ hr {
     gap: 12px;
 }
 
-/* the top group is image cards, not chips — same min AND same gap as
-   .camera-preview-row so a card is the same size on every page */
-.gallery-group:first-child .gallery-grid {
+/* a group of image cards, not chips — same min AND same gap as
+   .camera-preview-row so a card is the same size on every page. Set by
+   kind: 'cards' in js/gallery-data.js, so it follows the content, not the
+   position of the group on the page. */
+.gallery-groups .gallery-grid.is-cards {
     --grid-min: 220px;
     gap: 14px;
 }
@@ -909,6 +904,7 @@ hr {
 
 /* ---- Home Tiles (index.html) ---- */
 .home-tiles {
+    font-size: 1.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 280px auto auto;
@@ -1127,9 +1123,6 @@ a.t-brand:hover .brand-tag { color: #66FFCC; }
     background-color: #050505;
     border: 1px solid #333;
     transition: border-color 0.2s ease, transform 0.2s ease;
-}
-.card-thumb.is-placeholder {
-    background-image: repeating-linear-gradient(45deg, #0c0c0c 0 8px, #050505 8px 16px);
 }
 .recent-card:hover .card-thumb {
     border-color: #9966CC;

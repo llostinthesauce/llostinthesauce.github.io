@@ -459,57 +459,102 @@ def build_blog_nav():
     print(f"Updated {nav_path} ({len(posts)} blog posts)")
 
 
-def build_blog_list():
-    """Rewrite the blog list in blog.html between AUTOGEN markers."""
+def collect_posts():
+    """Every dated post as (category, rolling, datetime, filename, raw title).
+
+    One reading of blog/ for both themes, so nuBlog's blog.html and the clean
+    theme's writing.html can never drift apart. A post missing its category or
+    theme.js fails the build rather than quietly falling out of one of them.
+    """
     blog_dir = ROOT / 'blog'
+    title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
+    posts = []
+    problems = []
+    for path in sorted(blog_dir.glob('*.html')):
+        try:
+            dt = datetime.strptime(path.name[:10], '%Y-%m-%d')
+        except ValueError:
+            continue
+        content = path.read_text()
+        category = WRITING_CATEGORY_RE.search(content)
+        if not category or category.group(1) not in WRITING_CATEGORIES:
+            problems.append(path.name)
+            continue
+        if 'js/theme.js' not in content:
+            problems.append(f"{path.name} (no theme.js)")
+            continue
+        match = title_pattern.search(content)
+        posts.append((
+            category.group(1),
+            path.name in BLOG_FEED_EXCLUDE,
+            dt,
+            path.name,
+            match.group(1) if match else path.stem,
+        ))
+    if problems:
+        raise SystemExit(
+            "blog posts need <meta name=\"nublog:category\"> "
+            f"({', '.join(WRITING_CATEGORIES)}) and ../js/theme.js: {', '.join(problems)}"
+        )
+    return posts
+
+
+def group_posts(posts):
+    """Bucket posts by category, rolling pages first, then newest first."""
+    groups = {key: [] for key in WRITING_CATEGORIES}
+    for category, rolling, dt, name, title in posts:
+        groups[category].append((rolling, dt, name, title))
+    for bucket in groups.values():
+        bucket.sort(reverse=True)
+    return groups
+
+
+def build_blog_list():
+    """Rewrite blog.html between AUTOGEN markers: the same five sections, the
+    same order and the same membership as the clean theme's writing.html, with
+    nuBlog keeping every title exactly as the post wrote it."""
     blog_html_path = ROOT / 'blog.html'
-    if not blog_dir.is_dir() or not blog_html_path.is_file():
+    if not (ROOT / 'blog').is_dir() or not blog_html_path.is_file():
         print("blog/ or blog.html missing, skipping blog list update")
         return
 
-    posts = []
-    title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
+    groups = group_posts(collect_posts())
+    sections = []
+    total = 0
+    for key, (anchor_id, label) in WRITING_CATEGORIES.items():
+        def blog_item(href, title, when, added=''):
+            stamp = f' data-added="{added}"' if added else ''
+            return (f'            <div class="blog-item"{stamp}>'
+                    f'<a href="{href}">{title}</a>'
+                    f' <span class="blog-item-date">{when}</span></div>')
 
-    for p in sorted(blog_dir.iterdir()):
-        if not p.is_file() or p.suffix != '.html' or p.name.startswith('.') or p.name in BLOG_FEED_EXCLUDE:
+        # rolling pages, then the hand-added links, then the dated posts
+        lines = [
+            blog_item(f'blog/{name}', title, ROLLING_NOTE, dt.strftime('%Y-%m-%d'))
+            for rolling, dt, name, title in groups[key] if rolling
+        ]
+        lines += [
+            blog_item(href, title.lower(), ROLLING_NOTE)
+            for href, title, _ in WRITING_EXTRA_LINKS.get(key, [])
+        ]
+        lines += [
+            blog_item(f'blog/{name}', title,
+                      dt.strftime('%B %d, %Y').replace(' 0', ' '), dt.strftime('%Y-%m-%d'))
+            for rolling, dt, name, title in groups[key] if not rolling
+        ]
+        if not lines:
             continue
-        try:
-            date_str = p.name[:10]
-            dt = datetime.strptime(date_str, '%Y-%m-%d')
-            date_formatted = dt.strftime('%B %d, %Y').replace(' 0', ' ')
-        except ValueError:
-            continue
-
-        content = p.read_text()
-        match = title_pattern.search(content)
-        if match:
-            title = match.group(1)
-        else:
-            title = p.stem
-
-        posts.append((p.name, title, date_formatted, dt))
-
-    if not posts:
-        print("No dated blog posts found, skipping blog list update")
-        return
-
-    posts.sort(key=lambda x: (x[3], x[0]), reverse=True)
-
-    # data-added drives the '*new!' badge; js/whats-new.js picks the newest and
-    # drops it once it ages out, so the flag is never stale.
-    items = '\n'.join(
-        f'            <div class="blog-item" data-added="{dt.strftime("%Y-%m-%d")}">'
-        f'<a href="blog/{filename}">{title}</a>'
-        f' <span class="blog-item-date">{date_formatted}</span></div>'
-        for filename, title, date_formatted, dt in posts
-    )
+        total += len(lines)
+        sections.append(
+            f'        <h2 class="section-title">{label.lower()}</h2>\n'
+            + '\n'.join(lines)
+        )
 
     replacement = (
         "    <!-- AUTOGEN-START blog-list — populated by scripts/build-sitemap.py -->\n"
-        f"{items}\n"
+        + '\n'.join(sections) + "\n"
         "    <!-- AUTOGEN-END blog-list -->"
     )
-
     pattern = re.compile(
         r"    <!-- AUTOGEN-START blog-list.*?    <!-- AUTOGEN-END blog-list -->",
         re.DOTALL,
@@ -518,8 +563,8 @@ def build_blog_list():
     if not pattern.search(original):
         print(f"AUTOGEN markers not found in {blog_html_path}, skipping")
         return
-    blog_html_path.write_text(pattern.sub(replacement, original))
-    print(f"Updated {blog_html_path} ({len(posts)} blog posts)")
+    blog_html_path.write_text(pattern.sub(lambda _: replacement, original))
+    print(f"Updated {blog_html_path} ({total} entries in {len(sections)} sections)")
 
 
 # The clean theme's index (writing.html) groups posts by the category each post
@@ -527,18 +572,21 @@ def build_blog_list():
 # a phone one list top to bottom; on a wide screen WRITING_LEFT_COLUMN fills the
 # left column and the rest the right, each in this order.
 WRITING_CATEGORIES = {
-    'essay': ('essays', 'Essays'),
-    'university': ('university-essays', 'University Essays'),
     'field-notes': ('field-notes', 'Field Notes'),
     'creative': ('creative-writing', 'Creative Writing'),
+    'essay': ('essays', 'Essays'),
+    'university': ('university-essays', 'University Essays'),
     'other': ('other', 'Other'),
 }
-WRITING_LEFT_COLUMN = {'essay', 'university'}
+WRITING_LEFT_COLUMN = {'field-notes', 'creative', 'essay'}
 WRITING_CATEGORY_RE = re.compile(r'<meta name="nublog:category" content="([^"]+)">')
 # Non-post pages listed at the end of a section: (href, title, note).
+# (href, title, clean-theme note) — the clean note says the link leaves the reader.
 WRITING_EXTRA_LINKS = {
-    'other': [('blog/builds/index.html', 'Builds+', 'Full Site')],
+    'other': [('blog/builds/index.html', 'Builds+', 'updated intermittently \u00b7 full site')],
 }
+# Rolling pages carry this instead of a date, in both themes.
+ROLLING_NOTE = 'updated intermittently'
 
 # Title case for the clean theme. js/theme.js carries the same rules for post
 # headings; tests/title-case-cases.json holds both to one answer.
@@ -594,48 +642,29 @@ def build_writing_index():
         print("blog/ or writing.html missing, skipping writing index update")
         return
 
-    title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
-    groups = {key: [] for key in WRITING_CATEGORIES}
-    problems = []
-    for p in sorted(blog_dir.glob('*.html')):
-        try:
-            dt = datetime.strptime(p.name[:10], '%Y-%m-%d')
-        except ValueError:
-            continue
-        content = p.read_text()
-        category = WRITING_CATEGORY_RE.search(content)
-        if not category or category.group(1) not in WRITING_CATEGORIES:
-            problems.append(p.name)
-            continue
-        if 'js/theme.js' not in content:
-            problems.append(f"{p.name} (no theme.js)")
-            continue
-        match = title_pattern.search(content)
-        title = escape(title_case(unescape(match.group(1) if match else p.stem)), quote=False)
-        rolling = p.name in BLOG_FEED_EXCLUDE
-        groups[category.group(1)].append((rolling, dt, p.name, title))
-
-    if problems:
-        raise SystemExit(
-            "writing.html: these posts need <meta name=\"nublog:category\"> "
-            f"({', '.join(WRITING_CATEGORIES)}) and ../js/theme.js: {', '.join(problems)}"
-        )
+    groups = group_posts(collect_posts())
+    for bucket in groups.values():
+        bucket[:] = [
+            (rolling, dt, name, escape(title_case(unescape(title)), quote=False))
+            for rolling, dt, name, title in bucket
+        ]
 
     sections = []
     for key, (anchor_id, label) in WRITING_CATEGORIES.items():
-        posts = sorted(groups[key], reverse=True)
+        posts = groups[key]
         if not posts:
             continue
-        lines = [
-            f'                <li><a href="blog/{name}">{title}</a>'
-            f' <span class="clean-when">{dt.strftime("%b %Y")}</span></li>'
-            for _, dt, name, title in posts
-        ]
-        lines += [
-            f'                    <li><a href="{href}">{title}</a>'
-            f' <span class="clean-when">{note}</span></li>'
-            for href, title, note in WRITING_EXTRA_LINKS.get(key, [])
-        ]
+        def clean_item(href, title, when):
+            return (f'                <li><a href="{href}">{title}</a>'
+                    f' <span class="clean-when">{when}</span></li>')
+
+        # same order as blog.html: rolling, then the hand-added links, then dated
+        lines = [clean_item(f'blog/{name}', title, ROLLING_NOTE)
+                 for rolling, dt, name, title in posts if rolling]
+        lines += [clean_item(href, title, note)
+                  for href, title, note in WRITING_EXTRA_LINKS.get(key, [])]
+        lines += [clean_item(f'blog/{name}', title, dt.strftime('%b %Y'))
+                  for rolling, dt, name, title in posts if not rolling]
         items = '\n'.join(lines)
         sections.append((key,
             f'            <section class="clean-section" id="{anchor_id}">\n'
@@ -1238,12 +1267,25 @@ def version_shared_loader():
             return match.group(0)
         return f'{match.group(1)}{match.group(2)}?v={version}{match.group(3)}'
 
+    # Same treatment for the two other scripts pages reference bare: whats-new.js
+    # (which cards wear the badge) and theme.js (which theme a visitor lands in,
+    # decided before first paint). A cached copy of either is a stale rule.
+    extra = {}
+    for name in ('whats-new.js', 'theme.js'):
+        script_path = ROOT / 'js' / name
+        if not script_path.is_file():
+            continue
+        digest = hashlib.sha256(script_path.read_bytes()).hexdigest()[:12]
+        extra[re.compile(rf'(<script\b[^>]*\bsrc=["\'][^"\']*?js/{re.escape(name)})(?:\?[^"\']*)?(["\'])')] = digest
+
     updated = 0
     for page in sorted(ROOT.rglob('*.html')):
         if any(part in EXCLUDE_DIRS for part in page.relative_to(ROOT).parts):
             continue
         original = page.read_text()
         rendered = pattern.sub(replace, original)
+        for extra_pattern, digest in extra.items():
+            rendered = extra_pattern.sub(rf'\1?v={digest}\2', rendered)
         if rendered != original:
             page.write_text(rendered)
             updated += 1

@@ -8,7 +8,7 @@
     <meta property="og:description" content="looking for areas to create some side income, i serenaded my buddy Claude to help me generate 100-200 page e-pub books for amazon. upfront cost was $15~ for api credits to generate 30~ books. they...">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="nuBlog">
-    <title>misc+ - builds+ - nuBlog</title>
+    <title>other projects - builds+ - nuBlog</title>
     <link rel="stylesheet" href="../../styles/style.css">
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
 </head>
@@ -17,23 +17,44 @@
         <div id="site-header"></div>
         <main id="main-content" tabindex="-1">
         <a href="index.html" class="back-link">&larr; back to builds+</a>
-        <h1>Misc+</h1>
-        <div class="blog-post-date">April 2026 — wip</div>
+        <h1>other projects</h1>
+        <div class="blog-post-date">January 2025 — current</div>
 
         <div class="blog-post-content">
-            <p><strong>Apple Music Toolkit</strong></p>
+            <h2>Apple Music Toolkit</h2>
+            <p>local python toolkit for cleaning and understanding or fixing your local music files (created bc of the iPod(s))</p>
             <p><a href="https://github.com/llostinthesauce/apple-music-toolkit" class="github-link" target="_blank" rel="noopener">&rarr; github.com/llostinthesauce/apple-music-toolkit</a></p>
             <br><hr><br>
-            <p><strong>Navidrome Server</strong></p>
-            <p><em>January 2025 — running</em></p>
+
+            <h2>ACRE</h2>
+            <p>acre was my final capstone project before i could graduate. it was poised by me in august of 2025, and i had just gotten interested in running ai models on edge hardware. it was indeed a group project, but i myself pitched the idea and we developed it accordingly. the framework was posited as a LMStudio or Ollama competitor, but truly open source, and designed to be lightweight, universal across machines and OS, and accessible. We gained access to a brand new NVIDIA Jetson edge device (glorified pi with GPU cores) to show that it operates fully offline, as a proof of concept.</p>
+
+            <p>this project really captured my interest, and I wanted to know what the limits were of self hosting and how hard it actually is to build a full GUI app with multiple framework libraries and so on. We encountered a lot of hurdles. Cross platforming was fucking hard, and rag was very hard to make useful on the Jetson. it could run decent inference, but nothing compared to my MacBook. However, i wish I had more time to finish the project, but it got to a demonstrable state by the end, and we got a perfect grade, namely because we delivered what we set out to back in august, which was, develop a full multi-platform LLM inference engine for macOS, unix, and windows, which in the end, it did. fully fleshed out with "dev settings", or no-brainer settings, themes, chat history, safe words, and encryption.</p>
+
+            <br><hr><br>
+
+            <h2>LumenComposite</h2>
+            <p>I graduated, and i was NOT satisfied with ACRE. ACRE was written in python, and made for multiple machines. I have a mac, and MUCH prefer the macOS versions of these tools, namely because of this wonderful library developed by the ML engineers at Apple, called MLX. mlx is the bread and butter for local llm inference on apple silicon, and the difference is STARK. it runs laps over other machines with comparable specs, and offers mostly marginal improvement over running gguf or other model types.</p>
+
+            <p>still tho, i was excited to build acre again, but just in native swift using mlx-lm. This was much harder than I had anticipated, as there really just isnt/wasnt a ton of mlx support that was open source. i wanted a local iOS app too that could share chat history and settings via apple id or local network, ie, able to run inference from my phone via my MacBook, if i was on the same network, and in theory if i used tail scale or something, could use it anywhere. Youtube videos of people homelabbing or clustering mac minis got me inspired.</p>
+
+            <p>So I got lumen composite to a point where it had a nice macOS native GUI and did everything I wanted it to. had simple rag, inference, all of the parameters you could want in the world, and mlx-lm framework. However, I noticed that I kept getting issues when downloading new models from HF because I was sorta trying to re-invent the wheel, when i could just use LM studio for mlx inference, serve it, and build a more complex RAG wrapper app outside of that, which is what I really want. Dev paused on this around xmas because I got burned out.</p>
+        </div>
+
+        </main>
+
+        <div id="site-footer"></div>
+            <br><hr><br>
+            <h2>Navidrome Server</h2>
+            <p><em>January 2025 — current</em></p>
             <img src="../../images/builds/navidrome.jpg" alt="Navidrome Server" loading="lazy" width="1267" height="1168">
             <br><hr><br>
-            <p><strong>Calibre Server</strong></p>
-            <p><em>January 2025 — running</em></p>
+            <h2>Calibre Server</h2>
+            <p><em>January 2025 — current</em></p>
             <img src="../../images/builds/calibre.jpg" alt="Calibre Server" loading="lazy" width="1273" height="1180">
             <br><hr><br>
-            <p><strong>Splash Screen</strong></p>
-            <p><em>July 2026 — running</em></p>
+            <h2>Splash Screen</h2>
+            <p><em>July 2026 — current</em></p>
             <img src="../../images/builds/splash-screen.webp" alt="terminal splash screen: ascii name banner, a small cat, host and system stats, and a numbered menu of shortcuts and ssh targets" loading="lazy" width="1294" height="982">
         </div>
 

@@ -35,29 +35,28 @@
         var containers = scope.querySelectorAll('[data-new-scope]');
 
         Array.prototype.forEach.call(containers, function (container) {
-            var candidates = container.querySelectorAll('[data-added]');
-            var maxDate = null;
-            var newestList = [];
+            // data-new-count="2" on the scope badges the two newest dates
+            // (blog.html does); the default is one.
+            var wanted = Number(container.getAttribute('data-new-count')) || 1;
+            var dated = [];
 
-            Array.prototype.forEach.call(candidates, function (el) {
+            Array.prototype.forEach.call(container.querySelectorAll('[data-added]'), function (el) {
                 el.classList.remove('is-new');
                 var date = parseAdded(el.getAttribute('data-added'));
-                if (!date) return;
-                if (!maxDate || date > maxDate) {
-                    maxDate = date;
-                    newestList = [el];
-                } else if (date.getTime() === maxDate.getTime()) {
-                    newestList.push(el);
-                }
+                if (date) dated.push({ el: el, time: date.getTime() });
             });
+            if (!dated.length) return;
 
-            if (!maxDate) return;
-            var ageDays = (Date.now() - maxDate.getTime()) / DAY_MS;
-            if (ageDays <= FRESH_DAYS) {
-                newestList.forEach(function (el) {
-                    el.classList.add('is-new');
-                });
-            }
+            var times = dated.map(function (item) { return item.time; });
+            var fresh = times
+                .filter(function (time, index) { return times.indexOf(time) === index; })
+                .sort(function (a, b) { return b - a; })
+                .slice(0, wanted)
+                .filter(function (time) { return (Date.now() - time) / DAY_MS <= FRESH_DAYS; });
+
+            dated.forEach(function (item) {
+                if (fresh.indexOf(item.time) !== -1) item.el.classList.add('is-new');
+            });
         });
     }
 

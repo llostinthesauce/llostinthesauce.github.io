@@ -46,23 +46,15 @@ window.__SITEMAP__ = {
       "folders": {
         "builds": {
           "files": [
-            "benchmarks.html",
+            "current-dev.html",
             "index.html",
             "ipod.html",
-            "linux-box-2014.html",
-            "lumen-acre.html",
+            "linux-box-and-pi.html",
             "mac-pro-2013.html",
-            "macbook-air-2014.html",
-            "macbook-pro-2012.html",
-            "macbook-pro-2021.html",
-            "macbook-pro-2021b.html",
-            "macbook-pro-2026.html",
+            "macbooks.html",
             "misc-plus.html",
-            "mycelium.html",
             "neocities-tcwishes.html",
-            "raspi3.html",
-            "this-site.html",
-            "whisker.html"
+            "this-site.html"
           ],
           "folders": {}
         }

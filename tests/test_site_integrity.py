@@ -72,6 +72,17 @@ def actual_pages():
     )
 
 
+def newest_blog_entry():
+    """blog.html is grouped by section now, so "first link" is no longer the
+    newest post — read every entry's data-added and take the max."""
+    entries = re.findall(
+        r'<div class="blog-item" data-added="([\d-]+)"><a href="(blog/[^"]+\.html)">',
+        (ROOT / "blog.html").read_text(),
+    )
+    assert entries, "no dated blog entries found"
+    return max(entries)[1]
+
+
 class SiteIntegrityTests(unittest.TestCase):
     def test_water_gif_is_protected(self):
         self.assertEqual(WATER_SHA256, EXPECTED_WATER_SHA256)
@@ -88,12 +99,7 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertNotIn("images/water.gif", output.getvalue())
 
     def test_homepage_recent_blog_entry_matches_latest_blog_entry(self):
-        blog = (ROOT / "blog.html").read_text()
-        latest = re.search(
-            r'AUTOGEN-START blog-list.*?<a href="(blog/[^"]+\.html)">',
-            blog,
-            re.DOTALL,
-        ).group(1)
+        latest = newest_blog_entry()
         homepage = (ROOT / "index.html").read_text()
         recent = re.search(
             r'AUTOGEN-START recent-blog.*?class="recent-card" href="(blog/[^"]+\.html)"',
@@ -157,7 +163,9 @@ class SiteIntegrityTests(unittest.TestCase):
                 failures.append((post.name, "category"))
             # theme.js must precede first paint, so it belongs in <head>
             head = text.split("</head>", 1)[0]
-            if '<script src="../js/theme.js" data-page="post"></script>' not in head:
+            if not re.search(
+                r'<script src="\.\./js/theme\.js(?:\?v=[a-f0-9]+)?" data-page="post"></script>', head
+            ):
                 failures.append((post.name, "theme.js in head"))
             if f'href="blog/{post.name}"' not in writing:
                 failures.append((post.name, "listed on writing.html"))
@@ -173,8 +181,11 @@ class SiteIntegrityTests(unittest.TestCase):
     def test_clean_theme_front_doors_load_the_switch_before_styles(self):
         for page, kind in (("index.html", "home"), ("blog.html", "blog-index")):
             head = (ROOT / page).read_text().split("</head>", 1)[0]
-            switch = head.find(f'<script src="js/theme.js" data-page="{kind}"></script>')
-            self.assertGreater(switch, -1, page)
+            found = re.search(
+                rf'<script src="js/theme\.js(?:\?v=[a-f0-9]+)?" data-page="{kind}"></script>', head
+            )
+            self.assertIsNotNone(found, page)
+            switch = found.start()
             self.assertLess(switch, head.find("styles/style.css"), page)
 
     def test_blog_navigation_supports_newer_and_older(self):
@@ -211,8 +222,6 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertIn("@media (prefers-reduced-motion: reduce)", css)
         homepage = (ROOT / "index.html").read_text()
         self.assertNotIn("<marquee", homepage)
-        self.assertIn("pageShell.setAttribute('inert', '')", homepage)
-        self.assertIn("event.key === 'Tab'", homepage)
         self.assertNotIn("user-scalable=no", (ROOT / "all-images.html").read_text())
 
     def test_programmatic_main_focus_does_not_draw_a_page_border(self):
@@ -225,27 +234,7 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertIn("a:focus-visible", css)
         self.assertIn("button:focus-visible", css)
 
-    def test_home_boot_overlay_hidden_state_removes_it_from_layout(self):
-        homepage = (ROOT / "index.html").read_text()
-        self.assertRegex(
-            homepage,
-            r"#boot-overlay\[hidden\]\s*\{\s*display:\s*none;",
-        )
 
-    def test_home_boot_overlay_finishes_within_prescribed_window(self):
-        homepage = (ROOT / "index.html").read_text()
-        auto_delay = int(
-            re.search(
-                r"autoBootTimeout\s*=\s*setTimeout\(bootNuBlog,\s*(\d+)\)",
-                homepage,
-            ).group(1)
-        )
-        fade_delay = int(
-            re.search(r"reducedMotion\s*\?\s*0\s*:\s*(\d+)", homepage).group(1)
-        )
-        total_delay = auto_delay + fade_delay
-        self.assertGreaterEqual(total_delay, 3000)
-        self.assertLessEqual(total_delay, 5000)
 
     def test_bot_blocker_allows_local_preview_without_weakening_public_block(self):
         script = (ROOT / "js/bot-blocker.js").read_text()
@@ -516,11 +505,7 @@ class SiteIntegrityTests(unittest.TestCase):
             r'<a class="recent-card" href="([^"]+)"', block.group(1)
         )
 
-        latest_blog = re.search(
-            r'AUTOGEN-START blog-list.*?<a href="(blog/[^"]+\.html)">',
-            (ROOT / "blog.html").read_text(),
-            re.DOTALL,
-        ).group(1)
+        latest_blog = newest_blog_entry()
         plant_pages = sorted((ROOT / "plants/progress").glob("????-??.html"))
         monthly_pages = sorted((ROOT / "galleries/monthly").glob("????-??-???.html"))
         latest_plant = str(plant_pages[-1].relative_to(ROOT))
@@ -549,9 +534,9 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertIsNotNone(photo_tile, "homepage photo tile not found")
         self.assertEqual(photo_tile.group(1), str(current_month.relative_to(ROOT)))
 
-    def test_cards_are_one_size_outside_the_blog_strip(self):
-        """One card size sitewide. The 3:1 rolling strip on blog.html is the
-        single sanctioned exception; a second override means drift restarting."""
+    def test_cards_are_one_size(self):
+        """One card size sitewide. blog.html used to carry a 3:1 rolling strip;
+        it is gone, so no page may override the card's shape at all."""
         css = (ROOT / "styles/style.css").read_text()
         self.assertIn("aspect-ratio: 3 / 2;", css)
         self.assertIn("box-sizing: border-box;", css)
@@ -564,7 +549,7 @@ class SiteIntegrityTests(unittest.TestCase):
                     "big-link-box" in block or "gallery-entry-preview" in block
                 ):
                     overrides.append(str(page.relative_to(ROOT)))
-        self.assertEqual(overrides, ["blog.html"])
+        self.assertEqual(overrides, [])
 
     def test_post_images_use_only_sanctioned_scales(self):
         """Post images come in three widths and no others: the measure

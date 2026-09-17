@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const note = groupClone.querySelector('.note');
             const grid = groupClone.querySelector('.gallery-grid');
             grid.setAttribute('data-new-scope', '');
+            // kind: 'cards' — image cards at card density; anything else
+            // is a chip list (the month links).
+            if (group.kind === 'cards') grid.classList.add('is-cards');
 
             if (group.title) {
                 title.textContent = group.title;

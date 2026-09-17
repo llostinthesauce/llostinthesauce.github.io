@@ -12,63 +12,75 @@
 
 window.nublogGalleryGroups = [
     {
-        title: '',
+        title: 'current',
+        kind: 'cards',
         entries: [
-            {
-                label: 'september 2026 ~ current',
+                {
+                label: 'september 2026',
                 href: 'galleries/monthly/2026-09-sep.html',
                 sourceImage: 'images/monthly/2026/09-sep/IMG_7219.jpeg',
                 previewImage: 'images/.cards/monthly/2026/09-sep/IMG_7219.webp',
                 added: '2026-09'
             },
-            {
-                label: 'canon eos elan ii 35mm',
-                href: 'galleries/cameras/canon-elan-ii.html',
-                sourceImage: 'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
-                previewImage: 'images/.cards/cameras/elan-ii/roll-2/R1-08312-0020.webp',
-                added: '2026-06'
-            },
-            {
+                {
+                label: 'videos',
+                href: 'galleries/videos.html',
+                sourceImage: 'images/galleries/videos.jpeg',
+                previewImage: 'images/.cards/galleries/videos.webp',
+                added: '2026-04'
+            }
+        ]
+    },
+    {
+        title: 'film + digital',
+        kind: 'cards',
+        entries: [
+                {
                 label: 'vivitar pz3090 35mm',
                 href: 'galleries/cameras/vivitar-pz3090.html',
                 sourceImage: 'images/cameras/vivitar/roll-4/R1-08311-009A.JPG',
                 previewImage: 'images/.cards/cameras/vivitar/roll-4/R1-08311-009A.webp',
                 added: '2026-06'
             },
-            {
+                {
+                label: 'canon eos elan ii 35mm',
+                href: 'galleries/cameras/canon-elan-ii.html',
+                sourceImage: 'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
+                previewImage: 'images/.cards/cameras/elan-ii/roll-2/R1-08312-0020.webp',
+                added: '2026-06'
+            },
+                {
                 label: 'disposable 35mm',
                 href: 'galleries/cameras/disposable.html',
                 sourceImage: 'images/cameras/disposable/k8.jpeg',
                 previewImage: 'images/.cards/cameras/disposable/k8.webp',
                 added: '2026-04'
             },
-            {
+                {
                 label: 'canon sd400 digital',
                 href: 'galleries/cameras/canon-sd400.html',
                 sourceImage: 'images/cameras/canon/2026/IMG_4010.jpeg',
                 previewImage: 'images/.cards/cameras/canon/2026/IMG_4010.webp',
                 added: '2026-04'
-            },
-            {
+            }
+        ]
+    },
+    {
+        title: 'plants + animals',
+        kind: 'cards',
+        entries: [
+                {
                 label: 'plants',
                 href: 'plants.html',
                 sourceImage: 'images/plants/plantos4.JPG',
                 previewImage: 'images/.cards/plants/plantos4.webp',
                 added: '2026-04'
             },
-            {
+                {
                 label: 'animals',
                 href: 'galleries/animals.html',
                 sourceImage: 'images/galleries/animals.jpeg',
                 previewImage: 'images/.cards/galleries/animals.webp',
-                added: '2026-04'
-            },
-
-            {
-                label: 'videos',
-                href: 'galleries/videos.html',
-                sourceImage: 'images/galleries/videos.jpeg',
-                previewImage: 'images/.cards/galleries/videos.webp',
                 added: '2026-04'
             }
         ]
