@@ -18,7 +18,7 @@
         <main id="main-content" tabindex="-1">
         <a href="index.html" class="back-link">&larr; back to builds+</a>
 <h1>mycelium</h1>
-<div class="blog-post-date">April 2026 — active</div>
+<div class="blog-post-date">September 2026 — active</div>
 
 <div class="blog-post-content">
 <div class="spec-box">
@@ -31,21 +31,25 @@
 <tr><td>AI_Lab</td><td>experimental playground</td></tr>
 <tr><td>Lumen reDux</td><td>lumen reboot</td></tr>
 <tr><td>mycelium v1</td><td>first agentic platform</td></tr>
-<tr><td>mycelium v2</td><td>active development</td></tr>
+<tr><td>mycelium v2.1</td><td>swift rewrite, mlx_lm server</td></tr>
 </table>
 </div>
 
-<h2>v2: active dev</h2>
+<h2>v2.1: september 2026 update</h2>
 
-<p>this is what i am actively building right now. the vision is one place that is entirely me: a total dashboard, wiki, RAG layer, and personal knowledge graph, all private, offline, and secure by default. nothing leaves the machine unless i explicitly want it to.</p>
+<p>oh boy. its been, what, 6 months or so since i started calling this project this? and it is finally about done. I refactored the entire codebase to be mostly swift, and stopping using oMLX or ollama or lmstudio for serving alltogether. the perfomance is MUCH better and fine tunable with just plain mlx_lm server. anyways, the GUI is great, matches macos27, and i have really ironed out the agentic loop and tool use. i realized that making it a projects first, chat second, agentic interface was the best approach. all of the things i said in previous versions of embeddings or RAG or integrations, I have cut. I realized also that i dont actually want an agent to be able to send messages for me or anything like that. SiriAI or just Claude or whatever can do those things, and without much headache. the core original thesis was local models, and actually getting agentic work done. i can use a platform-agnostic system for projects, meaning, i can point the same project at Mycelium as i could OpenCode or Pi or Claude or GPT. the files are on my computer, and that context pack is what matters. and so far, it works well with my setup. sure, i may add integrations like fetching my gmail account or calendar, but i had them added, and it was annoying to fix, or just did not work the way i wanted it. so. anyways. it is usable, i use it, and qwen 3.8 27b is a GREAT model for this. praying google cooks up some heat with Gemma 4. prob not putting this public on GH either, as the system is a bit catered to my machine and current runtimes. god! local ai is like the wild west in 2026. it is very fun.</p>
 
-<p>the core stack is still being finalized. i am deciding between llama.cpp and ollama or LM Studio as the inference backend. the local models run well, particularly the Qwen MoE which is genuinely fast and capable on my hardware. that said, the architecture will also support connecting to any API endpoint or cloud provider for when i want a smarter model for a specific task. local first, cloud optional.</p>
+<h2>v2: late spring / summer 2026 update, active dev</h2>
 
-<p>the wiki layer is multi-domain by design and inspired partly by the Karpathy wiki approach: a knowledge graph that the model itself builds and updates over time. right now the main wiki has 350+ entries across entities, concepts, and auto-generated synthesis notes, seeded from Apple Notes. the taxonomy is intentionally coarse: entity and concept cover almost everything. ingest takes raw notes, classifies them, and writes structured wiki pages. it works.</p>
+<p>the vision is: a total dashboard, wiki, RAG layer, and personal knowledge graph, all private, offline, and secure by default. nothing leaves the machine unless i explicitly want it to.</p>
 
-<p>harvesters in progress: Apple Notes, iMessage, mail, calendar, browser history, local files. the end goal is a personal dashboard that surfaces all of it in one place: wiki search, health logs, a dev project index, everything. Streamlit is the current interface, but that is a placeholder. audio transcription and photo metadata still need preprocessing pipelines before they can ingest. everything else is text and the stack handles it. still a lot to build but the direction is right.</p>
+<p>i am deciding between llama.cpp and ollama or LM Studio as the inference backend. the local models run well, particularly the Qwen MoE which is genuinely fast and capable on my hardware. that said, the architecture will also support connecting to any API endpoint or cloud provider for when i want a smarter model for a specific task.</p>
 
-<h2>v1: deprecated</h2>
+<p>the wiki layer is inspired partly by the Karpathy wiki approach: a knowledge graph that the model itself builds and updates over time. harvesters in progress: Apple Notes, iMessage, mail, calendar, browser history, local files.</p>
+
+<p>the end goal is a personal dashboard that has it all in one place: wiki search, health logs, a dev project index, everything. Streamlit is the current interface, but that is a placeholder. audio transcription and photo metadata maybe down the road. I am doing a LOT.</p>
+
+<h2>v1: spring 2026 update</h2>
 
 <p>enough time passed and I got the itch again to continue dev on my vision of ACRE/Lumen/Mycelium. Around this time, OpenClaw dropped and got me thinking, yes, I dont need to completely re-engineer how MLX is processed and served on mac. So I set out once again to create some sort of skill, wrapper, app, or plugin, that is served locally, accessible thru outlets, and possible to run multi node with prompt processing and all of the bells and whistles. I started dev on this again before I even realized I was trying to make my own open claw. the difference is that it isnt so reliant on cloud models or fancy mcp servers or automated workflows. i want skills, but just the ones I build, not a whole marketplace, way too much security risk IMO. also something about building this perfect vision for myself is much more fun than just running open claw. I also get to learn so much while building.</p>
 

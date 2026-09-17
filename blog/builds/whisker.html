@@ -33,9 +33,7 @@
     </div>
     <a href="https://github.com/llostinthesauce/whisker" class="github-link" target="_blank" rel="noopener">&rarr; github.com/llostinthesauce/whisker</a>
 
-<p>whisker is my OS-level voice-to-text tunnel. the iPhone keyboard captures audio, ships it to a private Mac transcription server over LAN or Tailscale, and inserts the cleaned text back into whatever field you were typing in. the phone is just the mic; the Mac owns the models, cleanup, and speed.</p>
-
-<p>server is FastAPI with bearer auth, three parakeet-mlx profiles (fast, balanced, best). default bind is loopback, real use goes over a tailnet IP. still iterating.</p>
+<p>a mostly vibe coded mac / iphone app that handles on device (the mac that is) transcription using parakeet and mlx. the models and server live on the always on mac, and the app tethers to it via local ip and a key, or over tailscale.</p>
 </div>
 
         </main>
