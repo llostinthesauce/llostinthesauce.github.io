@@ -272,6 +272,33 @@ class SiteIntegrityTests(unittest.TestCase):
             loader,
         )
 
+    def test_page_shell_is_intact(self):
+        """One shell per page: balanced divs, one </main>, one footer slot, and
+        the footer after the content — merging two pages by slicing HTML once
+        dragged a closing shell into the middle of a page, which parked the
+        visitor counter mid-article and pushed everything after it outside the
+        container."""
+        failures = []
+        for page in actual_pages():
+            text = page.read_text(errors="replace")
+            body = text[text.index("<body"):] if "<body" in text else text
+            name = str(page.relative_to(ROOT))
+            opened = len(re.findall(r"<div\b", body))
+            closed = len(re.findall(r"</div>", body))
+            if opened != closed:
+                failures.append((name, f"div {opened} open / {closed} closed"))
+            if body.count("</main>") != 1:
+                failures.append((name, f'{body.count("</main>")} </main>'))
+            # all-images.html and sitemap.html are standalone and carry no
+            # footer slot at all; what must never happen is two of them.
+            footers = body.count('id="site-footer"')
+            if footers > 1:
+                failures.append((name, f"{footers} footer slots"))
+            if 'class="blog-post-content"' in body:
+                if body.index('class="blog-post-content"') > body.index("</main>"):
+                    failures.append((name, "content after </main>"))
+        self.assertEqual(failures, [])
+
     def test_every_page_has_main_landmark(self):
         missing = []
         for page in actual_pages():
