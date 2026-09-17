@@ -54,6 +54,10 @@
     globalThis.nublogTitleCase = titleCase;
     if (typeof document === 'undefined') return; // loaded by the node tests
 
+    // AUTOGEN-START clean-css-version — scripts/build-sitemap.py
+    var CLEAN_CSS_VERSION = '?v=6b402256aa29';
+    // AUTOGEN-END clean-css-version
+
     var THEME_KEY = 'nublog.theme';
     var MODE_KEY = 'nublog.mode';
     var script = document.currentScript;
@@ -137,8 +141,11 @@
         document.querySelectorAll('link[rel="stylesheet"][href*="style.css"]'),
         function (link) { link.media = 'not all'; }
     );
-    if (!document.querySelector('link[href*="clean.css"]')) {
-        document.write('<link rel="stylesheet" href="' + siteRoot + 'styles/clean.css">');
+    // Only a post needs the sheet written in: writing.html links it itself, and
+    // this script runs before that <link> is parsed, so querying for it here
+    // would miss and load the sheet a second time.
+    if (page === 'post') {
+        document.write('<link rel="stylesheet" href="' + siteRoot + 'styles/clean.css' + CLEAN_CSS_VERSION + '">');
     }
 
     var CATEGORY_LABELS = {
@@ -170,6 +177,22 @@
         });
         return toggle;
     }
+
+    // A field-notes post is mostly collapsed <details>; printing it that way
+    // yields a list of dates. CSS cannot reopen them, so open every entry for
+    // the print run and put the reader's own state back afterwards.
+    var reopened = [];
+    window.addEventListener('beforeprint', function () {
+        reopened = Array.prototype.filter.call(
+            document.querySelectorAll('.blog-post-content details'),
+            function (entry) { return !entry.open; }
+        );
+        reopened.forEach(function (entry) { entry.open = true; });
+    });
+    window.addEventListener('afterprint', function () {
+        reopened.forEach(function (entry) { entry.open = false; });
+        reopened = [];
+    });
 
     // Called by include.js in place of the nuBlog header/footer partials.
     function renderChrome() {

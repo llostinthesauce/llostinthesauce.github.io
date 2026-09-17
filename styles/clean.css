@@ -318,6 +318,24 @@ p {
     white-space: nowrap;
 }
 
+/* freshness, the quiet version of nuBlog's '*new!' badge. js/whats-new.js marks
+   the newest entries inside [data-new-scope] and drops the class once they age
+   out, so this expires on its own. */
+.clean-list li.is-new > a::after {
+    content: 'new';
+    display: inline-block;
+    margin-left: 0.5em;
+    padding: 0.1em 0.45em 0.05em;
+    border: 1px solid var(--accent);
+    border-radius: 2rem;
+    color: var(--accent);
+    font-size: 0.6em;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    text-decoration: none;
+    vertical-align: 0.18em;
+}
+
 /* wide screens: the index widens into two columns (see WRITING_LEFT_COLUMN
    in the build); posts keep the single reading measure */
 @media (min-width: 960px) {
@@ -680,4 +698,88 @@ main > h1 {
 /* nuBlog-only furniture that can still be in a post's markup */
 #oneko {
     display: none !important;
+}
+
+/* ---- print: the essay, nothing else -------------------------------------- */
+
+@media print {
+    :root {
+        --bg: #fff;
+        --bg-raised: #fff;
+        --text: #111;
+        --text-2: #444;
+        --text-3: #666;
+        --rule: #ccc;
+        --accent: #111;
+        color-scheme: light;
+    }
+
+    @page {
+        margin: 19mm 16mm;
+    }
+
+    html,
+    body {
+        background: #fff;
+        color: #111;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    .content {
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+        display: block;
+    }
+
+    /* chrome, navigation and the theme switch are screen furniture */
+    .clean-header,
+    .clean-footer,
+    .clean-post-nav,
+    .clean-jump,
+    .skip-link,
+    #site-header,
+    #site-footer {
+        display: none !important;
+    }
+
+    main > h1 {
+        font-size: 22pt;
+    }
+
+    .clean-eyebrow,
+    .blog-post-date {
+        color: #555;
+    }
+
+    /* a heading stranded at the foot of a page is worse than a short page */
+    h1, h2, h3, h4 {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    p, blockquote, li, img, table {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .blog-post-content img {
+        max-width: 100%;
+        max-height: 11cm;
+        margin: 1.2em auto;
+    }
+
+    a {
+        color: #111;
+        text-decoration: none;
+    }
+
+    /* a printed link is useless without its destination */
+    .blog-post-content a[href^="http"]::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.85em;
+        color: #555;
+        word-break: break-all;
+    }
 }

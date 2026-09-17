@@ -654,8 +654,9 @@ def build_writing_index():
         posts = groups[key]
         if not posts:
             continue
-        def clean_item(href, title, when):
-            return (f'                <li><a href="{href}">{title}</a>'
+        def clean_item(href, title, when, added=''):
+            stamp = f' data-added="{added}"' if added else ''
+            return (f'                <li{stamp}><a href="{href}">{title}</a>'
                     f' <span class="clean-when">{when}</span></li>')
 
         # same order as blog.html: rolling, then the hand-added links, then dated
@@ -663,7 +664,7 @@ def build_writing_index():
                  for rolling, dt, name, title in posts if rolling]
         lines += [clean_item(href, title, note)
                   for href, title, note in WRITING_EXTRA_LINKS.get(key, [])]
-        lines += [clean_item(f'blog/{name}', title, dt.strftime('%b %Y'))
+        lines += [clean_item(f'blog/{name}', title, dt.strftime('%b %Y'), dt.strftime('%Y-%m-%d'))
                   for rolling, dt, name, title in posts if not rolling]
         items = '\n'.join(lines)
         sections.append((key,
@@ -679,7 +680,7 @@ def build_writing_index():
     replacement = (
         "        <!-- AUTOGEN-START writing-index — populated by scripts/build-sitemap.py -->\n"
         f'        <ul class="clean-jump" aria-label="sections">\n{jump}\n        </ul>\n'
-        '        <div class="clean-columns">\n'
+        '        <div class="clean-columns" data-new-scope data-new-count="3">\n'
         '            <div class="clean-col">\n'
         + '\n'.join(html for key, html in sections if key in WRITING_LEFT_COLUMN) + '\n'
         '            </div>\n'
@@ -1256,6 +1257,165 @@ def enrich_image_metadata():
     print(f"Enriched image metadata ({updated_images} images across {updated_pages} pages)")
 
 
+SITE_URL = 'https://llostinthesauce.github.io'
+# Pages that describe themselves (every dated post already carries og: tags) or
+# that nothing should preview.
+OG_SKIP = {'404.html', 'guestbook.html'}
+# Index pages have no prose to borrow, so they say what they hold.
+OG_DESCRIPTIONS = {
+    'index.html': 'my domain is my domain. i am the oldest i have ever been and the youngest i will ever be.',
+    'blog.html': 'field notes, creative writing, essays, university essays, and the rolling pages.',
+    'writing.html': 'the clean reader: field notes, creative writing, essays, university essays.',
+    'galleries.html': 'film and digital photo galleries, month by month.',
+    'plants.html': 'plant progress photos, a few times a year.',
+    'blog/builds/index.html': 'machines, projects, and everything else i have built or taken apart.',
+    'all-images.html': 'every image on the site on one pan-and-zoom canvas.',
+    'sitemap.html': 'every page on nuBlog as a directory tree.',
+}
+# badges are 88x31 gifs; they make terrible link previews
+OG_IMAGE_SKIP = ('images/badges/', 'images/oneko')
+OG_BLOCK_RE = re.compile(
+    r'[ \t]*<!-- AUTOGEN-START og\b.*?<!-- AUTOGEN-END og -->\n',
+    re.DOTALL,
+)
+TAG_RE = re.compile(r'<[^>]+>')
+OG_DATE_LINE_RE = re.compile(r'^(?:<em>)?[A-Za-z0-9 ,~+/&-]{0,40}(?:—|--)[A-Za-z ]{0,20}(?:</em>)?$')
+
+
+def og_text(html: str) -> str:
+    return re.sub(r'\s+', ' ', unescape(TAG_RE.sub(' ', html))).strip()
+
+
+def og_builds_card_image(page_name: str) -> str:
+    """The card blog/builds/index.html shows for this page, as a site-root path."""
+    index = ROOT / 'blog' / 'builds' / 'index.html'
+    if not index.is_file():
+        return ''
+    match = re.search(
+        rf'href="{re.escape(page_name)}"[^>]*data-preview-source="([^"]+)"',
+        index.read_text(),
+    )
+    if not match:
+        return ''
+    return str((index.parent / match.group(1)).resolve().relative_to(ROOT))
+
+
+def og_fallback_image() -> str:
+    """The homepage photo tile: whatever month is current."""
+    index = (ROOT / 'index.html')
+    if index.is_file():
+        match = re.search(r'class="tile tile-img t-photos"[^>]*data-preview-source="([^"]+)"',
+                          index.read_text(), re.DOTALL)
+        if match:
+            return match.group(1)
+    return 'images/galleries/animals.jpeg'
+
+
+def build_open_graph():
+    """Give every page a link preview.
+
+    Blog posts hand-write their own og: tags; everything else — section indexes,
+    gallery pages, builds pages, plants — had none, so sharing one produced a
+    bare URL. Title comes from the <h1>, description from OG_DESCRIPTIONS or the
+    page's first real sentence, image from the first photo the page shows.
+    """
+    fallback_image = og_fallback_image()
+    updated = 0
+    for page in sorted(ROOT.rglob('*.html')):
+        rel = page.relative_to(ROOT)
+        key = str(rel).replace('\\', '/')
+        if any(part in EXCLUDE_DIRS for part in rel.parts) or rel.name in OG_SKIP:
+            continue
+        text = page.read_text()
+        if 'og:title' in OG_BLOCK_RE.sub('', text):
+            continue  # hand-written tags win
+
+        head, _, body = text.partition('</head>')
+        heading = re.search(r'<h1[^>]*>(.*?)</h1>', body, re.DOTALL)
+        title = og_text(heading.group(1)) if heading else page.stem.replace('-', ' ')
+
+        description = OG_DESCRIPTIONS.get(key, '')
+        if not description:
+            declared = re.search(r'<meta name="description" content="([^"]*)"', head)
+            if declared:
+                description = unescape(declared.group(1))
+        if not description:
+            for candidate in re.findall(r'<p[^>]*>(.*?)</p>', body, re.DOTALL):
+                stripped = candidate.strip()
+                # skip the "<start> — current" line that opens a builds entry
+                if OG_DATE_LINE_RE.match(stripped):
+                    continue
+                description = og_text(candidate)
+                if description:
+                    break
+        if rel.parent.name == 'progress':
+            dated = re.search(r'<div class="blog-post-date">(.*?)</div>', body, re.DOTALL)
+            if dated:
+                description = f'plant progress photos, {og_text(dated.group(1))}.'
+        if not description:
+            description = f'{title} — nuBlog'
+        if len(description) > 200:
+            description = description[:197].rsplit(' ', 1)[0] + '...'
+
+        image = ''
+        candidates = re.findall(r'data-preview-source="([^"]+)"', body) \
+            + re.findall(r'<img[^>]+src="([^"]+)"', body)
+        for candidate in candidates:
+            if candidate.startswith(('http', 'data:')):
+                continue
+            resolved = str((page.parent / candidate).resolve().relative_to(ROOT))
+            if resolved.startswith(OG_IMAGE_SKIP):
+                continue
+            image = resolved
+            break
+        if not image and rel.parent.name == 'builds':
+            image = og_builds_card_image(rel.name)
+        if not image:
+            image = fallback_image
+
+        block = (
+            '    <!-- AUTOGEN-START og — populated by scripts/build-sitemap.py -->\n'
+            f'    <meta property="og:title" content="{escape(title, quote=True)}">\n'
+            f'    <meta property="og:description" content="{escape(description, quote=True)}">\n'
+            '    <meta property="og:type" content="website">\n'
+            '    <meta property="og:site_name" content="nuBlog">\n'
+            f'    <meta property="og:image" content="{SITE_URL}/{image}">\n'
+            '    <meta name="twitter:card" content="summary_large_image">\n'
+            '    <!-- AUTOGEN-END og -->\n'
+        )
+        if OG_BLOCK_RE.search(text):
+            rendered = OG_BLOCK_RE.sub(lambda _: block, text)
+        else:
+            title_tag = re.search(r'[ \t]*<title>.*?</title>\n', text)
+            if not title_tag:
+                print(f'no <title> in {rel}, skipping og tags')
+                continue
+            rendered = text.replace(title_tag.group(0), title_tag.group(0) + block, 1)
+        if rendered != text:
+            page.write_text(rendered)
+            updated += 1
+    print(f'Open Graph tags ({updated} pages)')
+
+
+def stamp_clean_css_version():
+    """js/theme.js writes styles/clean.css into a post itself, so it needs that
+    file's hash; the loop below can only stamp links that are in the markup."""
+    css = ROOT / 'styles' / 'clean.css'
+    theme = ROOT / 'js' / 'theme.js'
+    if not css.is_file() or not theme.is_file():
+        return
+    digest = hashlib.sha256(css.read_bytes()).hexdigest()[:12]
+    pattern = re.compile(
+        r"(// AUTOGEN-START clean-css-version.*?\n    var CLEAN_CSS_VERSION = ')[^']*(';)",
+        re.DOTALL,
+    )
+    original = theme.read_text()
+    rendered = pattern.sub(rf"\g<1>?v={digest}\g<2>", original)
+    if rendered != original:
+        theme.write_text(rendered)
+        print(f'Stamped clean.css version into theme.js ({digest})')
+
+
 def version_shared_loader():
     """Invalidate old loaders whenever the loader or its counter changes."""
     source = b'\0'.join((ROOT / 'js' / name).read_bytes() for name in ('include.js', 'counter.js'))
@@ -1277,6 +1437,15 @@ def version_shared_loader():
             continue
         digest = hashlib.sha256(script_path.read_bytes()).hexdigest()[:12]
         extra[re.compile(rf'(<script\b[^>]*\bsrc=["\'][^"\']*?js/{re.escape(name)})(?:\?[^"\']*)?(["\'])')] = digest
+
+    # Stylesheets change more often than anything else on this site; a browser
+    # holding yesterday's copy is the most common way a change looks broken.
+    for name in ('style.css', 'clean.css'):
+        sheet = ROOT / 'styles' / name
+        if not sheet.is_file():
+            continue
+        digest = hashlib.sha256(sheet.read_bytes()).hexdigest()[:12]
+        extra[re.compile(rf'(<link\b[^>]*\bhref=["\'][^"\']*?styles/{re.escape(name)})(?:\?[^"\']*)?(["\'])')] = digest
 
     updated = 0
     for page in sorted(ROOT.rglob('*.html')):
@@ -1336,6 +1505,8 @@ def main():
     build_homepage_current_photos()  # follows recents so the prior month can reuse its preview
     build_card_thumbs()  # must follow: homepage/cards can add new refs
     enrich_image_metadata()
+    build_open_graph()
+    stamp_clean_css_version()
     version_shared_loader()
     check_image_sizes()
 
