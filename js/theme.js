@@ -55,7 +55,7 @@
     if (typeof document === 'undefined') return; // loaded by the node tests
 
     // AUTOGEN-START clean-css-version — scripts/build-sitemap.py
-    var CLEAN_CSS_VERSION = '?v=6b402256aa29';
+    var CLEAN_CSS_VERSION = '?v=c60061d3e583';
     // AUTOGEN-END clean-css-version
 
     var THEME_KEY = 'nublog.theme';

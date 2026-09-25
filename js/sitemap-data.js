@@ -151,6 +151,7 @@ window.__SITEMAP__ = {
         "include.js",
         "lite-yt.js",
         "oneko.js",
+        "photo-viewer.js",
         "sitemap-data.js",
         "theme.js",
         "whats-new.js"

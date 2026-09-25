@@ -83,19 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let visibleCount = BATCH_SIZE;
         const updateVisibility = () => {
             items.forEach((item, i) => {
-                if (i < visibleCount) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
+                item.hidden = i >= visibleCount;
             });
             const remaining = items.length - visibleCount;
-            if (remaining <= 0) {
-                loadMoreBtn.style.display = 'none';
-            } else {
-                loadMoreBtn.style.display = 'block';
+            loadMoreBtn.hidden = remaining <= 0;
+            if (remaining > 0) {
                 const nextBatch = Math.min(BATCH_SIZE, remaining);
-                loadMoreBtn.textContent = `Load More (${nextBatch} more images)`;
+                loadMoreBtn.textContent = `load ${nextBatch} more`;
             }
         };
 

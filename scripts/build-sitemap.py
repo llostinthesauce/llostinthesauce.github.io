@@ -9,9 +9,9 @@ import re
 from datetime import datetime, timedelta
 from html import escape, unescape
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import quote, unquote, urlparse
 
-from PIL import ExifTags, Image
+from PIL import ExifTags, Image, ImageOps
 
 ROOT = Path(__file__).parent.parent.resolve()
 EXCLUDE_DIRS = {
@@ -20,7 +20,7 @@ EXCLUDE_DIRS = {
 }
 EXCLUDE_FILES = {
     'AGENTS.md', 'CLAUDE.md', 'agents-wiki.md',
-    'HANDOFF.md',
+    'HANDOFF.md', 'requirements.txt',
 }
 BLOG_FEED_EXCLUDE = {'2025-09-04-review-books-i-have-read-2023-2024-2025.html'}
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'}
@@ -42,9 +42,19 @@ CARD_QUALITY = 82
 # It is strictly the better trade, so the tier does not use JPEG at all.
 CARD_FORMAT = 'WEBP'
 CARD_EXT = '.webp'
+# Photo-grid cells are ~405 CSS px on desktop, so a 2x (retina, 4K at 200%)
+# screen needs 810 real pixels. Browsers only take a smaller candidate when it
+# covers the need, and an 800px long edge misses by a hair (and portraits by
+# far), so this tier is sized by width. 3x phones still reach for the original.
+GRID_DIR_NAME = '.grid'
+GRID_WIDTH = 840
+GRID_QUALITY = 80
+DERIVATIVE_DIRS = {THUMB_DIR_NAME, CARD_DIR_NAME, GRID_DIR_NAME}
 # Filenames may contain spaces ("plants/mar/canon - 1.webp"), so stop at the
 # quote or paren that closes the url()/attribute rather than at whitespace.
-CARD_REF_RE = re.compile(r'images/\.cards/([^\'"()\n]+)\.webp')
+# Lazy, so a srcset naming a .webp original after its card stops at the card.
+# srcset can't hold a raw space, so photo grids write them as %20; unquote.
+CARD_REF_RE = re.compile(r'images/\.cards/([^\'"()\n]+?)\.webp')
 EXIF_TAGS = {value: key for key, value in ExifTags.TAGS.items()}
 CAPTURE_DATE_TAGS = ('DateTimeOriginal', 'DateTimeDigitized', 'DateTime')
 IDG_NAME_RE = re.compile(r'^IDG_(\d{8})_(\d{6})(?:_\d+)?', re.IGNORECASE)
@@ -236,8 +246,10 @@ def build_tree(path: Path):
 
 
 def render_derivative(src_path: Path, out_dir_name: str, long_edge: int, quality: int,
-                      fmt: str = 'JPEG', ext: str = '.jpg'):
+                      fmt: str = 'JPEG', ext: str = '.jpg', by_width: bool = False):
     """Resize src_path into images/<out_dir_name>/, mirroring its path.
+
+    long_edge caps the longer side, or with by_width, the width alone.
 
     Returns the repo-rel path of the derivative, or None to signal 'use the
     source'. Skips regeneration when the derivative is newer than the source.
@@ -251,10 +263,13 @@ def render_derivative(src_path: Path, out_dir_name: str, long_edge: int, quality
     out.parent.mkdir(parents=True, exist_ok=True)
     try:
         with Image.open(src_path) as im:
-            im = im.convert('RGB')
+            # Pixels are stored sideways when the camera set an orientation
+            # flag; the flag doesn't survive the resize, so apply it first.
+            im = ImageOps.exif_transpose(im).convert('RGB')
             w, h = im.size
-            if max(w, h) > long_edge:
-                ratio = long_edge / max(w, h)
+            edge = w if by_width else max(w, h)
+            if edge > long_edge:
+                ratio = long_edge / edge
                 im = im.resize((max(1, int(w * ratio)), max(1, int(h * ratio))), Image.LANCZOS)
             opts = {'method': 6} if fmt == 'WEBP' else {'optimize': True}
             im.save(out, fmt, quality=quality, **opts)
@@ -275,6 +290,12 @@ def ensure_card(src_path: Path):
                              CARD_FORMAT, CARD_EXT)
 
 
+def ensure_grid(src_path: Path):
+    """Photo-grid derivative of src_path under images/.grid/."""
+    return render_derivative(src_path, GRID_DIR_NAME, GRID_WIDTH, GRID_QUALITY,
+                             CARD_FORMAT, CARD_EXT, by_width=True)
+
+
 def find_image_source(stem_rel: str):
     """Resolve 'builds/navidrome' to the real images/builds/navidrome.<ext>."""
     for ext in sorted(IMAGE_EXTS):
@@ -288,10 +309,11 @@ def find_image_source(stem_rel: str):
 def build_card_thumbs():
     """Build images/.cards/ from the paths the markup actually asks for.
 
-    The markup is the source of truth here: whatever `images/.cards/<path>.jpg`
+    The markup is the source of truth here: whatever `images/.cards/<path>.webp`
     a page references, this renders from the matching original under images/.
     That keeps the big tier scoped to the few dozen images used as card
-    backgrounds instead of mirroring all ~1500 images at 800px.
+    backgrounds instead of mirroring all ~1500 images at 800px (photo grids
+    have their own tier; see build_photo_grids).
     """
     wanted = {}
     for path in sorted(ROOT.rglob('*')):
@@ -299,7 +321,7 @@ def build_card_thumbs():
             continue
         if any(part in EXCLUDE_DIRS or part.startswith('.') for part in path.relative_to(ROOT).parts[:-1]):
             continue
-        for stem in CARD_REF_RE.findall(path.read_text()):
+        for stem in map(unquote, CARD_REF_RE.findall(path.read_text())):
             wanted.setdefault(stem, []).append(str(path.relative_to(ROOT)))
 
     missing = []
@@ -336,6 +358,110 @@ def build_card_thumbs():
     if pruned:
         parts.append(f'{pruned} pruned')
     print(f'Card thumbs at {CARD_LONG_EDGE}px/q{CARD_QUALITY} (' + ', '.join(parts) + ')')
+
+
+# Photo grids show each photo in a cell a few hundred CSS px wide, so they point
+# the browser at the grid tier first and list the original as the bigger
+# candidate: ordinary, retina and 4K screens take the 840px-wide copy, and only
+# a screen that needs more (a 3x phone showing one photo per row) reaches for
+# the original. Either way the full photo is one click away in the viewer
+# (js/photo-viewer.js), via the link this wraps around every photo.
+GRID_PHOTO_RE = re.compile(
+    r'<div class="gallery-grid-item">(?:<a class="gallery-photo"[^>]*>)?(<img\b[^>]*>)(?:</a>)?'
+)
+# Measured in the browser against styles/style.css (cell width by viewport):
+# one column to ~780px (328px at 375, 585px at 740), two columns to ~1150px
+# (310-455px), then three columns of 308px however wide the screen gets. So a
+# 4K monitor at any scaling, and a 2x phone, are covered by the 840px copy.
+GRID_SIZES = ('(max-width: 600px) calc(100vw - 32px), (max-width: 780px) 80vw, '
+              '(max-width: 1150px) 40vw, 310px')
+# Photos this narrow gain too little from a second file.
+GRID_SRCSET_MIN_WIDTH = 1000
+GRID_PHOTO_EXTS = PHOTO_EXTS | {'.webp'}
+
+
+def img_attr(tag: str, name: str):
+    match = re.search(rf'\s{name}="([^"]*)"', tag)
+    return unescape(match.group(1)) if match else None
+
+
+def drop_img_attr(tag: str, name: str) -> str:
+    return re.sub(rf'\s{name}="[^"]*"', '', tag)
+
+
+def url_path(path: str) -> str:
+    """A path as a URL: srcset splits candidates on whitespace, so a space in a
+    filename ("canon - 1.webp") has to be %20 there."""
+    return quote(unquote(path), safe="/.-_~'")
+
+
+def build_photo_grids():
+    """Give every photo-grid image a grid-tier srcset and a link to its original,
+    rendering the tier as it goes and pruning copies no grid uses any more."""
+    updated = 0
+    photos = 0
+    wanted = set()
+    rendered_count = 0
+    for page in sorted(ROOT.rglob('*.html')):
+        rel = page.relative_to(ROOT)
+        if any(part in EXCLUDE_DIRS for part in rel.parts):
+            continue
+        text = page.read_text()
+        if 'gallery-grid-item' not in text:
+            continue
+
+        def render(match):
+            nonlocal photos, rendered_count
+            tag = match.group(1)
+            src = img_attr(tag, 'src')
+            if not src or src.startswith(('http:', 'https:', '//', 'data:')):
+                return match.group(0)
+            source = (page.parent / unquote(src)).resolve()
+            try:
+                image_rel = source.relative_to(ROOT / 'images')
+            except ValueError:
+                return match.group(0)
+            if not source.is_file() or source.suffix.lower() not in GRID_PHOTO_EXTS:
+                return match.group(0)
+            if image_rel.parts[0] in DERIVATIVE_DIRS:
+                return match.group(0)
+
+            tag = drop_img_attr(drop_img_attr(tag, 'srcset'), 'sizes')
+            width = img_attr(tag, 'width')
+            if width and width.isdigit() and int(width) > GRID_SRCSET_MIN_WIDTH:
+                w = int(width)
+                out = ROOT / 'images' / GRID_DIR_NAME / image_rel.with_suffix(CARD_EXT)
+                fresh = out.is_file() and out.stat().st_mtime >= source.stat().st_mtime
+                if ensure_grid(source):
+                    rendered_count += not fresh
+                    wanted.add(image_rel.with_suffix(CARD_EXT).as_posix())
+                    prefix = src[:src.index('images/')] if 'images/' in src else ''
+                    grid = f'{prefix}images/{GRID_DIR_NAME}/{image_rel.with_suffix(CARD_EXT).as_posix()}'
+                    srcset = f'{url_path(grid)} {GRID_WIDTH}w, {url_path(src)} {w}w'
+                    tag = tag[:-1].rstrip() + f' srcset="{escape(srcset, quote=True)}" sizes="{GRID_SIZES}">'
+            photos += 1
+            return (
+                f'<div class="gallery-grid-item"><a class="gallery-photo"'
+                f' href="{escape(url_path(src), quote=True)}">{tag}</a>'
+            )
+
+        rendered = GRID_PHOTO_RE.sub(render, text)
+        if rendered != text:
+            page.write_text(rendered)
+            updated += 1
+    pruned = 0
+    grid_dir = ROOT / 'images' / GRID_DIR_NAME
+    if grid_dir.is_dir():
+        for copy in sorted(grid_dir.rglob('*')):
+            if copy.is_file() and copy.relative_to(grid_dir).as_posix() not in wanted:
+                copy.unlink()
+                pruned += 1
+    parts = [f'{photos} photos', f'{len(wanted)} at {GRID_WIDTH}px/q{GRID_QUALITY}']
+    if rendered_count:
+        parts.append(f'{rendered_count} rendered')
+    if pruned:
+        parts.append(f'{pruned} pruned')
+    print('Photo grids (' + ', '.join(parts) + ')')
 
 
 def prune_stale_thumbs():
@@ -378,7 +504,7 @@ def build_all_images_data():
     for img in sorted(images_dir.rglob('*')):
         if not (img.is_file() and img.suffix.lower() in IMAGE_EXTS):
             continue
-        if THUMB_DIR_NAME in img.parts or CARD_DIR_NAME in img.parts:
+        if DERIVATIVE_DIRS & set(img.parts):
             continue  # never include generated derivatives in the data array
         rel = str(img.relative_to(ROOT)).replace('\\', '/')
         try:
@@ -758,7 +884,7 @@ def build_homepage_recent_blog():
         f'                        <div class="card-thumb" style="background-image: url(\'{thumb_path}\');"></div>\n'
         '                        <div class="card-section">blog</div>\n'
         f'                        <div class="card-text">{escape(title)}</div>\n'
-        f'                        <div class="card-when">{date.month}/{date.day:02d}</div>\n'
+        f'                        <div class="card-when">{card_when(date)}</div>\n'
         '                    </a>\n'
         '                    <!-- AUTOGEN-END recent-blog -->'
     )
@@ -821,16 +947,23 @@ def homepage_card_preview(source_path: str):
     return rendered
 
 
+def card_when(date: datetime) -> str:
+    """The date under a homepage card: "sep '26". One format for every card,
+    since month/day ("9/14") and month/year ("8/26") read the same."""
+    return f"{date.strftime('%b').lower()} '{date.strftime('%y')}"
+
+
 def homepage_recent_card(href: str, source_path: str, section: str, title: str,
-                         when: str, date: str):
+                         date: str):
     preview_path = homepage_card_preview(source_path)
+    when = card_when(datetime.strptime(date, '%Y-%m-%d'))
     return (
         f'                    <a class="recent-card" href="{escape(href, quote=True)}"'
         f' data-date="{date}" data-preview-source="{escape(source_path, quote=True)}">\n'
         f'                        <div class="card-thumb" style="background-image: url(\'{preview_path}\');"></div>\n'
         f'                        <div class="card-section">{escape(section)}</div>\n'
         f'                        <div class="card-text">{escape(title)}</div>\n'
-        f'                        <div class="card-when">{escape(when)}</div>\n'
+        f'                        <div class="card-when">{escape(when, quote=False)}</div>\n'
         '                    </a>'
     )
 
@@ -901,7 +1034,6 @@ def build_homepage_recent_sections():
             plant_source,
             'plants',
             f'{plant_date.strftime("%b").lower()} {plant_date.year} update',
-            f'{plant_date.month}/01',
             plant_date.strftime('%Y-%m-01'),
         ),
         homepage_recent_card(
@@ -909,7 +1041,6 @@ def build_homepage_recent_sections():
             month_source,
             'photos',
             f'{month_date.strftime("%B").lower()} {month_date.year} photos',
-            f'{month_date.month}/{str(month_date.year)[2:]}',
             month_date.strftime('%Y-%m-01'),
         ),
         homepage_recent_card(
@@ -917,7 +1048,6 @@ def build_homepage_recent_sections():
             'images/cameras/vivitar/roll-4/R1-08311-017A.JPG',
             'photos',
             'vivitar pz3090',
-            'root',
             '2026-06-09',
         ),
         homepage_recent_card(
@@ -925,7 +1055,6 @@ def build_homepage_recent_sections():
             'images/cameras/elan-ii/roll-2/R1-08312-0020.JPG',
             'photos',
             'canon elan ii',
-            'root',
             '2026-06-09',
         ),
         homepage_recent_card(
@@ -933,7 +1062,6 @@ def build_homepage_recent_sections():
             'images/cameras/canon/2026/IMG_4010.jpeg',
             'photos',
             'powershot sd400',
-            'root',
             '2026-04-01',
         ),
     ]
@@ -1416,9 +1544,95 @@ def stamp_clean_css_version():
         print(f'Stamped clean.css version into theme.js ({digest})')
 
 
+# Which nav link a page belongs under, by its path from the site root. First
+# match wins, so builds (under blog/) has to come before blog.
+NAV_SECTIONS = (
+    ('builds', re.compile(r'^blog/builds/')),
+    ('blog', re.compile(r'^blog(?:\.html|/)')),
+    ('photos', re.compile(r'^(?:galleries|all-images)(?:\.html|/)')),
+    ('plants', re.compile(r'^plants(?:\.html|/)')),
+    ('about', re.compile(r'^(?:about|guestbook|sitemap)\.html$')),
+    ('home', re.compile(r'^index\.html$')),
+)
+# writing.html is clean-only and writes its own header by hand.
+PARTIAL_SKIP = {'writing.html'}
+PARTIAL_SLOT_RE = re.compile(
+    r'^([ \t]*)<div id="site-(header|footer)">'
+    r'(?:\s*<!-- AUTOGEN-START (?:header|footer)\b.*?<!-- AUTOGEN-END (?:header|footer) -->)?'
+    r'\s*</div>',
+    re.DOTALL | re.MULTILINE,
+)
+LOADER_BASE_RE = re.compile(r'<script\b[^>]*\bsrc="[^"]*js/include\.js[^"]*"[^>]*\bdata-base="([^"]*)"')
+
+
+def nav_section(rel_path: str):
+    for section, pattern in NAV_SECTIONS:
+        if pattern.search(rel_path):
+            return section
+    return None
+
+
+def inline_partials():
+    """Write partials/header.html and footer.html into every page.
+
+    They used to be fetched by js/include.js after load, so the nav popped in
+    late, was missing without JavaScript, and a changed partial needed a hand-
+    bumped cache version. Baked in here, they arrive with the page, and the
+    current section's link is marked at build time too.
+    """
+    partials = {
+        name: (ROOT / 'partials' / f'{name}.html').read_text().strip('\n')
+        for name in ('header', 'footer')
+    }
+    updated = 0
+    for page in sorted(ROOT.rglob('*.html')):
+        rel = page.relative_to(ROOT)
+        key = str(rel).replace('\\', '/')
+        if any(part in EXCLUDE_DIRS for part in rel.parts) or key in PARTIAL_SKIP:
+            continue
+        text = page.read_text()
+        loader = LOADER_BASE_RE.search(text)
+        if not loader or not PARTIAL_SLOT_RE.search(text):
+            continue
+        raw_base = loader.group(1)
+        # data-base="/" is 404.html, which Pages serves at any depth.
+        base = '' if raw_base == '/' else (raw_base.rstrip('/') or '.')
+        section = nav_section(key)
+
+        def render(match):
+            indent, name = match.group(1), match.group(2)
+            html = partials[name].replace('%BASE%', base)
+            if name == 'header' and section:
+                html = html.replace(
+                    f'data-section="{section}"',
+                    f'data-section="{section}" aria-current="page"',
+                )
+            inner = '\n'.join(
+                (indent + '    ' + line) if line.strip() else ''
+                for line in html.split('\n')
+            )
+            return (
+                f'{indent}<div id="site-{name}">\n'
+                f'{indent}    <!-- AUTOGEN-START {name} — partials/{name}.html, inlined by scripts/build-sitemap.py -->\n'
+                f'{inner}\n'
+                f'{indent}    <!-- AUTOGEN-END {name} -->\n'
+                f'{indent}</div>'
+            )
+
+        rendered = PARTIAL_SLOT_RE.sub(render, text)
+        if rendered != text:
+            page.write_text(rendered)
+            updated += 1
+    print(f'Inlined header/footer partials ({updated} pages)')
+
+
 def version_shared_loader():
-    """Invalidate old loaders whenever the loader or its counter changes."""
-    source = b'\0'.join((ROOT / 'js' / name).read_bytes() for name in ('include.js', 'counter.js'))
+    """Invalidate old loaders whenever the loader or a script it loads changes."""
+    source = b'\0'.join(
+        (ROOT / 'js' / name).read_bytes()
+        for name in ('include.js', 'counter.js', 'photo-viewer.js')
+        if (ROOT / 'js' / name).is_file()
+    )
     version = hashlib.sha256(source).hexdigest()[:12]
     pattern = re.compile(r'(<script\b[^>]*\bsrc=["\'])([^"\']*?js/include\.js)(?:\?[^"\']*)?(["\'])')
 
@@ -1469,7 +1683,7 @@ def check_image_sizes():
     oversized = []
     for img in images_dir.rglob('*'):
         if img.is_file() and img.suffix.lower() in IMAGE_EXTS:
-            if THUMB_DIR_NAME in img.parts or CARD_DIR_NAME in img.parts:
+            if DERIVATIVE_DIRS & set(img.parts):
                 continue  # generated derivatives aren't worth warning about
             if img.relative_to(ROOT) in IMAGE_SIZE_WARNING_EXCLUDE:
                 continue  # intentionally protected animation; see AGENTS.md
@@ -1503,9 +1717,11 @@ def main():
     build_homepage_recent_blog()
     build_homepage_recent_sections()  # must follow: the blog card is the first slot
     build_homepage_current_photos()  # follows recents so the prior month can reuse its preview
+    enrich_image_metadata()  # photo grids read the width/height it fills in
+    build_photo_grids()  # after the monthly grids are regenerated
     build_card_thumbs()  # must follow: homepage/cards can add new refs
-    enrich_image_metadata()
     build_open_graph()
+    inline_partials()
     stamp_clean_css_version()
     version_shared_loader()
     check_image_sizes()

@@ -25,7 +25,7 @@
         while (span.firstChild) span.removeChild(span.firstChild);
         span.appendChild(document.createTextNode('VISITOR COUNT: '));
         var inner = document.createElement('span');
-        inner.style.color = '#33CCAA';
+        inner.className = 'hit-counter-value';
         inner.textContent = label;
         span.appendChild(inner);
     }

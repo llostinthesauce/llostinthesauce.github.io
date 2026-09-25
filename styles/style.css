@@ -504,6 +504,13 @@ a:hover {
     justify-content: flex-start;
 }
 
+/* both set display, which would otherwise beat the hidden attribute
+   gallery.js uses for load-more */
+.gallery-grid-item[hidden],
+.load-more-btn[hidden] {
+    display: none;
+}
+
 /* explicit: a grid nested in a post must not inherit the post-image caps */
 .gallery-grid-item img {
     width: 100%;
@@ -549,6 +556,21 @@ footer {
     font-size: 0.8em;
     color: #99CCCC;
     text-align: center;
+}
+
+.site-footer-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.site-footer-sep {
+    color: #666;
+}
+
+.hit-counter-value {
+    color: #33CCAA;
 }
 
 /* Blog list items */
@@ -672,6 +694,153 @@ hr {
 
 .load-more-btn:hover {
     background-color: #7744AA;
+}
+
+/* ---- Photo viewer (js/photo-viewer.js) ----
+   The build wraps every grid photo in a.gallery-photo pointing at the
+   original; post photos get .photo-viewable. Either opens the viewer. */
+.gallery-photo {
+    display: block;
+    width: 100%;
+    cursor: zoom-in;
+}
+
+.photo-viewable {
+    cursor: zoom-in;
+}
+
+.photo-viewer {
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: rgba(0, 0, 0, 0.95);
+    color: #99CCCC;
+    overscroll-behavior: contain;
+}
+
+.photo-viewer::backdrop {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+html.photo-viewer-open {
+    overflow: hidden;
+}
+
+.photo-viewer-stage {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 52px 64px 60px;
+}
+
+.photo-viewer-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    min-height: 0;
+    max-height: 100%;
+    margin: 0;
+    border: none;
+    object-fit: contain;
+    touch-action: pan-y pinch-zoom;
+}
+
+.photo-viewer-caption {
+    max-width: 60ch;
+    font-size: 0.9em;
+    text-align: center;
+    color: #99CCCC;
+}
+
+.photo-viewer button {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #99CCCC;
+    font: inherit;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.photo-viewer button:hover {
+    color: #CC99FF;
+}
+
+.photo-viewer button[hidden] {
+    display: none;
+}
+
+.photo-viewer-close {
+    top: 8px;
+    right: 8px;
+}
+
+.photo-viewer-prev,
+.photo-viewer-next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.photo-viewer-prev {
+    left: 8px;
+}
+
+.photo-viewer-next {
+    right: 8px;
+}
+
+.photo-viewer-bar {
+    position: fixed;
+    right: 0;
+    bottom: 14px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    font-size: 0.85em;
+    color: #99CCCC;
+}
+
+.photo-viewer-bar a {
+    color: #33CCAA;
+}
+
+.photo-viewer.is-loading .photo-viewer-original::after {
+    content: " \2026";
+}
+
+@media (max-width: 600px) {
+    .photo-viewer-stage {
+        padding: 52px 8px 60px;
+    }
+
+    .photo-viewer-prev,
+    .photo-viewer-next {
+        top: auto;
+        bottom: 4px;
+        transform: none;
+    }
 }
 
 /* ---- Gallery Index Page (galleries.html) ---- */

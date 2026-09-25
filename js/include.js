@@ -1,8 +1,4 @@
 (function () {
-    // Bump when partials/header.html or partials/footer.html change,
-    // so cached copies are invalidated without defeating HTTP caching.
-    const PARTIALS_VERSION = '2026-09-14';
-
     const script = document.currentScript;
     // The build hashes this loader and counter.js together, then versions every page.
     const COUNTER_VERSION = (script && new URL(script.src, window.location.href).searchParams.get('v')) || '2026-09-01';
@@ -36,64 +32,20 @@
         document.documentElement.classList.add('save-data');
     }
 
-    const markCurrentNavigation = () => {
-        const currentPath = window.location.pathname.replace(/\/index\.html$/, '/');
-        const navLinks = Array.from(document.querySelectorAll('.nav a'));
-        let currentSection = null;
-        if (currentPath === '/') {
-            currentSection = 'home';
-        } else if (/\/blog\/builds(?:\/|$)/.test(currentPath)) {
-            currentSection = 'builds';
-        } else if (/\/blog(?:\.html|\/)/.test(currentPath)) {
-            currentSection = 'blog';
-        } else if (/\/(?:galleries|all-images)(?:\.html|\/)/.test(currentPath)) {
-            currentSection = 'photos';
-        } else if (/\/plants(?:\.html|\/)/.test(currentPath)) {
-            currentSection = 'plants';
-        } else if (/\/(?:about|guestbook|sitemap)(?:\.html|\/)/.test(currentPath)) {
-            currentSection = 'about';
-        }
-        navLinks.forEach((link) => {
-            if (link.title === currentSection) {
-                link.setAttribute('aria-current', 'page');
-            } else {
-                link.removeAttribute('aria-current');
-            }
-        });
-    };
-
-    const loadPartial = (file, target) => {
-        if (!target) return Promise.resolve();
-
-        return fetch(`${base}/partials/${file}?v=${PARTIALS_VERSION}`)
-            .then((resp) => resp.ok ? resp.text() : '')
-            .then((html) => {
-                const rendered = html.replace(/%BASE%/g, base);
-                target.innerHTML = rendered;
-                if (file === 'header.html') markCurrentNavigation();
-            })
-            .catch((err) => {
-                console.error(`Failed to load ${file}`, err);
-            });
-    };
-
     const loadCounter = () => {
         const counterScript = document.createElement('script');
         counterScript.src = `${base}/js/counter.js?v=${COUNTER_VERSION}`;
         document.body.appendChild(counterScript);
     };
 
-    // Clean theme (js/theme.js, loaded in <head>) brings its own header and
-    // footer and leaves the cat at home; see js/theme.js.
+    // The nuBlog header and footer are already in the page: the build writes
+    // partials/*.html into every page, current nav link included. The clean
+    // theme (js/theme.js, loaded in <head>) swaps in its own and leaves the
+    // cat at home.
     const cleanTheme = window.nublogTheme && window.nublogTheme.isClean;
 
-    if (cleanTheme) {
-        window.nublogTheme.renderChrome();
-        loadCounter();
-    } else {
-        loadPartial('header.html', document.getElementById('site-header'));
-        loadPartial('footer.html', document.getElementById('site-footer')).then(loadCounter);
-    }
+    if (cleanTheme) window.nublogTheme.renderChrome();
+    loadCounter();
 
     // Load oneko only when the visitor has not requested reduced motion.
     if (!cleanTheme && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -102,11 +54,18 @@
         document.body.appendChild(onekoScript);
     }
 
-    // Load blog nav (injects next/prev links on blog posts)
-    const blogNavScript = document.createElement('script');
-    blogNavScript.src = `${base}/js/blog-nav.js`;
-    document.body.appendChild(blogNavScript);
+    // Click-to-view for grid photos and photos in posts; versioned with this
+    // loader (the build hashes all three), so a changed viewer is never stale.
+    if (document.querySelector('a.gallery-photo, .blog-post-content img')) {
+        const viewerScript = document.createElement('script');
+        viewerScript.src = `${base}/js/photo-viewer.js?v=${COUNTER_VERSION}`;
+        document.body.appendChild(viewerScript);
+    }
 
-
-
+    // Blog posts only: next/prev links under the post.
+    if (/\/blog\/[^/]+\.html$/.test(window.location.pathname)) {
+        const blogNavScript = document.createElement('script');
+        blogNavScript.src = `${base}/js/blog-nav.js`;
+        document.body.appendChild(blogNavScript);
+    }
 })();

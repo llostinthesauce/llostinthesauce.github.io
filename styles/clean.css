@@ -653,16 +653,162 @@ main > h1 {
     color: var(--text-3);
 }
 
-/* counter.js paints its number in nuBlog teal inline; hold it to the palette */
-.clean-footer #hit-counter,
-.clean-footer #hit-counter span {
-    color: var(--text-3) !important;
+.clean-footer #hit-counter {
+    color: var(--text-3);
     font-variant: all-small-caps;
     letter-spacing: 0.04em;
 }
 
-.clean-footer #hit-counter span {
-    color: var(--accent) !important;
+.clean-footer .hit-counter-value {
+    color: var(--accent);
+}
+
+/* The build writes nuBlog's header and footer into every post, and theme.js
+   swaps in the clean ones when include.js runs; keep nuBlog's out of the
+   first paint so they never flash. */
+#site-header > :not(.clean-header),
+#site-footer > :not(.clean-footer) {
+    display: none;
+}
+
+/* ---- photo viewer (js/photo-viewer.js) ----------------------------------- */
+
+.photo-viewable {
+    cursor: zoom-in;
+}
+
+.photo-viewer {
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: var(--bg);
+    color: var(--text);
+    overscroll-behavior: contain;
+}
+
+.photo-viewer::backdrop {
+    background: var(--bg);
+}
+
+html.photo-viewer-open {
+    overflow: hidden;
+}
+
+.photo-viewer-stage {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 52px 64px 60px;
+}
+
+.photo-viewer-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    min-height: 0;
+    max-height: 100%;
+    margin: 0;
+    border: none;
+    object-fit: contain;
+    touch-action: pan-y pinch-zoom;
+}
+
+.photo-viewer-caption {
+    max-width: 60ch;
+    font-size: 0.9em;
+    text-align: center;
+    color: var(--text-2);
+}
+
+.photo-viewer button {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--bg-raised);
+    color: var(--text);
+    font: inherit;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.photo-viewer button:hover {
+    color: var(--accent);
+}
+
+.photo-viewer button[hidden] {
+    display: none;
+}
+
+.photo-viewer-close {
+    top: 8px;
+    right: 8px;
+}
+
+.photo-viewer-prev,
+.photo-viewer-next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.photo-viewer-prev {
+    left: 8px;
+}
+
+.photo-viewer-next {
+    right: 8px;
+}
+
+.photo-viewer-bar {
+    position: fixed;
+    right: 0;
+    bottom: 14px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    font-size: 0.85em;
+    color: var(--text-2);
+}
+
+.photo-viewer-bar a {
+    color: var(--accent);
+}
+
+.photo-viewer.is-loading .photo-viewer-original::after {
+    content: " \2026";
+}
+
+@media (max-width: 600px) {
+    .photo-viewer-stage {
+        padding: 52px 8px 60px;
+    }
+
+    .photo-viewer-prev,
+    .photo-viewer-next {
+        top: auto;
+        bottom: 4px;
+        transform: none;
+    }
 }
 
 /* ---- phones -------------------------------------------------------------- */

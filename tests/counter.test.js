@@ -100,26 +100,40 @@ for (const count of ['', ' ', '-1', '1.5', null, 'not a number']) {
     });
 }
 
-test('a stalled header does not block the footer counter, which inherits the loader version', async () => {
+function runLoader(pathname, hasPhotos = false) {
     const body = element();
-    const footer = element();
-    const header = element();
     const script = { src: 'https://example.com/js/include.js?v=fresh-build', dataset: { base: '.' } };
+    const fetched = [];
     vm.runInNewContext(fs.readFileSync(path.join(root, 'js/include.js'), 'utf8'), {
         URL, console,
         document: {
             currentScript: script, body, head: element(),
             createElement: () => element(),
-            getElementById: id => ({ 'site-header': header, 'site-footer': footer })[id],
+            documentElement: { classList: { add() {} } },
+            getElementById: () => element(),
+            querySelector: () => (hasPhotos ? element() : null),
             querySelectorAll: () => []
         },
-        window: { location: { pathname: '/index.html', href: 'https://example.com/index.html' }, matchMedia: () => ({ matches: true }) },
+        window: { location: { pathname, href: `https://example.com${pathname}` }, matchMedia: () => ({ matches: true }) },
         navigator: {},
-        fetch: url => url.includes('header.html')
-            ? new Promise(() => {})
-            : Promise.resolve({ ok: true, text: async () => '<footer>ready</footer>' })
+        fetch: url => { fetched.push(url); return new Promise(() => {}); }
     });
-    await flush();
-    assert.equal(footer.innerHTML, '<footer>ready</footer>');
-    assert.ok(body.children.some(child => child.src === './js/counter.js?v=fresh-build'));
+    return { srcs: body.children.map(child => child.src), fetched };
+}
+
+test('the loader fetches no partials and the counter inherits the loader version', () => {
+    const { srcs, fetched } = runLoader('/index.html');
+    assert.deepEqual(fetched, []);
+    assert.ok(srcs.includes('./js/counter.js?v=fresh-build'));
+});
+
+test('blog-nav.js loads on blog posts only', () => {
+    assert.ok(runLoader('/blog/2026-09-14-post.html').srcs.includes('./js/blog-nav.js'));
+    assert.ok(!runLoader('/index.html').srcs.includes('./js/blog-nav.js'));
+    assert.ok(!runLoader('/blog/builds/macbooks.html').srcs.includes('./js/blog-nav.js'));
+});
+
+test('the photo viewer loads, versioned with the loader, only where there are photos', () => {
+    assert.ok(runLoader('/galleries/monthly/2026-09-sep.html', true).srcs.includes('./js/photo-viewer.js?v=fresh-build'));
+    assert.ok(!runLoader('/about.html', false).srcs.some(src => src.includes('photo-viewer')));
 });

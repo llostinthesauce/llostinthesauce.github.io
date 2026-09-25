@@ -130,7 +130,7 @@ class SiteIntegrityTests(unittest.TestCase):
         )
         sitemap = (ROOT / "sitemap.html").read_text()
         expected = ["home", "photos", "blog", "builds", "plants", "about"]
-        header_labels = re.findall(r'title="([^"]+)"', header)
+        header_labels = re.findall(r'data-section="([^"]+)"', header)
         sitemap_nav = re.search(
             r'<nav class="nav"[^>]*>(.*?)</nav>', sitemap, re.DOTALL
         ).group(1)
@@ -150,6 +150,74 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertRegex(
             sitemap_nav,
             r'<a href="about\.html" aria-current="page">about</a>',
+        )
+
+    def test_pages_carry_the_current_header_and_footer(self):
+        """The build writes partials/*.html into every page (nothing fetches
+        them at runtime any more), so a page with an empty slot or a stale copy
+        means the build was not re-run after a partial changed."""
+        partials = {
+            name: re.sub(r"\s+", " ", (ROOT / f"partials/{name}.html").read_text()).strip()
+            for name in ("header", "footer")
+        }
+        failures = []
+        for page in actual_pages():
+            text = page.read_text(errors="replace")
+            name = str(page.relative_to(ROOT))
+            if name == "writing.html":
+                continue  # clean-only; writes its own header
+            for slot in ("header", "footer"):
+                if f'<div id="site-{slot}">' not in text:
+                    continue
+                block = re.search(
+                    rf"<!-- AUTOGEN-START {slot}\b[^>]*-->(.*?)<!-- AUTOGEN-END {slot} -->",
+                    text, re.DOTALL,
+                )
+                if not block:
+                    failures.append((name, f"{slot} not inlined"))
+                    continue
+                inlined = re.sub(r"\s+", " ", block.group(1)).strip()
+                inlined = re.sub(r'href="[^"]*?/?(?=[a-z0-9-]+(?:/[a-z0-9-]+)*\.html)', 'href="%BASE%/', inlined)
+                inlined = inlined.replace(' aria-current="page"', "")
+                if inlined != partials[slot]:
+                    failures.append((name, f"{slot} is stale"))
+            if text.count('aria-current="page"') > 1:
+                failures.append((name, "more than one current nav link"))
+        self.assertEqual(failures, [])
+
+    def test_grid_photos_link_to_their_original_and_have_a_card_tier(self):
+        """Every local grid photo is wrapped in a.gallery-photo pointing at the
+        original (the viewer and no-JS fallback), and every file its srcset
+        names exists, so a screen that picks the 800px copy never gets a 404."""
+        from urllib.parse import unquote
+        failures = []
+        photos = 0
+        for page in actual_pages():
+            text = page.read_text(errors="replace")
+            name = str(page.relative_to(ROOT))
+            for item in re.findall(r'<div class="gallery-grid-item">(<a [^>]*>)?(<img\b[^>]*>)', text):
+                link, img = item
+                src = re.search(r'\ssrc="([^"]+)"', img).group(1)
+                if src.startswith(("http", "//")):
+                    continue
+                photos += 1
+                href = re.search(r'class="gallery-photo" href="([^"]+)"', link)
+                if not href or unquote(href.group(1)) != unquote(src):
+                    failures.append((name, src, "not linked to its original"))
+                srcset = re.search(r'\ssrcset="([^"]+)"', img)
+                for candidate in (srcset.group(1).split(", ") if srcset else []):
+                    url = candidate.rsplit(" ", 1)[0]
+                    if not (page.parent / unquote(url)).resolve().is_file():
+                        failures.append((name, url, "srcset file missing"))
+        self.assertGreater(photos, 1000)
+        self.assertEqual(failures, [])
+
+    def test_homepage_card_dates_share_one_format(self):
+        homepage = (ROOT / "index.html").read_text()
+        dates = re.findall(r'<div class="card-when">([^<]*)</div>', homepage)
+        self.assertTrue(dates)
+        self.assertEqual(
+            [d for d in dates if not re.fullmatch(r"[a-z]{3} '\d{2}", d)], []
         )
 
     def test_every_dated_post_is_filed_in_the_clean_theme(self):
@@ -216,9 +284,6 @@ class SiteIntegrityTests(unittest.TestCase):
         header = (ROOT / "partials/header.html").read_text()
         css = (ROOT / "styles/style.css").read_text()
         self.assertIn('class="skip-link"', header)
-        include_script = (ROOT / "js/include.js").read_text()
-        self.assertIn("aria-current", include_script)
-        self.assertIn("let currentSection = null", include_script)
         self.assertIn("@media (prefers-reduced-motion: reduce)", css)
         homepage = (ROOT / "index.html").read_text()
         self.assertNotIn("<marquee", homepage)
