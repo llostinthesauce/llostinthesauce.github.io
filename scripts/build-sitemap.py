@@ -706,7 +706,6 @@ WRITING_CATEGORIES = {
 }
 WRITING_LEFT_COLUMN = {'field-notes', 'creative', 'essay'}
 WRITING_CATEGORY_RE = re.compile(r'<meta name="nublog:category" content="([^"]+)">')
-# Non-post pages listed at the end of a section: (href, title, note).
 # (href, title, clean-theme note) — the clean note says the link leaves the reader.
 WRITING_EXTRA_LINKS = {
     'other': [('blog/builds/index.html', 'Builds+', 'updated intermittently \u00b7 full site')],
@@ -757,8 +756,8 @@ def title_case(text: str) -> str:
 def build_writing_index():
     """Rewrite the grouped post list in writing.html between AUTOGEN markers.
 
-    Unlike blog.html this includes rolling pages (listed first in their
-    section): the reader has no other way to reach them. A dated post with a
+    Rolling pages are listed first in their section, as on blog.html: the
+    reader has no other way to reach them. A dated post with a
     missing or unknown category fails the build, so a new post cannot silently
     vanish from the clean theme.
     """
@@ -1443,8 +1442,8 @@ def build_open_graph():
     """Give every page a link preview.
 
     Blog posts hand-write their own og: tags; everything else — section indexes,
-    gallery pages, builds pages, plants — had none, so sharing one produced a
-    bare URL. Title comes from the <h1>, description from OG_DESCRIPTIONS or the
+    gallery pages, builds pages, plants — gets them here, so sharing one never
+    produces a bare URL. Title comes from the <h1>, description from OG_DESCRIPTIONS or the
     page's first real sentence, image from the first photo the page shows.
     """
     fallback_image = og_fallback_image()
@@ -1575,10 +1574,9 @@ def nav_section(rel_path: str):
 def inline_partials():
     """Write partials/header.html and footer.html into every page.
 
-    They used to be fetched by js/include.js after load, so the nav popped in
-    late, was missing without JavaScript, and a changed partial needed a hand-
-    bumped cache version. Baked in here, they arrive with the page, and the
-    current section's link is marked at build time too.
+    Baked in at build time, the nav arrives with the page, works without
+    JavaScript, needs no cache version, and the current section's link is
+    marked here too.
     """
     partials = {
         name: (ROOT / 'partials' / f'{name}.html').read_text().strip('\n')

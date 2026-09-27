@@ -73,8 +73,8 @@ def actual_pages():
 
 
 def newest_blog_entry():
-    """blog.html is grouped by section now, so "first link" is no longer the
-    newest post — read every entry's data-added and take the max."""
+    """blog.html is grouped by section, so the first link is not the newest
+    post — read every entry's data-added and take the max."""
     entries = re.findall(
         r'<div class="blog-item" data-added="([\d-]+)"><a href="(blog/[^"]+\.html)">',
         (ROOT / "blog.html").read_text(),
@@ -154,7 +154,7 @@ class SiteIntegrityTests(unittest.TestCase):
 
     def test_pages_carry_the_current_header_and_footer(self):
         """The build writes partials/*.html into every page (nothing fetches
-        them at runtime any more), so a page with an empty slot or a stale copy
+        them at runtime), so a page with an empty slot or a stale copy
         means the build was not re-run after a partial changed."""
         partials = {
             name: re.sub(r"\s+", " ", (ROOT / f"partials/{name}.html").read_text()).strip()
@@ -575,8 +575,8 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertEqual(orphans, [])
 
     def test_spec_box_is_not_re_inlined(self):
-        """.spec-box is canonical in style.css. It was previously copied into
-        10 builds pages and drifted into 3 variants; re-inlining restarts that."""
+        """.spec-box is canonical in style.css. Copies inlined into builds
+        pages drift into variants."""
         offenders = []
         for page in sorted((ROOT / "blog/builds").glob("*.html")):
             text = page.read_text(errors="replace")
@@ -627,8 +627,7 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertEqual(photo_tile.group(1), str(current_month.relative_to(ROOT)))
 
     def test_cards_are_one_size(self):
-        """One card size sitewide. blog.html used to carry a 3:1 rolling strip;
-        it is gone, so no page may override the card's shape at all."""
+        """One card size sitewide: no page may override the card's shape."""
         css = (ROOT / "styles/style.css").read_text()
         self.assertIn("aspect-ratio: 3 / 2;", css)
         self.assertIn("box-sizing: border-box;", css)
