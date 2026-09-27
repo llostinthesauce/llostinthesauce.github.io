@@ -53,9 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (entry.added) {
                     entryDiv.setAttribute('data-added', entry.added);
                 }
-                if (entry.cssClass) {
-                    entryDiv.classList.add(entry.cssClass);
-                }
 
                 grid.appendChild(entryClone);
             });
