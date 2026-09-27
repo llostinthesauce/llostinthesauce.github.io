@@ -2,9 +2,14 @@
 """Scaffold a new page with correct boilerplate.
 
 Run from repo root:  python3 scripts/new-page.py --type blog --title "My Post"
+
+Default filenames follow what the build expects: blog posts are
+YYYY-MM-DD-<slug>.html (today), monthly galleries YYYY-MM-mmm.html (the month
+in --date, else this month).
 """
 
 import argparse
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -97,21 +102,6 @@ TEMPLATES = {
     <title>{title} - builds+ - nuBlog</title>
     <link rel="stylesheet" href="{css}">
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
-    <style>
-        .spec-box {{
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-left: 3px solid #99CCCC;
-            padding: 16px 20px;
-            margin: 20px 0 28px;
-            font-family: monospace;
-            font-size: 0.85em;
-        }}
-        .spec-box table {{ width: 100%; border-collapse: collapse; }}
-        .spec-box td {{ padding: 3px 0; vertical-align: top; }}
-        .spec-box td:first-child {{ color: #99CCCC; width: 130px; }}
-        .spec-box td:last-child {{ color: #ccc; }}
-    </style>
 </head>
 <body>
     <div class="content">
@@ -124,12 +114,11 @@ TEMPLATES = {
         <div class="blog-post-content">
             <div class="spec-box">
                 <table>
-                    <tr><td>hostname</td><td></td></tr>
                     <tr><td>cpu</td><td></td></tr>
-                    <tr><td>ram</td><td></td></tr>
+                    <tr><td>gpu</td><td></td></tr>
+                    <tr><td>memory</td><td></td></tr>
                     <tr><td>storage</td><td></td></tr>
                     <tr><td>os</td><td></td></tr>
-                    <tr><td>services</td><td></td></tr>
                 </table>
             </div>
             <p>description here...</p>
@@ -208,8 +197,9 @@ def main():
     )
     parser.add_argument(
         "--date", "-d",
-        default=datetime.now().strftime('%B %Y'),
-        help="Date string (default: current month year)",
+        help='Date line text (default: "Originally published: <today>" for '
+             'blog posts, "<Month> <Year>" otherwise; a monthly gallery reads '
+             'its month from it)',
     )
     parser.add_argument(
         "--filename", "-f",
@@ -218,17 +208,30 @@ def main():
     args = parser.parse_args()
 
     tmpl = TEMPLATES[args.type]
+    today = datetime.now()
     slug = slugify(args.title)
-    filename = args.filename or f"{slug}.html"
+    if args.type == "blog":
+        date = args.date or f"Originally published: {today:%B} {today.day}, {today.year}"
+        default_name = f"{today:%Y-%m-%d}-{slug}.html"
+    elif args.type == "monthly-gallery":
+        date = args.date or today.strftime('%B %Y')
+        try:
+            month = datetime.strptime(date, '%B %Y')
+        except ValueError:
+            sys.exit('ERROR: --date must look like "September 2026" for a monthly gallery')
+        default_name = f"{month:%Y-%m}-{month:%b}.html".lower()
+    else:
+        date = args.date or today.strftime('%B %Y')
+        default_name = f"{slug}.html"
+    filename = args.filename or default_name
     out_path = ROOT / tmpl["dir"] / filename
 
     if out_path.exists():
-        print(f"ERROR: {out_path} already exists — aborting")
-        return
+        sys.exit(f"ERROR: {out_path} already exists — aborting")
 
     html = tmpl["template"].format(
         title=args.title,
-        date=args.date,
+        date=date,
         css=tmpl["css"],
     )
 
