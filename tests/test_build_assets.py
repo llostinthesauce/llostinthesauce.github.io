@@ -71,7 +71,7 @@ class BuildAssetTests(unittest.TestCase):
 
     def test_goodreads_images_without_valid_dimensions_still_fail_build(self):
         (self.root / 'index.html').write_text('<img src="https://i.gr-assets.com/cover.jpg" width="0" height="75">')
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(SystemExit):
             self.build.enrich_image_metadata()
 
     def test_browser_script_runtime(self):

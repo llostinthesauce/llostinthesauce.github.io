@@ -60,20 +60,12 @@ CAPTURE_DATE_TAGS = ('DateTimeOriginal', 'DateTimeDigitized', 'DateTime')
 IDG_NAME_RE = re.compile(r'^IDG_(\d{8})_(\d{6})(?:_\d+)?', re.IGNORECASE)
 IMG_NAME_RE = re.compile(r'^IMG_(\d+)', re.IGNORECASE)
 MONTH_DAY_NAME_RE = re.compile(r'^[a-z]{3}-([0-9]{2})$', re.IGNORECASE)
-MONTHLY_SECTION_ORDER = {
-    'pre-trip': 0,
-    'chicago': 1,
-    'great-lakes-ohio': 2,
-    'appalachia': 3,
-    'east-coast': 4,
-}
-MONTHLY_SECTION_LABELS = {
-    'pre-trip': 'pre-trip',
-    'chicago': 'chicago',
-    'great-lakes-ohio': 'great lakes, indiana, michigan, ohio',
-    'appalachia': 'appalachia',
-    'east-coast': 'east coast',
-}
+MONTHLY_PAGE_RE = re.compile(r'^(\d{4})-(\d{2})-([a-z-]+)\.html$')
+
+
+def fail(message: str):
+    """Stop the build: a half-applied rebuild is worse than none."""
+    raise SystemExit(f'build failed: {message}')
 
 
 def parse_exif_datetime(value):
@@ -100,7 +92,7 @@ def image_capture_datetime(path: Path):
             dt = parse_exif_datetime(exif.get(EXIF_TAGS.get(tag_name)))
             if dt:
                 return dt
-    except Exception:
+    except OSError:
         return None
     return None
 
@@ -156,32 +148,24 @@ def monthly_sort_key(path: Path, year: str, month_num: str):
     return (1, path.name.lower())
 
 
-def monthly_section_sort_key(path: Path):
-    return (MONTHLY_SECTION_ORDER.get(path.name, 100), path.name.lower())
-
-
-def monthly_section_label(path: Path):
-    if path.name in MONTHLY_SECTION_LABELS:
-        return MONTHLY_SECTION_LABELS[path.name]
-    return path.name.replace('-', ' ')
-
-
 def monthly_gallery_item(img_file: Path, alt_text: str):
+    """Grid markup for one photo, and whether it displays landscape."""
     try:
         with Image.open(img_file) as img:
             width, height = img.size
             orient = img.getexif().get(EXIF_TAGS.get('Orientation'), 1)
-        if orient in (5, 6, 7, 8):
-            width, height = height, width
-        rel_path = img_file.relative_to(ROOT)
-        return (
-            f'            <div class="gallery-grid-item">'
-            f'<img src="../../{rel_path}" alt="{escape(alt_text, quote=True)}"'
-            f' width="{width}" height="{height}"'
-            f' class="styled-image" loading="lazy"></div>'
-        )
-    except Exception:
-        return None
+    except OSError as e:
+        fail(f'cannot read {img_file.relative_to(ROOT)}: {e}')
+    if orient in (5, 6, 7, 8):
+        width, height = height, width
+    rel_path = img_file.relative_to(ROOT)
+    item = (
+        f'            <div class="gallery-grid-item">'
+        f'<img src="../../{rel_path}" alt="{escape(alt_text, quote=True)}"'
+        f' width="{width}" height="{height}"'
+        f' class="styled-image" loading="lazy"></div>'
+    )
+    return item, width >= height
 
 
 def monthly_gallery_grid(items):
@@ -275,8 +259,7 @@ def render_derivative(src_path: Path, out_dir_name: str, long_edge: int, quality
             im.save(out, fmt, quality=quality, **opts)
         return str(out.relative_to(ROOT)).replace('\\', '/')
     except Exception as e:
-        print(f"  {out_dir_name} render failed for {src_path.name}: {e}")
-        return None
+        fail(f'{out_dir_name} render failed for {src_path.relative_to(ROOT)}: {e}')
 
 
 def ensure_thumb(src_path: Path):
@@ -337,9 +320,7 @@ def build_card_thumbs():
             built += 1
 
     if missing:
-        raise RuntimeError(
-            f'{len(missing)} card background(s) have no source image: ' + ', '.join(missing)
-        )
+        fail(f'{len(missing)} card background(s) have no source image: ' + ', '.join(missing))
 
     # Compare the full filename, not the stem: a tier that changes format leaves
     # same-stem files from the old one behind, and those must go too.
@@ -494,12 +475,10 @@ def build_all_images_data():
     """
     images_dir = ROOT / 'images'
     if not images_dir.is_dir():
-        print("images/ directory not found, skipping all-images-data.js")
-        return
+        fail("images/ directory not found")
     prune_stale_thumbs()
 
     entries = []
-    skipped = 0
     thumbs_built = 0
     for img in sorted(images_dir.rglob('*')):
         if not (img.is_file() and img.suffix.lower() in IMAGE_EXTS):
@@ -510,10 +489,8 @@ def build_all_images_data():
         try:
             with Image.open(img) as im:
                 w, h = im.size
-        except Exception as e:
-            print(f"  skipped {rel}: {e}")
-            skipped += 1
-            continue
+        except OSError as e:
+            fail(f'cannot read {rel}: {e}')
         thumb_exists_before = False
         thumb_path_obj = ROOT / 'images' / THUMB_DIR_NAME / img.relative_to(ROOT / 'images').with_suffix('.jpg')
         if thumb_path_obj.is_file():
@@ -524,8 +501,7 @@ def build_all_images_data():
         entries.append((rel, w, h, thumb_rel))
 
     if not entries:
-        print("No images found, skipping all-images-data.js")
-        return
+        fail("no images found under images/")
 
     items = ',\n    '.join(
         f'[{json.dumps(p)}, {w}, {h}, {json.dumps(t)}]'
@@ -543,8 +519,6 @@ def build_all_images_data():
     parts = [f"{len(entries)} images"]
     if thumbs_built:
         parts.append(f"{thumbs_built} new thumbs")
-    if skipped:
-        parts.append(f"{skipped} skipped")
     print(f"Generated {out} (" + ", ".join(parts) + ")")
 
 
@@ -553,8 +527,7 @@ def build_blog_nav():
     blog_dir = ROOT / 'blog'
     nav_path = ROOT / 'js' / 'blog-nav.js'
     if not blog_dir.is_dir() or not nav_path.is_file():
-        print("blog/ or js/blog-nav.js missing, skipping blog-nav update")
-        return
+        fail("blog/ or js/blog-nav.js missing")
 
     # Only dated posts (YYYY-MM-DD-*) belong in the prev/next chain; rolling
     # pages stay out of it (but remain linked elsewhere).
@@ -579,8 +552,7 @@ def build_blog_nav():
     )
     original = nav_path.read_text()
     if not pattern.search(original):
-        print(f"AUTOGEN markers not found in {nav_path}, skipping")
-        return
+        fail(f"AUTOGEN blogPosts markers not found in {nav_path}")
     nav_path.write_text(pattern.sub(replacement, original))
     print(f"Updated {nav_path} ({len(posts)} blog posts)")
 
@@ -589,8 +561,8 @@ def collect_posts():
     """Every dated post as (category, rolling, datetime, filename, raw title).
 
     One reading of blog/ for both themes, so nuBlog's blog.html and the clean
-    theme's writing.html can never drift apart. A post missing its category or
-    theme.js fails the build rather than quietly falling out of one of them.
+    theme's writing.html can never drift apart. A post missing its date prefix,
+    category or theme.js fails the build rather than quietly falling out.
     """
     blog_dir = ROOT / 'blog'
     title_pattern = re.compile(r'<title>(.*?) - nuBlog</title>')
@@ -600,6 +572,7 @@ def collect_posts():
         try:
             dt = datetime.strptime(path.name[:10], '%Y-%m-%d')
         except ValueError:
+            problems.append(f'{path.name} (no YYYY-MM-DD- prefix)')
             continue
         content = path.read_text()
         category = WRITING_CATEGORY_RE.search(content)
@@ -618,8 +591,8 @@ def collect_posts():
             match.group(1) if match else path.stem,
         ))
     if problems:
-        raise SystemExit(
-            "blog posts need <meta name=\"nublog:category\"> "
+        fail(
+            "blog posts need a YYYY-MM-DD- filename, <meta name=\"nublog:category\"> "
             f"({', '.join(WRITING_CATEGORIES)}) and ../js/theme.js: {', '.join(problems)}"
         )
     return posts
@@ -641,8 +614,7 @@ def build_blog_list():
     nuBlog keeping every title exactly as the post wrote it."""
     blog_html_path = ROOT / 'blog.html'
     if not (ROOT / 'blog').is_dir() or not blog_html_path.is_file():
-        print("blog/ or blog.html missing, skipping blog list update")
-        return
+        fail("blog/ or blog.html missing")
 
     groups = group_posts(collect_posts())
     sections = []
@@ -687,8 +659,7 @@ def build_blog_list():
     )
     original = blog_html_path.read_text()
     if not pattern.search(original):
-        print(f"AUTOGEN markers not found in {blog_html_path}, skipping")
-        return
+        fail(f"AUTOGEN blog-list markers not found in {blog_html_path} (they must keep their indentation)")
     blog_html_path.write_text(pattern.sub(lambda _: replacement, original))
     print(f"Updated {blog_html_path} ({total} entries in {len(sections)} sections)")
 
@@ -764,8 +735,7 @@ def build_writing_index():
     blog_dir = ROOT / 'blog'
     writing_path = ROOT / 'writing.html'
     if not blog_dir.is_dir() or not writing_path.is_file():
-        print("blog/ or writing.html missing, skipping writing index update")
-        return
+        fail("blog/ or writing.html missing")
 
     groups = group_posts(collect_posts())
     for bucket in groups.values():
@@ -821,8 +791,7 @@ def build_writing_index():
     )
     original = writing_path.read_text()
     if not pattern.search(original):
-        print(f"AUTOGEN markers not found in {writing_path}, skipping")
-        return
+        fail(f"AUTOGEN writing-index markers not found in {writing_path} (they must keep their indentation)")
     writing_path.write_text(pattern.sub(lambda _: replacement, original))
     total = sum(len(v) for v in groups.values())
     print(f"Updated {writing_path} ({total} posts in {len(sections)} sections)")
@@ -894,8 +863,7 @@ def build_homepage_recent_blog():
     )
     original = index_path.read_text()
     if not pattern.search(original):
-        print(f"AUTOGEN recent-blog markers not found in {index_path}, skipping")
-        return
+        fail(f"AUTOGEN recent-blog markers not found in {index_path} (they must keep their indentation)")
     index_path.write_text(pattern.sub(card, original))
     print(f"Updated {index_path} recent blog card ({latest.name})")
 
@@ -939,11 +907,8 @@ def homepage_card_preview(source_path: str):
     """Build and return the card-tier path for one homepage source image."""
     source = ROOT / source_path
     if not source.is_file() or not source_path.startswith('images/'):
-        raise RuntimeError(f'Homepage preview source missing: {source_path}')
-    rendered = ensure_card(source)
-    if not rendered:
-        raise RuntimeError(f'Homepage preview render failed: {source_path}')
-    return rendered
+        fail(f'homepage preview source missing: {source_path}')
+    return ensure_card(source)
 
 
 def card_when(date: datetime) -> str:
@@ -977,8 +942,7 @@ def build_homepage_recent_sections():
     open_tag = '<div class="recent-cards">'
     start = text.find(open_tag)
     if start == -1:
-        print("recent-cards container not found, skipping sort")
-        return
+        fail("recent-cards container not found in index.html")
     body_start = start + len(open_tag)
 
     # walk to the matching close so we never depend on fixed indentation
@@ -989,8 +953,7 @@ def build_homepage_recent_sections():
             i = body_start + m.start()
             break
     else:
-        print("unbalanced recent-cards container, skipping sort")
-        return
+        fail("unbalanced recent-cards container in index.html")
     blog_match = re.search(
         r'[ \t]*<!-- AUTOGEN-START recent-blog -->.*?'
         r'<!-- AUTOGEN-END recent-blog -->',
@@ -998,14 +961,12 @@ def build_homepage_recent_sections():
         re.DOTALL,
     )
     if not blog_match:
-        print("recent blog card not found, skipping homepage section build")
-        return
+        fail("recent blog card not found in index.html")
 
     plant_pages = homepage_content_pages(ROOT / 'plants' / 'progress', '????-??.html')
     monthly_pages = homepage_content_pages(ROOT / 'galleries' / 'monthly', '????-??-???.html')
     if not plant_pages or len(monthly_pages) < 2:
-        print("Homepage section sources missing, skipping recent section build")
-        return
+        fail("homepage needs a plants progress page and two month pages")
 
     latest_plant = plant_pages[-1]
     previous_month = monthly_pages[-2]
@@ -1020,8 +981,7 @@ def build_homepage_recent_sections():
         or homepage_page_image(previous_month)
     )
     if not plant_source or not month_source:
-        print("Homepage section preview missing, skipping recent section build")
-        return
+        fail("homepage plants or month card has no preview image")
 
     plant_date = datetime.strptime(latest_plant.stem, '%Y-%m')
     month_date = datetime.strptime(previous_month.stem[:7], '%Y-%m')
@@ -1084,8 +1044,7 @@ def build_homepage_current_photos():
     href = str(current.relative_to(ROOT)).replace('\\', '/')
     source = homepage_existing_preview(text, href) or homepage_page_image(current)
     if not source:
-        print("Homepage current photo preview missing, leaving tile alone")
-        return
+        fail(f"{href} has no image for the homepage photo tile")
     preview = homepage_card_preview(source)
     date = datetime.strptime(current.stem[:7], '%Y-%m')
     card = (
@@ -1101,8 +1060,7 @@ def build_homepage_current_photos():
         re.DOTALL,
     )
     if not pattern.search(text):
-        print("Homepage current photo tile not found, skipping")
-        return
+        fail("homepage photo tile (a.tile.t-photos) not found in index.html")
 
     index_path.write_text(pattern.sub(card, text, count=1))
     print(f"Updated {index_path} current photo tile ({current.name})")
@@ -1111,7 +1069,9 @@ def build_homepage_current_photos():
 def build_monthly_galleries():
     """Auto-generate monthly gallery grids from images/monthly/ directories.
 
-    Scans gallery pages (not image dirs) so all pages get updated, even empty months.
+    Scans gallery pages (not image dirs) so all pages get updated, even empty
+    months. A page's photos come from images/monthly/YYYY/MM-mmm/ unless it
+    names another folder with <!-- AUTOGEN-SOURCE path -->.
     """
     images_monthly = ROOT / 'images' / 'monthly'
     galleries_monthly = ROOT / 'galleries' / 'monthly'
@@ -1120,135 +1080,59 @@ def build_monthly_galleries():
         re.DOTALL,
     )
 
-    if not galleries_monthly.is_dir():
-        print("Monthly galleries dir missing, skipping")
-        return
-
     updated = 0
 
     for gallery_file in sorted(galleries_monthly.glob('*.html')):
-        if gallery_file.name.startswith('.'):
-            continue
-
         original = gallery_file.read_text()
         if not marker_pattern.search(original):
             continue
+        rel = gallery_file.relative_to(ROOT)
         title_match = re.search(r'<h1>(.*?)</h1>', original, re.DOTALL)
         gallery_title = (
             re.sub(r'<[^>]+>', '', title_match.group(1)).strip()
             if title_match else gallery_file.stem.replace('-', ' ')
         )
 
-        # Parse YYYY-MM from filename: 2025-01-jan.html
-        stem = gallery_file.stem  # "2025-01-jan"
-        parts = stem.split('-', 2)
-        if len(parts) < 3:
-            continue
-        year, month_num, month_name = parts  # "2025", "01", "jan"
+        match = MONTHLY_PAGE_RE.match(gallery_file.name)
+        if not match:
+            fail(f'{rel} has a gallery-grid marker but is not named YYYY-MM-<name>.html')
+        year, month_num, month_name = match.groups()
 
         source_match = re.search(r'<!-- AUTOGEN-SOURCE ([^>]+) -->', original)
-        explicit_source = bool(source_match)
-        if explicit_source:
+        if source_match:
             image_dir = ROOT / source_match.group(1).strip()
+            if not image_dir.is_dir():
+                fail(f'{rel}: AUTOGEN-SOURCE {source_match.group(1).strip()} is not a directory')
         else:
             image_dir = images_monthly / year / f'{month_num}-{month_name}'
-        sections = []
 
-        if image_dir.is_dir():
-            loose_files = sorted(
-                [
-                    p for p in image_dir.iterdir()
-                    if p.is_file()
-                    and not p.name.startswith('.')
-                    and p.suffix.lower() in PHOTO_EXTS
-                ],
-                key=lambda p: monthly_sort_key(p, year, month_num),
+        img_files = sorted(
+            [
+                p for p in image_dir.iterdir()
+                if p.is_file()
+                and not p.name.startswith('.')
+                and p.suffix.lower() in PHOTO_EXTS
+            ],
+            key=lambda p: monthly_sort_key(p, year, month_num),
+        ) if image_dir.is_dir() else []
+
+        horizontal = []
+        vertical = []
+        for number, img_file in enumerate(img_files, 1):
+            item, is_horizontal = monthly_gallery_item(img_file, f'{gallery_title} photo {number}')
+            (horizontal if is_horizontal else vertical).append(item)
+
+        items = horizontal[:]
+        if horizontal and vertical:
+            items.append(
+                '            <div style="grid-column: 1 / -1; height: 0; '
+                'margin: 0; padding: 0;"></div>'
             )
-            section_dirs = []
-            if not explicit_source:
-                section_dirs = sorted(
-                    [
-                        p for p in image_dir.iterdir()
-                        if p.is_dir()
-                        and not p.name.startswith('.')
-                        and any(
-                            child.is_file()
-                            and not child.name.startswith('.')
-                            and child.suffix.lower() in PHOTO_EXTS
-                            for child in p.iterdir()
-                        )
-                    ],
-                    key=monthly_section_sort_key,
-                )
-
-            if section_dirs:
-                if loose_files:
-                    sections.append(('unfiled', loose_files, True))
-                for section_dir in section_dirs:
-                    section_files = sorted(
-                        [
-                            p for p in section_dir.iterdir()
-                            if p.is_file()
-                            and not p.name.startswith('.')
-                            and p.suffix.lower() in PHOTO_EXTS
-                        ],
-                        key=lambda p: monthly_sort_key(p, year, month_num),
-                    )
-                    sections.append((monthly_section_label(section_dir), section_files, True))
-            else:
-                sections.append(('', loose_files, False))
-
-        blocks = []
-        photo_number = 0
-        for label, img_files, sectioned in sections:
-            items = []
-            horizontal = []
-            vertical = []
-            for img_file in img_files:
-                photo_number += 1
-                context = f'{gallery_title} photo {photo_number}'
-                if label:
-                    context = f'{gallery_title}, {label}, photo {photo_number}'
-                item = monthly_gallery_item(img_file, context)
-                if not item:
-                    continue
-                if sectioned:
-                    items.append(item)
-                    continue
-                try:
-                    with Image.open(img_file) as img:
-                        w, h = img.size
-                        orient = img.getexif().get(EXIF_TAGS.get('Orientation'), 1)
-                    if orient in (5, 6, 7, 8):
-                        w, h = h, w
-                    if w >= h:
-                        horizontal.append(item)
-                    else:
-                        vertical.append(item)
-                except Exception:
-                    continue
-
-            if not sectioned:
-                items = horizontal[:]
-                if horizontal and vertical:
-                    items.append(
-                        '            <div style="grid-column: 1 / -1; height: 0; '
-                        'margin: 0; padding: 0;"></div>'
-                    )
-                items.extend(vertical)
-
-            if label:
-                blocks.append(f'        <h2>{label}</h2>')
-            blocks.append(monthly_gallery_grid(items))
-
-        if not blocks:
-            blocks.append(monthly_gallery_grid([]))
-
-        grid = '\n'.join(blocks)
+        items.extend(vertical)
 
         replacement = (
             '        <!-- AUTOGEN-START gallery-grid -->\n'
-            f'{grid}\n'
+            f'{monthly_gallery_grid(items)}\n'
             '        <!-- AUTOGEN-END gallery-grid -->'
         )
         gallery_file.write_text(marker_pattern.sub(replacement, original))
@@ -1380,7 +1264,7 @@ def enrich_image_metadata():
 
     if failures:
         sample = ', '.join(f'{page}: {src}' for page, src in failures[:5])
-        raise RuntimeError(f'Could not enrich {len(failures)} image(s): {sample}')
+        fail(f'could not enrich {len(failures)} image(s): {sample}')
     print(f"Enriched image metadata ({updated_images} images across {updated_pages} pages)")
 
 
@@ -1515,8 +1399,7 @@ def build_open_graph():
         else:
             title_tag = re.search(r'[ \t]*<title>.*?</title>\n', text)
             if not title_tag:
-                print(f'no <title> in {rel}, skipping og tags')
-                continue
+                fail(f'no <title> in {rel} to anchor og tags')
             rendered = text.replace(title_tag.group(0), title_tag.group(0) + block, 1)
         if rendered != text:
             page.write_text(rendered)
