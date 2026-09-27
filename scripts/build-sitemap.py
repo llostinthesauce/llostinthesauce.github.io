@@ -1063,7 +1063,9 @@ def build_homepage_current_photos():
     href = str(current.relative_to(ROOT)).replace('\\', '/')
     source = homepage_existing_preview(text, href) or homepage_page_image(current)
     if not source:
-        fail(f"{href} has no image for the homepage photo tile")
+        # A month page made before its photos arrive is normal; keep the tile.
+        print(f"{href} has no photos yet, leaving the homepage photo tile alone")
+        return
     preview = homepage_card_preview(source)
     date = datetime.strptime(current.stem[:7], '%Y-%m')
     card = (
