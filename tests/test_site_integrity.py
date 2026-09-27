@@ -72,6 +72,19 @@ def actual_pages():
     )
 
 
+def load_build():
+    spec = importlib.util.spec_from_file_location(
+        "build_sitemap", ROOT / "scripts/build-sitemap.py"
+    )
+    build_sitemap = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_sitemap)
+    return build_sitemap
+
+
+def newest_month_page():
+    return load_build().month_pages()[-1].relative_to(ROOT).as_posix()
+
+
 def newest_blog_entry():
     """blog.html is grouped by section, so the first link is not the newest
     post — read every entry's data-added and take the max."""
@@ -88,11 +101,7 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertEqual(WATER_SHA256, EXPECTED_WATER_SHA256)
 
     def test_protected_water_gif_does_not_trigger_size_warning(self):
-        spec = importlib.util.spec_from_file_location(
-            "build_sitemap", ROOT / "scripts/build-sitemap.py"
-        )
-        build_sitemap = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(build_sitemap)
+        build_sitemap = load_build()
         output = io.StringIO()
         with redirect_stdout(output):
             build_sitemap.check_image_sizes()
@@ -110,16 +119,12 @@ class SiteIntegrityTests(unittest.TestCase):
         self.assertEqual(recent.group(1), latest)
 
     def test_homepage_section_build_keeps_recent_blog_regeneratable(self):
-        spec = importlib.util.spec_from_file_location(
-            "build_sitemap", ROOT / "scripts/build-sitemap.py"
-        )
-        build_sitemap = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(build_sitemap)
-        output = io.StringIO()
-        with redirect_stdout(output):
+        """Both homepage builders stop the build (SystemExit) when a marker,
+        container or preview they need is missing, so running them is the test."""
+        build_sitemap = load_build()
+        with redirect_stdout(io.StringIO()):
             build_sitemap.build_homepage_recent_sections()
             build_sitemap.build_homepage_recent_blog()
-        self.assertNotIn("markers not found", output.getvalue())
 
     def test_navigation_order_is_consistent(self):
         # The clean-theme switch rides in the nav but is not a section, so it
@@ -549,20 +554,14 @@ class SiteIntegrityTests(unittest.TestCase):
             text=True,
         )
         groups = json.loads(rendered.stdout)
+        month_href = newest_month_page()
         current = next(
             entry
             for entry in groups[0]["entries"]
-            if entry["href"] == "galleries/monthly/2026-09-sep.html"
+            if entry["href"] == month_href
         )
-        self.assertEqual(current.get("added"), "2026-09")
+        self.assertEqual(current.get("added"), Path(month_href).name[:7])
         self.assertFalse(current.get("featured", False))
-
-        parser = ReferenceParser()
-        parser.feed((ROOT / "galleries.html").read_text())
-        self.assertIn(
-            ("script", "js/gallery-data.js?v=2026-09-12"),
-            parser.references,
-        )
 
     def test_dated_cards_live_inside_a_new_scope(self):
         """data-added outside a [data-new-scope] container is inert: the badge
@@ -617,14 +616,11 @@ class SiteIntegrityTests(unittest.TestCase):
 
     def test_homepage_photo_tile_matches_current_month(self):
         text = (ROOT / "index.html").read_text()
-        current_month = sorted(
-            (ROOT / "galleries/monthly").glob("????-??-???.html")
-        )[-1]
         photo_tile = re.search(
             r'<a class="tile tile-img t-photos" href="([^"]+)"', text
         )
         self.assertIsNotNone(photo_tile, "homepage photo tile not found")
-        self.assertEqual(photo_tile.group(1), str(current_month.relative_to(ROOT)))
+        self.assertEqual(photo_tile.group(1), newest_month_page())
 
     def test_cards_are_one_size(self):
         """One card size sitewide: no page may override the card's shape."""

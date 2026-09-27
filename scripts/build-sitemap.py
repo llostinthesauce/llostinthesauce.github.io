@@ -3,6 +3,7 @@
 
 Run from repo root:  python3 scripts/build-sitemap.py
 """
+import calendar
 import hashlib
 import json
 import re
@@ -66,6 +67,18 @@ MONTHLY_PAGE_RE = re.compile(r'^(\d{4})-(\d{2})-([a-z-]+)\.html$')
 def fail(message: str):
     """Stop the build: a half-applied rebuild is worse than none."""
     raise SystemExit(f'build failed: {message}')
+
+
+def is_month_page(path: Path) -> bool:
+    """A month's own gallery page (2026-09-sep.html, 2026-06-june.html), not a
+    trip sub-page such as 2026-05-chicago.html."""
+    match = MONTHLY_PAGE_RE.match(path.name)
+    if not match:
+        return False
+    month = int(match.group(2))
+    return 1 <= month <= 12 and match.group(3) in {
+        calendar.month_abbr[month].lower(), calendar.month_name[month].lower()
+    }
 
 
 def parse_exif_datetime(value):
@@ -875,6 +888,14 @@ def homepage_content_pages(directory: Path, pattern: str):
     return sorted(directory.glob(pattern), key=lambda path: path.name)
 
 
+def month_pages():
+    """Each month's own gallery page, oldest first."""
+    return [
+        page for page in homepage_content_pages(ROOT / 'galleries' / 'monthly', '*.html')
+        if is_month_page(page)
+    ]
+
+
 def homepage_page_image(page: Path):
     """Return the first local image on a content page as a repo-relative path."""
     match = re.search(r'<img\b[^>]*\bsrc="([^"]+)"', page.read_text(), re.IGNORECASE)
@@ -964,7 +985,7 @@ def build_homepage_recent_sections():
         fail("recent blog card not found in index.html")
 
     plant_pages = homepage_content_pages(ROOT / 'plants' / 'progress', '????-??.html')
-    monthly_pages = homepage_content_pages(ROOT / 'galleries' / 'monthly', '????-??-???.html')
+    monthly_pages = month_pages()
     if not plant_pages or len(monthly_pages) < 2:
         fail("homepage needs a plants progress page and two month pages")
 
@@ -1033,9 +1054,7 @@ def build_homepage_recent_sections():
 def build_homepage_current_photos():
     """Keep the large homepage photo tile on the newest monthly gallery."""
     index_path = ROOT / 'index.html'
-    monthly_pages = homepage_content_pages(
-        ROOT / 'galleries' / 'monthly', '????-??-???.html'
-    )
+    monthly_pages = month_pages()
     if not index_path.is_file() or not monthly_pages:
         return
 
