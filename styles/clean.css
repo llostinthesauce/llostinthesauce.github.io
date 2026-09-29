@@ -561,6 +561,35 @@ main > h1 {
     background: var(--accent);
 }
 
+/* a <details> dressed as the three-star section break: nothing says it opens.
+   Undoes the field-notes entry styling above. */
+.blog-post-content details.easter-egg,
+.blog-post-content details.easter-egg:last-of-type {
+    margin: 2.4em 0 0;
+    border: 0;
+}
+
+.blog-post-content details.easter-egg > summary {
+    padding: 0 0 0 0.6em;
+    text-indent: 0;
+    text-align: center;
+    letter-spacing: 0.6em;
+    font-weight: 400;
+    color: var(--text-3);
+}
+
+.blog-post-content details.easter-egg > summary::before {
+    content: none;
+}
+
+.blog-post-content details.easter-egg > summary:hover {
+    color: var(--text-3);
+}
+
+.blog-post-content details.easter-egg[open] > summary {
+    margin-bottom: 2.4em;
+}
+
 /* goodreads widgets (the books page) — tame their inline styling */
 .goodreads-widgets img {
     display: inline-block;

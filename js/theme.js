@@ -55,7 +55,7 @@
     if (typeof document === 'undefined') return; // loaded by the node tests
 
     // AUTOGEN-START clean-css-version — scripts/build-sitemap.py
-    var CLEAN_CSS_VERSION = '?v=c60061d3e583';
+    var CLEAN_CSS_VERSION = '?v=2f0b65a9e55b';
     // AUTOGEN-END clean-css-version
 
     var THEME_KEY = 'nublog.theme';
@@ -180,11 +180,12 @@
 
     // A field-notes post is mostly collapsed <details>; printing it that way
     // yields a list of dates. CSS cannot reopen them, so open every entry for
-    // the print run and put the reader's own state back afterwards.
+    // the print run and put the reader's own state back afterwards. An
+    // .easter-egg stays shut: it is meant to be found, not printed.
     var reopened = [];
     window.addEventListener('beforeprint', function () {
         reopened = Array.prototype.filter.call(
-            document.querySelectorAll('.blog-post-content details'),
+            document.querySelectorAll('.blog-post-content details:not(.easter-egg)'),
             function (entry) { return !entry.open; }
         );
         reopened.forEach(function (entry) { entry.open = true; });

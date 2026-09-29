@@ -408,6 +408,35 @@ button:focus-visible {
     color: #66FFCC;
 }
 
+/* A <details> dressed as a three-star section break: nothing says it opens.
+   Undoes the collapsible-entry styling above. */
+.blog-post-content details.easter-egg {
+    margin: 32px auto 0;
+}
+
+.blog-post-content details.easter-egg > summary {
+    text-align: center;
+    letter-spacing: 0.6em;
+    padding-left: 0.6em;
+    color: #6699CC;
+    font-size: 1em;
+    font-weight: normal;
+    border-bottom: 0;
+}
+
+.blog-post-content details.easter-egg > summary::before {
+    content: none;
+}
+
+.blog-post-content details.easter-egg > summary:hover {
+    color: #6699CC;
+    border-bottom: 0;
+}
+
+.blog-post-content details.easter-egg[open] > summary {
+    margin-bottom: 24px;
+}
+
 /* Blockquotes: link-and-notes callouts in essays. Same left rule as a
    featured field-notes entry. */
 .blog-post-content blockquote {
